@@ -1,0 +1,61 @@
+# CFP data AMPL format
+
+set F := 1 2 ;
+set Z := 1 2;
+
+param a :=
+1 1
+2 0
+;
+
+param B :=
+1 1 0
+1 2 1
+2 1 1
+2 2 0
+;
+
+param A :=
+1 1 1
+1 2 1
+2 1 1
+2 2 1
+;
+
+param dem :=
+1 30
+2 5
+;
+
+param Nz :=
+1 20
+2 26
+;
+
+param cs :=
+1 2
+2 3
+;
+
+param cf :=
+1 5
+2 6
+;
+
+param cr :=
+1 15
+2 24
+;
+
+param cap :=
+1 8
+2 14
+;
+
+param R :=
+11
+;
+
+param gamma :=
+0.5
+;
