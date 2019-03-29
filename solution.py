@@ -8,7 +8,6 @@ class Solution:
 	  	self.st = [0] * parameters.Nof
 	  	self.r = [0] * parameters.Nof
 	  	self.y = [0] * parameters.Nof
-	  	self.cost = 0
 
 	def set_values(self, parameters, x, omega, st, r, y):
 		self.x = x
@@ -16,7 +15,6 @@ class Solution:
 		self.st = st
 		self.r = r
 		self.y = y
-		self.cost = 0
 		if len(x) != parameters.Nov or len(x[0]) != parameters.Nof \
 		or len(omega) != parameters.Nof or len(st) != parameters.Nof or len(r) != parameters.Nof\
 		or len(y) != parameters.Nof:
@@ -61,24 +59,12 @@ class Solution:
 
 		# Demand constraint
 		for z in range(parameters.Noz):
-			# total_value = 0
-			# for zeta in range(parameters.Noz):
-			# 	value = 0
-			# 	for j in range(parameters.Nof):
-			# 		value = value + parameters.H[j][zeta] * self.y[j]
-			# 		# print("z is %d zeta is %d j is %d and value is %f" %(z, zeta, j, value))
-			# 	total_value = total_value + parameters.A[z][zeta] * value
-			# 	# print("### z is %d zeta is %d and total value is %f" %(z, zeta, total_value))
 			total_value = gn.currentDemand(parameters, self, z)
 			if total_value < parameters.gamma * parameters.demand[z]:
 				return False
-			# print("********** The overall value for zone %d is %f **************" %(z, total_value))
 
 		# On-street constraint
 		for z in range(parameters.Noz):
-			# value = 0
-			# for j in range(parameters.Nof):
-			# 	value = value + parameters.alpha[j] * parameters.H[j][z] *self.y[j]
 			value = gn.currentOnstreetCPs(parameters, self, z)
 			if value > parameters.Nz[z]:
 				return False
@@ -103,7 +89,25 @@ class Solution:
 		return True
 
 
-	def solutionCost(self, parameters):
+	def open_facility(self, facility):
+		self.omega[facility] = 1
+
+	def close_facility(self, facility):
+		self.omega[facility] = 0
+		self.st[facility] = 0
+		self.r[facility] = 0
+		self.y[facility] = 0
+
+	def is_open(self, facility):
+		return self.omega[facility]
+
+	def connect(self, vehicle, facility):
+		self.x[vehicle][facility] = 1
+
+	def disconnect(self, vehicle, facility):
+		self.x[vehicle][facility] = 0
+
+	def cost(self, parameters):
 		vehicleCost = 0	
 		scenCost = 0
 		facCost = 0
@@ -125,5 +129,4 @@ class Solution:
 			scenCost = sum(vehCosts)
 			# print("Scenario %d cost is %f\n\n" %(scenario, scenCost))
 			scenCosts.append(scenCost)		
-		self.cost = sum(scenCosts)
-		return self.cost
+		return sum(scenCosts)

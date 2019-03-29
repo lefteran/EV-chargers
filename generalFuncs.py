@@ -12,3 +12,4 @@ def currentOnstreetCPs(parameters, S, z):
 	for j in range(parameters.Nof):
 		value = value + parameters.alpha[j] * parameters.H[j][z] *S.y[j]
 	return value
+

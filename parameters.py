@@ -20,7 +20,6 @@ class Parameters:
 		self.demand = [10, 13, 9, 17]
 		self.dist = [  [ [0.1, 0.2, 0.3], [0.4, 0.5, 0.6] ],\
 					   [ [0.7, 0.8, 0.9], [1.0, 1.2, 1.3] ]]		# scenario 2
-
 		# Check if the parameter arrays have the correct sizes
 		if len(self.beta) != self.Nov or len(self.beta[0]) != self.Nof or len(self.ps) != self.Nos \
 		or len(self.dist) != self.Nos or len(self.dist[0]) != self.Nov or len(self.dist[0][0]) != self.Nof\

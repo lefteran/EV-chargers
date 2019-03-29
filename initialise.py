@@ -1,7 +1,3 @@
-# Use an extension of the forward greedy algorithm in
-# https://www.cs.princeton.edu/courses/archive/fall14/cos521/projects/kmedian.pdf
-# to initialise
-
 import solution as sl
 import generalFuncs as gn
 
@@ -15,7 +11,7 @@ def initialise(parameters):
 		if Lz:
 			k = Lz[0]			# k is the number of a facility
 			del Lz[0]
-			S.omega[k] = 1
+			S.open_facility(k)
 			while S.y[k] < parameters.cap[k] and\
 			gn.currentDemand(parameters, S, z) < parameters.gamma * parameters.demand[z]:
 				if S.r[k] < parameters.R:
@@ -24,8 +20,6 @@ def initialise(parameters):
 				else:
 					S.st[k] += 1
 					S.y[k] += 1
-				# print("current on street CP value is %d and Nz is %d" %(currentOnstreetCPs(parameters, S, z), parameters.Nz[z]))
-				# print("y[%d] is %d" %(k, S.y[k]))
 				if gn.currentOnstreetCPs(parameters, S, z) == parameters.Nz[z]:
 					for element in Lz:
 						if parameters.alpha[element] == 1:
@@ -39,7 +33,7 @@ def initialise(parameters):
 						k = Lz[0]
 					except IndexError:
 						print("No feasible solution for the problem (cap)")
-					S.omega[k] = 1
+					S.open_facility(k)
 	for i in range(parameters.Nov):
 		closestFac = 0
 		closestDist = 0
@@ -56,10 +50,16 @@ def initialise(parameters):
 	print("r is ", S.r)
 	print("y is ", S.y)
 	print("omega is ", S.omega)
-	print("Cost of S is ", S.solutionCost(parameters))
+	print("Cost of S is ", S.cost(parameters))
 
 
-# def neighborhood(S):
+
+
+
+
+
+
+
 
 
 # def lagrangian():

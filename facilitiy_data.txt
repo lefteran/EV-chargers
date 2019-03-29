@@ -1,0 +1,5 @@
+# facility numbering starts from 1
+id	cost	capacity	alpha	zone
+1	10	10	0	1
+2	20	20	0	2
+3	30	16	1	3
