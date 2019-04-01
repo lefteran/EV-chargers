@@ -2,6 +2,7 @@ import solution as sl
 import parameters as pam
 import zone as zn
 import facility as fl
+import read_data as rd
 import itertools
 import copy
 
@@ -17,10 +18,22 @@ def combinations(L, p):
 def neighborhood(parameters, S, p):
 	old_cost = S.cost(parameters)
 	newS = copy.deepcopy(S)
+	zones = rd.getZones()
+	for zone in zones:
+		zoneClosedFac = []
+		zoneOpenedFac = []
+		zoneFacilities = zone.facilities
+		for facility in zoneFacilities:
+			j = facility.id
+			if S.is_open(j):
+				zoneOpenedFac.append(j)
+			else:
+				zoneClosedFac.append(j)
+		print(zoneClosedFac)
+		closedComb = combinations(zoneClosedFac, p)
+		print(closedComb)
+		print("-----------")
 
-	# pass the zones and facilities read from read_data file
-	# for each zone z
-	# get the opened and closed facilities of that zone
 	# for every possible bundle of size p of closed facilities bunClFac
 	# and for every bundle of opened facilities of size p
 	# check if the total capacity of all the facilities in the candidate bundle bunClFac
@@ -32,25 +45,21 @@ def neighborhood(parameters, S, p):
 	# 	for j in 
 
 
-	for j in range(parameters.Nof):
-		if S.is_open(j):
-			opened.append(j)
-		else:
-			closed.append(j)
-	fl_to_open = combinations(closed, p)
-	fl_to_close = combinations(opened, p)
-	print("fl to open ", fl_to_open)
-	print("fl to close ", fl_to_close)
-	if fl_to_close:
-		tempS = solution(parameters)
-		for fl_tuple in fl_to_close:
-			for j in fl_tuple:
+	
+	# fl_to_open = combinations(closed, p)
+	# fl_to_close = combinations(opened, p)
+	# print("fl to open ", fl_to_open)
+	# print("fl to close ", fl_to_close)
+	# if fl_to_close:
+	# 	tempS = solution(parameters)
+	# 	for fl_tuple in fl_to_close:
+	# 		for j in fl_tuple:
 
-			newS.close_facility(j)
+	# 		newS.close_facility(j)
 
 
-	print("opened is ", opened)
-	print("closed is ", closed)
+	# print("opened is ", opened)
+	# print("closed is ", closed)
 
 	
 
@@ -60,17 +69,15 @@ def neighborhood(parameters, S, p):
 
 
 
-L = [1, 2, 3, 4]
-combs = combinations(L, 2)
+# L = [1, 2, 3, 4]
+# combs = combinations(L, 2)
 # print(combs)
 parameters = pam.Parameters()
 S = sl.Solution(parameters)
 
-
-facilities = []
-for j in range(parameters.Nof):
-	facility = fl.facility(cost, capacity, alpha, zone)
-	facilities.append(facility)
+# for j in range(parameters.Nof):
+# 	facility = fl.facility(cost, capacity, alpha, zone)
+# 	facilities.append(facility)
 
 neighborhood(parameters, S, 2)
 
