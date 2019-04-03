@@ -3,14 +3,14 @@ import zone as zn
 import vehicle as vcl
 import facility as fl
 
-
+# the index of a cell corresponds to the id of the facility and its value to the zone it belongs to
 def getBelongingList():
 	parameters = pam.Parameters()
 	belongingFile = "belonging.txt"
 	fpb = open(belongingFile,"r")
 	for i in range(3):
 		next(fpb)
-	belonging = [0] * parameters.Nof		# the index of a cell corresponds to the id of the facility and its value to the zone it belongs to
+	belonging = [0] * parameters.Nof
 	zonesNum = 0
 	for zone in fpb:
 		elements = zone.split("\t")
@@ -80,12 +80,13 @@ def getZones():
 		elements = line.split("\t")
 		idNum = int(elements[0])
 		adjacent = adjacencyMatrix[idNum]
-		demand = int(elements[2])
+		demand = int(elements[1])
 		zoneFacilities = []
 		for facility in facilities:
 			if facility.zone == idNum:
 				zoneFacilities.append(facility)
-		zone = zn.Zone(idNum, adjacent, demand, zoneFacilities)
+		onStreetBound = int(elements[2])
+		zone = zn.Zone(idNum, adjacent, demand, zoneFacilities, onStreetBound)
 		zones.append(zone)
 		linesNum += 1
 	if parameters.Noz != linesNum:
@@ -110,6 +111,8 @@ def getVehicles():
 		vehicle = vcl.Vehicle(idNum, locations)
 		vehicles.append(vehicle)
 		linesNum += 1
+	if parameters.Nos != len(elements) - 1:
+		print("The number of possible locations of a vehicle in vehicle_data.txt file is not equal to Nos given in parameters")
 	if parameters.Nov != linesNum:
 		print("The number of lines in vehicle_data.txt file is not equal to Nov given in parameters")
 	fpv.close()

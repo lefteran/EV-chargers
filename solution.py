@@ -1,4 +1,6 @@
-import generalFuncs as gn
+import read_data as rdt
+import distMatrix as dmtx
+import parameters as pam
 
 class Solution:
 
@@ -25,10 +27,13 @@ class Solution:
 
 
 	def isFeasible(self, parameters):
+		zones = rdt.getZones()
+		facilities = rdt.getFacilities()
+
 		# Budget constraint
 		land_cost = sum(x * y for x, y in zip(parameters.c, self.omega))
 		cp_cost = parameters.cst * sum(self.st) + parameters.cr * sum(self.r)
-		print("Land and cp cost is %f" %(land_cost + cp_cost))
+		print("Land and cp cost are %f" %(land_cost + cp_cost))
 		if land_cost + cp_cost > parameters.B:
 			return False
 
@@ -59,19 +64,19 @@ class Solution:
 
 		# Demand constraint
 		for z in range(parameters.Noz):
-			total_value = gn.currentDemand(parameters, self, z)
-			if total_value < parameters.gamma * parameters.demand[z]:
+			zoneDeamand = currentDemand(parameters, z)
+			if zoneDeamand < parameters.gamma * zones[z].demand:
 				return False
 
 		# On-street constraint
 		for z in range(parameters.Noz):
-			value = gn.currentOnstreetCPs(parameters, self, z)
-			if value > parameters.Nz[z]:
+			zoneOnstreetCPs = currentOnstreetCPs(parameters, z)
+			if zoneOnstreetCPs > zones[z].onStreetBound:
 				return False
 
 		# capacity constraint
 		for j in range(parameters.Nof):
-			if self.y[j] > parameters.cap[j]:
+			if self.y[j] > facilities[j].capacity:
 				return False
 
 		# Binary variables
@@ -88,6 +93,24 @@ class Solution:
 
 		return True
 
+	def currentDemand(self, parameters, z):
+		zones = rdt.getZones()
+		belonging = rdt.getBelongingList()
+		value = 0
+		for zeta in zones[z].adjacent:
+			for j in range(parameters.Nof):
+				if belonging[j] == z or belonging[j] == zeta:
+					value += self.y[j]
+		return value
+
+	def currentOnstreetCPs(self, parameters, z):
+		facilities = rdt.getFacilities()
+		belonging = rdt.getBelongingList()
+		value = 0
+		for j in range(parameters.Nof):
+			if belonging[j] == z:
+				value += facilities[j].alpha * self.y[j]
+		return value
 
 	def open_facility(self, facility):
 		self.omega[facility] = 1
@@ -107,26 +130,17 @@ class Solution:
 	def disconnect(self, vehicle, facility):
 		self.x[vehicle][facility] = 0
 
-	def cost(self, parameters):
-		vehicleCost = 0	
-		scenCost = 0
-		facCost = 0
+	def getCost(self, parameters):
+		distMatrix = dmtx.getDistMatrix()
+		cost = 0
+		for i in range(parameters.Nov):
+			for j in range(parameters.Nof):
+				cost += distMatrix[i][j] * self.x[i][j]
+		return cost
 
-		scenCosts = []
-		for scenario in range(parameters.Nos):
-			vehCosts=[]
-			for vehicle in range(parameters.Nov):
-				facCosts = []
-				for facility in range(parameters.Nof):
-					facCost = parameters.beta[vehicle][facility]\
-					* parameters.dist[scenario][vehicle][facility]\
-					* self.x[vehicle][facility]
-					facCosts.append(facCost)
-					# print("Facility %d cost is %f" %(facility, facCost))
-				vehicleCost = sum(facCosts)
-				# print("Vehicle %d cost is %f\n" %(vehicle, vehicleCost))
-				vehCosts.append(vehicleCost)
-			scenCost = sum(vehCosts)
-			# print("Scenario %d cost is %f\n\n" %(scenario, scenCost))
-			scenCosts.append(scenCost)		
-		return sum(scenCosts)
+
+
+# parameters = pam.Parameters()
+# testSol = Solution(parameters)
+# cost = testSol.getCost(parameters)
+# print(cost)
