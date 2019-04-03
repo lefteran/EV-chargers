@@ -1,0 +1,10 @@
+****************** TODO ********************
+
+0.2 Independent set reduction?
+
+2. Check if the solution produced by "initialise" is feasible
+3. write down the local search algorithm for every zone first and then globally
+4. sample the locations of the vehicles using randomisation
+5. osmnx network visualisation
+6. Nof, Nov, Nos to be removed from the parameters file
+7. values for beta to be read from a separate file

@@ -1,13 +1,22 @@
 import initialise as intl
 import parameters as pam
-import solution as sl
+import read_data as rdt
+import network as nrk
+import distMatrix as dmtx
+
 
 parameters = pam.Parameters()
-initialSol = sl.Solution(parameters)
-initialSol.set_values(parameters, [[1,1,0], [0,0,1]], [1,1,1], [0,1,3], [2,0,5], [2,1,8])
-print("The cost of the objective function is %f" %initialSol.cost(parameters))
-value = initialSol.isFeasible(parameters)
-print("Is S feasible: %r" %value)
 
-sol = intl.initialise(parameters)
+belonging = rdt.getBelongingList()
+adjMatrix = rdt.getAdjMatrix()
+facilities = rdt.getFacilities(belonging)
+zones = rdt.getZones(facilities, adjMatrix)
+vehicles = rdt.getVehicles()
+
+G, weights = nrk.createNetwork()
+distMatrix = dmtx.getDistMatrix(G, weights, facilities, vehicles)
+initSol = intl.initialise(parameters, belonging, facilities, zones, distMatrix)
+
+initSol.printSol(parameters, belonging, facilities, zones, distMatrix)
+
 

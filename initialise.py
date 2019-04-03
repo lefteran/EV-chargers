@@ -1,28 +1,23 @@
-import read_data as rdt
-import distMatrix as dmtx
 import solution as sl
 import parameters as pam
 import copy
 
-def initialise(parameters):
+def initialise(parameters, belonging, facilities, zones, distMatrix):
 	S = sl.Solution(parameters)
-	zones = rdt.getZones()
-	facilities = rdt.getFacilities()
-	distMatrix = dmtx.getDistMatrix()
 	for z in range(parameters.Noz):
 		Lz = copy.deepcopy(zones[z].facilities)
 		if Lz:
 			k = Lz[0].id			# get the first facility in Lz
 			del Lz[0]
 			S.open_facility(k)
-			while S.y[k] < facilities[k].capacity and S.currentDemand(parameters, z) < parameters.gamma * zones[z].demand:
+			while S.y[k] < facilities[k].capacity and S.currentDemand(parameters, zones, z) < parameters.gamma * zones[z].demand:
 				if S.r[k] < parameters.R:
 					S.r[k] += 1
 					S.y[k] += 1
 				else:
 					S.st[k] += 1
 					S.y[k] += 1
-				if S.currentOnstreetCPs(parameters, z) == zones[z].onStreetBound:
+				if S.currentOnstreetCPs(parameters, facilities, belonging, z) == zones[z].onStreetBound:
 					for element in Lz:
 						if parameters.alpha[element] == 1:
 							Lz.remove(element)
@@ -44,20 +39,21 @@ def initialise(parameters):
 				closest = distMatrix[i][j]
 				closestFac = j
 		S.connect(i, closestFac)
-	print("Initial feasible solution")
-	print("x is ", S.x)
-	print("st is ", S.st)
-	print("r is ", S.r)
-	print("y is ", S.y)
-	print("omega is ", S.omega)
-	print("Cost of S is ", S.getCost(parameters))
+	return S
 
 
+# parameters = pam.Parameters()
+# testSol = initialise(parameters)
 
-parameters = pam.Parameters()
-testSol = initialise(parameters)
 
-
+# print("Initial feasible solution")
+# print("x is ", testSol.x)
+# print("st is ", testSol.st)
+# print("r is ", testSol.r)
+# print("y is ", testSol.y)
+# print("omega is ", testSol.omega)
+# print("Cost of testSol is ", testSol.getCost(parameters))
+# print("Solution feasible: %r" %testSol.isFeasible(parameters))
 
 
 

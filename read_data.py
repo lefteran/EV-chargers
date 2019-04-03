@@ -43,9 +43,8 @@ def getAdjMatrix():
 	fpa.close()
 	return adjacencyMatrix
 
-def getFacilities():
+def getFacilities(belonging):
 	parameters = pam.Parameters()
-	belonging = getBelongingList()
 	facilitiesFile = "facilitiy_data.txt"
 	fpf = open(facilitiesFile,"r")
 	next(fpf)
@@ -68,9 +67,8 @@ def getFacilities():
 	return facilities
 
 
-def getZones():
+def getZones(facilities, adjMatrix):
 	parameters = pam.Parameters()
-	adjacencyMatrix = getAdjMatrix()
 	zonesFile = "zone_data.txt"
 	fpz = open(zonesFile,"r")
 	next(fpz)
@@ -79,7 +77,7 @@ def getZones():
 	for line in fpz:
 		elements = line.split("\t")
 		idNum = int(elements[0])
-		adjacent = adjacencyMatrix[idNum]
+		adjacent = adjMatrix[idNum]
 		demand = int(elements[1])
 		zoneFacilities = []
 		for facility in facilities:
@@ -118,11 +116,11 @@ def getVehicles():
 	fpv.close()
 	return vehicles
 
-belonging = getBelongingList()
-AdjMatrix = getAdjMatrix()
-facilities = getFacilities()
-zones = getZones()
-vehicles = getVehicles()
+# belonging = getBelongingList()
+# AdjMatrix = getAdjMatrix()
+# facilities = getFacilities()
+# zones = getZones()
+# vehicles = getVehicles()
 
 
 

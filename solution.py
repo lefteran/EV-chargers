@@ -26,10 +26,7 @@ class Solution:
 				print("*** The sum of standard and rapid chargers does not match the total chargers ***")
 
 
-	def isFeasible(self, parameters):
-		zones = rdt.getZones()
-		facilities = rdt.getFacilities()
-
+	def isFeasible(self, parameters, belonging, facilities, zones):
 		# Budget constraint
 		land_cost = sum(x * y for x, y in zip(parameters.c, self.omega))
 		cp_cost = parameters.cst * sum(self.st) + parameters.cr * sum(self.r)
@@ -64,13 +61,13 @@ class Solution:
 
 		# Demand constraint
 		for z in range(parameters.Noz):
-			zoneDeamand = currentDemand(parameters, z)
+			zoneDeamand = self.currentDemand(parameters, zones, z)
 			if zoneDeamand < parameters.gamma * zones[z].demand:
 				return False
 
 		# On-street constraint
 		for z in range(parameters.Noz):
-			zoneOnstreetCPs = currentOnstreetCPs(parameters, z)
+			zoneOnstreetCPs = self.currentOnstreetCPs(parameters, facilities, belonging, z)
 			if zoneOnstreetCPs > zones[z].onStreetBound:
 				return False
 
@@ -93,8 +90,7 @@ class Solution:
 
 		return True
 
-	def currentDemand(self, parameters, z):
-		zones = rdt.getZones()
+	def currentDemand(self, parameters, zones, z):
 		belonging = rdt.getBelongingList()
 		value = 0
 		for zeta in zones[z].adjacent:
@@ -103,9 +99,7 @@ class Solution:
 					value += self.y[j]
 		return value
 
-	def currentOnstreetCPs(self, parameters, z):
-		facilities = rdt.getFacilities()
-		belonging = rdt.getBelongingList()
+	def currentOnstreetCPs(self, parameters, facilities, belonging, z):
 		value = 0
 		for j in range(parameters.Nof):
 			if belonging[j] == z:
@@ -130,14 +124,21 @@ class Solution:
 	def disconnect(self, vehicle, facility):
 		self.x[vehicle][facility] = 0
 
-	def getCost(self, parameters):
-		distMatrix = dmtx.getDistMatrix()
+	def getCost(self, parameters, distMatrix):
 		cost = 0
 		for i in range(parameters.Nov):
 			for j in range(parameters.Nof):
 				cost += distMatrix[i][j] * self.x[i][j]
 		return cost
 
+	def printSol(self, parameters, belonging, facilities, zones, distMatrix):
+		print("x is ", self.x)
+		print("st is ", self.st)
+		print("r is ", self.r)
+		print("y is ", self.y)
+		print("omega is ", self.omega)
+		print("Cost of solution is ", self.getCost(parameters, distMatrix))
+		print("Solution feasible: %r" %self.isFeasible(parameters, belonging, facilities, zones))
 
 
 # parameters = pam.Parameters()
