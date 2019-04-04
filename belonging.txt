@@ -1,7 +1,7 @@
 # Rows represent zones and columns facilities. If the value of cell (i,j)=1
 # then facility j belongs to zone i and (i,j)=0 otherwise
-	0	1	2	3	4
-0	1	0	0	0	0
-1	0	1	0	0	0
-2	0	0	1	0	0
-3	0	0	0	1	1
+	0	1	2	3	4	5
+0	1	0	0	0	0	0
+1	0	1	0	0	0	0
+2	0	0	1	0	0	0
+3	0	0	0	1	1	1

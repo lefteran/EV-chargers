@@ -8,3 +8,22 @@
 5. osmnx network visualisation
 6. Nof, Nov, Nos to be removed from the parameters file
 7. values for beta to be read from a separate file
+
+
+
+AS IT IS NOW IT WILLL RETURN VALUE EQUAL TO DEMAND
+IT SHOULD BE POSSIBLE TO ALLOW HIGHER VALUES OF DEMAND
+
+
+8. write the demand constraint differently in the pseudocode i.e.
+if facility j belongs in zone z then 
+\sum_{zeta \in N(z)} where N(z) the neighboring zones of z
+
+9. prove (in words) that the initial solution is feasible
+
+
+10. In the end of the algorithm
+if the demand on each zone is not met then there is no feasible solution
+
+
+11. randomness in localsearch?

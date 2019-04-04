@@ -6,7 +6,7 @@ class Solution:
 
 	def __init__(self, parameters):
 	  	self.x = [ [0] * parameters.Nof ] * parameters.Nov
-	  	self.omega = [0] * parameters.Nof
+	  	self.omega = [1] * parameters.Nof
 	  	self.st = [0] * parameters.Nof
 	  	self.r = [0] * parameters.Nof
 	  	self.y = [0] * parameters.Nof
@@ -26,13 +26,16 @@ class Solution:
 				print("*** The sum of standard and rapid chargers does not match the total chargers ***")
 
 
-	def isFeasible(self, parameters, belonging, facilities, zones):
+	def IsFeasibleWithBudget(self, parameters):
 		# Budget constraint
 		land_cost = sum(x * y for x, y in zip(parameters.c, self.omega))
 		cp_cost = parameters.cst * sum(self.st) + parameters.cr * sum(self.r)
 		print("Land and cp cost are %f" %(land_cost + cp_cost))
 		if land_cost + cp_cost > parameters.B:
 			return False
+		return True
+
+	def isFeasibleWithoutBudget(self, parameters, belonging, facilities, zones):
 
 		# sum of x_{ij}
 		for i in range(parameters.Nov):
@@ -67,7 +70,7 @@ class Solution:
 
 		# On-street constraint
 		for z in range(parameters.Noz):
-			zoneOnstreetCPs = self.currentOnstreetCPs(parameters, facilities, belonging, z)
+			zoneOnstreetCPs = self.zoneOnstreetCPs(zones[z].facilities)
 			if zoneOnstreetCPs > zones[z].onStreetBound:
 				return False
 
@@ -95,15 +98,14 @@ class Solution:
 		value = 0
 		for zeta in zones[z].adjacent:
 			for j in range(parameters.Nof):
-				if belonging[j] == z or belonging[j] == zeta:
+				if belonging[j] == zeta:
 					value += self.y[j]
 		return value
 
-	def currentOnstreetCPs(self, parameters, facilities, belonging, z):
+	def zoneOnstreetCPs(self, facilities):
 		value = 0
-		for j in range(parameters.Nof):
-			if belonging[j] == z:
-				value += facilities[j].alpha * self.y[j]
+		for facility in facilities:
+			value += facility.alpha * self.y[facility.id]
 		return value
 
 	def open_facility(self, facility):
@@ -138,7 +140,8 @@ class Solution:
 		print("y is ", self.y)
 		print("omega is ", self.omega)
 		print("Cost of solution is ", self.getCost(parameters, distMatrix))
-		print("Solution feasible: %r" %self.isFeasible(parameters, belonging, facilities, zones))
+		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters, belonging, facilities, zones))
+		print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
 
 
 # parameters = pam.Parameters()
