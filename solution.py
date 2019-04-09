@@ -117,6 +117,9 @@ class Solution:
 		self.r[facility] = 0
 		self.y[facility] = 0
 
+	# def getFacilityCPs(self, facility):
+	# 	return self.st[facility], self.r[facility], self.y[facility]
+
 	def is_open(self, facility):
 		return self.omega[facility]
 

@@ -13,3 +13,4 @@ class Parameters:
 		self.R = 4
 		self.gamma = 0.5
 		self.swaps = 2
+		self.lambdaMax = 100000000			# THIS NEEDS TO BE lambdaMax = max dist[i][j]

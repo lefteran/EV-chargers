@@ -4,6 +4,7 @@ import read_data as rdt
 import network as nrk
 import distMatrix as dmtx
 import local_search as ls
+import convertToAMPL as campl
 
 
 parameters = pam.Parameters()
@@ -17,8 +18,14 @@ zones = rdt.getZones(facilities, adjMatrix)
 vehicles = rdt.getVehicles()
 
 G, weights = nrk.createNetwork()
-# nrk.plotNetwork(G)
+
 distMatrix = dmtx.getDistMatrix(G, weights, facilities, vehicles)
+
+# ######### OPT solution ##############
+# print(adjMatrix)
+# campl.convertToAMPL(facilities, zones, vehicles, belonging, adjMatrix)
+
+# ######### Approximate solution
 initSol = intl.initialise(parameters, belonging, facilities, zones, distMatrix)
 
 initSol.printSol(parameters, belonging, facilities, zones, distMatrix)

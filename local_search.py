@@ -7,24 +7,141 @@ def combinations(L, p):
 		combs.append(list(subset))
 	return combs
 
-# p parameter of the swaping elements
+
+def isSwapFeasible(S, facilities, openfacIds, closedFacIds):
+	totalSt, totalRap, totalCPs = 0, 0, 0
+	openCPs = 0
+	closedTotalCap = 0
+	for facId in openfacIds:
+		openCPs += S.y[facId]
+	for facId in closedFacIds:
+		for facility in facilities:
+			if facility.id == facId:
+				closedTotalCap += facility.capacity
+	if closedTotalCap < openCPs:
+		return False
+	else:
+		return True	
+
+
+def swap(S, openFacIds, closedFacIds):
+	newS = copy.deepcopy(S)
+	openNewFacilities(newS)
+	closeOldFacilities()
+
+
+def openNewFacilities(newS, facilities, closedFacIds, standard, rapid, totalCPs):
+	L = sorted(facilities, key=lambda x: x.capacity, reverse=True)
+	for facility in L:
+		facId = facility.id
+		capacity = facility.capacity
+		if rapid >= capacity:
+			newS.r[facId] = capacity
+			rapid -= capacity
+
+			newS.st[facId] = 0
+			
+			newS.y[facId] = capacity
+			totalCPs -= capacity
+		
+		elif rapid + standard >= capacity:
+			newS.r[facId] = rapid
+			rapid = 0
+		
+			remaining = capacity - rapid
+			newS.st[facId] = remaining
+			standard -= remaining
+		
+			newS.y[facId] = capacity
+			totalCPs -= capacity
+
+		elif rapid + standard < capacity:
+			newS.r[facId] = rapid
+			rapid = 0
+		
+			newS.st[facId] = standard
+			standard = 0
+		
+			total = rapid + standard
+			newS.y[facId] = total
+			totalCPs -= total
+
+	# sort the facilities in decreasing order of capacity in list L
+	# get the first facility from L
+	# add CPs until it is full
+	# repeat for the rest of the facilities
+	# if there are no more CPs to be added
+	# do not open any other facility
+
+def closeOldFacilities(S, openFacIds):
+	for facId in openFacIds:
+		S.close_facility(facId)
+
+def getZoneNeighborhood(zone, parameters, S):
+	neighborhood = []
+	closedFacIds = []
+	openFacIds = []
+	newS = copy.deepcopy(S)
+	for facility in zone.facilities:
+		j = facility.id
+		if S.is_open(j):
+			openFacIds.append(j)
+		else:
+			closedFacIds.append(j)
+	# if len(closedFacIds) < parameters.swaps or len(openFacIds) < parameters.swaps:
+		# for swapLength in range(parameters.swaps):
+		# 	openedComb = combinations(openedFacIds, swapLength)
+		# 	for comb in openedComb:
+		# 		for element in comb:
+		# 			newS.close_facility(element)
+		# 	closedComb = combinations(closedFacIds, swapLength)
+		# 	for comb
+	else:
+		while 0:
+			openFacCombList = combinations(openFacIds, parameters.swaps)
+			closedFacCombList = combinations(closedFacIds, parameters.swaps)
+			for openFacComb in openFacCombList:
+				for closedFacComb in closedComb:
+					for i in range(parameters.swaps):
+						# facStandard, facRapid, facAllCPs = news.y[openFacComb[i]]
+						# newS.close_facility(openFacComb[i])
+						# newS.open_facility(closedFacComb[i])
+						# standard += facStandard
+						# rapid += facRapid
+						# allFacilityCPs += facAllCPs
+			
+		# OPEN THE SAME NUMBER OF FACILITIES THAT WERE CLOSED IN THE NEW SOLUTION
+		# ADD THE NEW SOLUTION TO THE LIST
+		# KEEP A LIST OF NEW SOLUTIONS FOR EVERY ZONE
+		# THEN CHECK IN THE LOCALSEARCH METHOD ALL THESE LISTS AND KEEP THE SOLUTION WITH THE BEST IMPROVEMENT
+		# LATER DO THE GLOBAL NEIGHBORHOOD
+		# generate scenqarios
+	print("zoneClosedFacIds is ", zoneClosedFacIds)
+	print("zoneOpenedFacIds is ", zoneOpenedFacIds)
+	openedComb = combinations(zoneOpenedFacIds, parameters.swaps)
+	print(openedComb)
+	print("-----------")
+
 def neighborhood(parameters, S, zones, distMatrix):
 	old_cost = S.getCost(parameters, distMatrix)
 	newS = copy.deepcopy(S)
 	for zone in zones:
-		zoneClosedFacIds = []
-		zoneOpenedFacIds = []
-		for facility in zone.facilities:
-			j = facility.id
-			if S.is_open(j):
-				zoneOpenedFacIds.append(j)
-			else:
-				zoneClosedFacIds.append(j)
-		print("zoneClosedFacIds is ", zoneClosedFacIds)
-		print("zoneOpenedFacIds is ", zoneOpenedFacIds)
-		openedComb = combinations(zoneOpenedFacIds, parameters.swaps)
-		print(openedComb)
-		print("-----------")
+		getZoneNeighborhood(zone)
+						
+
+
+
+		
+
+# def localSearch(S):
+# 	neighborhood = getNeighborhood(S)
+# 	flag = True
+# 	while flag:
+# 		for newSol in neighborhood:
+# 			if newSol.getCost(parameters, distMatrix) < S.getCost(parameters, distMatrix):
+# 				S = newSol
+
+
 
 	# for every possible bundle of size p of closed facilities bunClFac
 	# and for every bundle of opened facilities of size p (parameters.swaps)
