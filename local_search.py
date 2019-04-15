@@ -26,8 +26,8 @@ def isSwapFeasible(S, facilities, openfacIds, closedFacIds):
 
 def swap(S, openFacIds, closedFacIds):
 	newS = copy.deepcopy(S)
-	openNewFacilities(newS)
-	closeOldFacilities()
+	# openNewFacilities(newS, facilities, closedFacIds, standard, rapid, totalCPs)
+	# closeOldFacilities(newS, openFacIds)
 
 
 def openNewFacilities(newS, facilities, closedFacIds, standard, rapid, totalCPs):
@@ -65,137 +65,123 @@ def openNewFacilities(newS, facilities, closedFacIds, standard, rapid, totalCPs)
 			total = rapid + standard
 			newS.y[facId] = total
 			totalCPs -= total
+			break
 
-	# sort the facilities in decreasing order of capacity in list L
-	# get the first facility from L
-	# add CPs until it is full
-	# repeat for the rest of the facilities
-	# if there are no more CPs to be added
-	# do not open any other facility
 
-def closeOldFacilities(S, openFacIds):
+def closeOldFacilities(newS, openFacIds):
 	for facId in openFacIds:
-		S.close_facility(facId)
+		newS.close_facility(facId)
 
-def getZoneNeighborhood(zone, parameters, S):
-	neighborhood = []
-	closedFacIds = []
-	openFacIds = []
-	newS = copy.deepcopy(S)
-	for facility in zone.facilities:
-		j = facility.id
-		if S.is_open(j):
-			openFacIds.append(j)
-		else:
-			closedFacIds.append(j)
-	# if len(closedFacIds) < parameters.swaps or len(openFacIds) < parameters.swaps:
-		# for swapLength in range(parameters.swaps):
-		# 	openedComb = combinations(openedFacIds, swapLength)
-		# 	for comb in openedComb:
-		# 		for element in comb:
-		# 			newS.close_facility(element)
-		# 	closedComb = combinations(closedFacIds, swapLength)
-		# 	for comb
-	else:
-		while 0:
-			openFacCombList = combinations(openFacIds, parameters.swaps)
-			closedFacCombList = combinations(closedFacIds, parameters.swaps)
-			for openFacComb in openFacCombList:
-				for closedFacComb in closedComb:
-					for i in range(parameters.swaps):
-						# facStandard, facRapid, facAllCPs = news.y[openFacComb[i]]
-						# newS.close_facility(openFacComb[i])
-						# newS.open_facility(closedFacComb[i])
-						# standard += facStandard
-						# rapid += facRapid
-						# allFacilityCPs += facAllCPs
-			
-		# OPEN THE SAME NUMBER OF FACILITIES THAT WERE CLOSED IN THE NEW SOLUTION
-		# ADD THE NEW SOLUTION TO THE LIST
-		# KEEP A LIST OF NEW SOLUTIONS FOR EVERY ZONE
-		# THEN CHECK IN THE LOCALSEARCH METHOD ALL THESE LISTS AND KEEP THE SOLUTION WITH THE BEST IMPROVEMENT
-		# LATER DO THE GLOBAL NEIGHBORHOOD
-		# generate scenqarios
-	print("zoneClosedFacIds is ", zoneClosedFacIds)
-	print("zoneOpenedFacIds is ", zoneOpenedFacIds)
-	openedComb = combinations(zoneOpenedFacIds, parameters.swaps)
-	print(openedComb)
-	print("-----------")
-
-def neighborhood(parameters, S, zones, distMatrix):
-	old_cost = S.getCost(parameters, distMatrix)
-	newS = copy.deepcopy(S)
-	for zone in zones:
-		getZoneNeighborhood(zone)
-						
+# def getZoneNeighborhood(zone, parameters, S):
 
 
 
-		
 
-# def localSearch(S):
-# 	neighborhood = getNeighborhood(S)
+# def getTotalZoneCPs(S, zoneFaciities):
+# 	standard = 0
+# 	rapid = 0
+# 	for facility in zoneFaciities:
+# 		facId = facility.id
+# 		standard += S.st[facId]
+# 		rapid += S.r[facId]
+# 	return standard, rapid
+
+
+# # Returns a sorted list where each entry is a tuple of a dictionary (facId, remaining capacity)
+# def remainingCapacities(S, zoneFaciities):
+# 	remainingCap = {}
+# 	for facility in zoneFaciities:
+# 		facId = facility.id
+# 		remainingCap[facId] = facility.capacity - S.y[facId]
+# 	remCapSorted = sorted(remainingCap.items(), key = lambda remCap:(remCap[1], remCap[0]), reverse=True)
+# 	return remCapSorted
+
+
+
+def isFacilityFull(S, facility):
+	return S.y[facility.id] == facility.capacity
+
+# def isFacilityEmpty(S, facility):
+# 	return S.y[facility.id] == 0
+
+def hasFacilityStandardCPs(S, facId):
+	return S.st[facId] != 0
+
+def hasFacilityRapidCPs(S, facId):
+	return S.r[facId] != 0
+
+def getNextNonFullFac(S, sortedByCapacity, index):
+	for i in range(index, len(sortedByCapacity)):
+		facility = sortedByCapacity[i]
+		if not isFacilityFull(S, facility):
+			return sortedByCapacity[i]
+
+def redistributeCPs(S, zoneFacilities):
+	sortedByCapacity = sorted(zoneFacilities, key=lambda x: x.capacity, reverse=True)
+	index = 0
+	facilityToFill = getNextNonFullFac(S, sortedByCapacity, index)
+	for facilityToEmpty in sortedByCapacity[::-1]:
+		standardFacsToMove = S.st[facilityToEmpty.id]
+		rapidFacsToMove = S.r[facilityToEmpty.id]
+		for i in range(standardFacsToMove):
+			S.increaseStandardCP(facilityToFill.id)
+			S.removeStandardCP(facilityToEmpty.id)
+			if (not hasFacilityStandardCPs(S, facilityToEmpty.id)) and (not hasFacilityRapidCPs(S, facilityToEmpty.id)):
+				S.close_facility(facilityToEmpty.id)
+			if isFacilityFull(S, facilityToFill):
+				facilityToFill = getNextNonFullFac(S, sortedByCapacity, index)
+			if facilityToEmpty.id == facilityToFill.id:
+				break
+		for i in range(rapidFacsToMove):
+			S.increaseRapidCP(facilityToFill.id)
+			S.removeRapidCP(facilityToEmpty.id)
+			if (not hasFacilityStandardCPs(S, facilityToEmpty.id)) and (not hasFacilityRapidCPs(S, facilityToEmpty.id)):
+				S.close_facility(facilityToEmpty)
+			if isFacilityFull(S, facilityToFill):
+				facilityToFill = getNextNonFullFac(S, sortedByCapacity, index)
+			if facilityToEmpty.id == facilityToFill.id:
+				break
+
+
+
+# Returns a list of open and a list of closed facility ids in the given zone
+def getOpenAndClosedFacIds(S, zone):
+	openFacs = []
+	closedFacs = []
+	facilities = zone.facilities
+	for facility in facilities:
+		facid = facility.id
+		openFacs.append(facid) if S.is_open(facid) else closedFacs.append(facid)
+	return openFacs, closedFacs
+
+
+# Removes as many rapid and standard CPs until the solution is infeasible
+def reduceCPs(parameters, S):
+	for facility in parameters.facilities:
+		facId = facility.id
+		for i in range(S.r[facId]):
+			S.removeRapidCP(facId)
+			if not S.isFeasibleWithoutBudget(parameters):
+				S.increaseRapidCP(facId)
+				break
+		for i in range(S.st[facId]):
+			S.removeStandardCP(facId)
+			if not S.isFeasibleWithoutBudget(parameters):
+				S.increaseStandardCP(facId)
+				break
+
+
+
+# def getSolWithClosedFacs(S, facilities):
+# 	for facility in facilities:
+
+
+
+# def localSearch(S, parameters, zones):
+# 	zonesFlags = [True] * parameters.Noz
 # 	flag = True
 # 	while flag:
-# 		for newSol in neighborhood:
-# 			if newSol.getCost(parameters, distMatrix) < S.getCost(parameters, distMatrix):
-# 				S = newSol
+# 		for zone in zones:
 
 
-
-	# for every possible bundle of size p of closed facilities bunClFac
-	# and for every bundle of opened facilities of size p (parameters.swaps)
-	# check if the total capacity of all the facilities in the candidate bundle bunClFac
-	# is at least as large as the number of CPs in the open facilities
-
-	# for z in parameters.Noz:
-	# 	closed = []
-	# 	opened = []
-	# 	for j in 
-
-
-	
-	# fl_to_open = combinations(closed, p)
-	# fl_to_close = combinations(opened, p)
-	# print("fl to open ", fl_to_open)
-	# print("fl to close ", fl_to_close)
-	# if fl_to_close:
-	# 	tempS = solution(parameters)
-	# 	for fl_tuple in fl_to_close:
-	# 		for j in fl_tuple:
-
-	# 		newS.close_facility(j)
-
-
-	# print("opened is ", opened)
-	# print("closed is ", closed)
-
-	
-
-
-
-
-
-
-
-# L = [1, 2, 3, 4]
-# combs = combinations(L, 2)
-# print(combs)
-# parameters = pam.Parameters()
-# S = sl.Solution(parameters)
-
-# for j in range(parameters.Nof):
-# 	facility = fl.facility(cost, capacity, alpha, zone)
-# 	facilities.append(facility)
-
-# neighborhood(parameters, S, 2)
-
-# while there is a better solution
-
-# get in a list all the possible combinations of swaps
-
-
-
-# Make a simple data file with 3 rows for the facilities
-# and another data file with 4 rows for the zones
-# Then read the data from these files and create the objects above
+# def checkCPs(newS):				

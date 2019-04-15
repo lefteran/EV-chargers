@@ -1,4 +1,4 @@
-import read_data as rdt
+# import read_data as rdt
 import distMatrix as dmtx
 import parameters as pam
 
@@ -35,7 +35,7 @@ class Solution:
 			return False
 		return True
 
-	def isFeasibleWithoutBudget(self, parameters, belonging, facilities, zones):
+	def isFeasibleWithoutBudget(self, parameters):
 
 		# sum of x_{ij}
 		for i in range(parameters.Nov):
@@ -64,19 +64,19 @@ class Solution:
 
 		# Demand constraint
 		for z in range(parameters.Noz):
-			zoneDeamand = self.currentDemand(parameters, zones, z)
-			if zoneDeamand < parameters.gamma * zones[z].demand:
+			zoneDeamand = self.currentDemand(parameters, z)
+			if zoneDeamand < parameters.gamma * parameters.zones[z].demand:
 				return False
 
 		# On-street constraint
 		for z in range(parameters.Noz):
-			zoneOnstreetCPs = self.zoneOnstreetCPs(zones[z].facilities)
-			if zoneOnstreetCPs > zones[z].onStreetBound:
+			zoneOnstreetCPs = self.zoneOnstreetCPs(parameters.zones[z].facilities)
+			if zoneOnstreetCPs > parameters.zones[z].onStreetBound:
 				return False
 
 		# capacity constraint
 		for j in range(parameters.Nof):
-			if self.y[j] > facilities[j].capacity:
+			if self.y[j] > parameters.facilities[j].capacity:
 				return False
 
 		# Binary variables
@@ -93,58 +93,88 @@ class Solution:
 
 		return True
 
-	def currentDemand(self, parameters, zones, z):
-		belonging = rdt.getBelongingList()
+	def currentDemand(self, parameters, z):
 		value = 0
-		for zeta in zones[z].adjacent:
+		for zeta in parameters.zones[z].adjacent:
 			for j in range(parameters.Nof):
-				if belonging[j] == zeta:
+				if parameters.belonging[j] == zeta:
 					value += self.y[j]
 		return value
 
-	def zoneOnstreetCPs(self, facilities):
+	def zoneOnstreetCPs(self, zoneFacilities):
 		value = 0
-		for facility in facilities:
+		for facility in zoneFacilities:
 			value += facility.alpha * self.y[facility.id]
 		return value
 
-	def open_facility(self, facility):
-		self.omega[facility] = 1
+	def open_facility(self, facId):
+		self.omega[facId] = 1
 
-	def close_facility(self, facility):
-		self.omega[facility] = 0
-		self.st[facility] = 0
-		self.r[facility] = 0
-		self.y[facility] = 0
+	def close_facility(self, facId):
+		self.omega[facId] = 0
+		self.st[facId] = 0
+		self.r[facId] = 0
+		self.y[facId] = 0
 
-	# def getFacilityCPs(self, facility):
-	# 	return self.st[facility], self.r[facility], self.y[facility]
+	def is_open(self, facId):
+		return self.omega[facId]
 
-	def is_open(self, facility):
-		return self.omega[facility]
+	def canRemoveRapidCP(self, facility):
+		return True if self.r[facility] > 0 else False
 
-	def connect(self, vehicle, facility):
-		self.x[vehicle][facility] = 1
+	def canRemoveStandardCP(self, facility):
+		return True if self.st[facility] > 0 else False
+
+	def removeRapidCP(self, facId):
+		self.r[facId] -= 1
+		self.y[facId] -= 1
+
+	def removeStandardCP(self, facId):
+		self.st[facId] -= 1
+		self.y[facId] -= 1
+
+	def increaseRapidCP(self, facId):
+		self.r[facId] += 1
+		self.y[facId] += 1
+
+	def increaseStandardCP(self, facId):
+		self.st[facId] += 1
+		self.y[facId] += 1
+
+	def connect(self, vehicle, facId):
+		self.x[vehicle][facId] = 1
 
 	def disconnect(self, vehicle, facility):
 		self.x[vehicle][facility] = 0
 
-	def getCost(self, parameters, distMatrix):
+	def getCost(self, parameters):
 		cost = 0
 		for i in range(parameters.Nov):
 			for j in range(parameters.Nof):
-				cost += distMatrix[i][j] * self.x[i][j]
+				cost += parameters.distMatrix[i][j] * self.x[i][j]
 		return cost
 
-	def printSol(self, parameters, belonging, facilities, zones, distMatrix):
+	def getCostLagrangian(self, parameters, lambdaVal):
+		lagrangianCost = 0
+		for i in range(parameters.Nov):
+			for j in range(parameters.Nof):
+				lagrangianCost += parameters.distMatrix[i][j] * self.x[i][j]
+		lagrangianCost -= lambdaVal * parameters.B
+		for j in range(parameters.Nof):
+			lagrangianCost += parameters.c[j] * self.omega[j] + parameters.cst * self.st[j] + parameters.cr * self.r[j]
+		return lagrangianCost
+
+	def printSol(self, parameters, lambdaVal):
 		print("x is ", self.x)
 		print("st is ", self.st)
 		print("r is ", self.r)
 		print("y is ", self.y)
 		print("omega is ", self.omega)
-		print("Cost of solution is ", self.getCost(parameters, distMatrix))
-		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters, belonging, facilities, zones))
+		print("Cost of objective is ", self.getCost(parameters))
+		print("Cost of lagrangian objective is ", self.getCostLagrangian(parameters, lambdaVal))
+		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters))
 		print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
+		print("------------------------------------")
 
 
 # parameters = pam.Parameters()

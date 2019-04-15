@@ -120,6 +120,11 @@ def checkSizes(parameters):
 			print("*** The size of array beta[%d] in parameters is not equal to Nof given in parameters ***" %i)
 			sys.exit(1)
 
+	# Check facility opening costs
+	if len(parameters.c) != parameters.Nof:
+		print("*** The size of array c in parameters is not equal to Nof given in parameters ***")
+		sys.exit(1)
+
 	# Check belonging file
 	belongingFile = "belonging.txt"
 	fpb = open(belongingFile,"r")

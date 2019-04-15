@@ -5,29 +5,59 @@ import network as nrk
 import distMatrix as dmtx
 import local_search as ls
 import convertToAMPL as campl
+import lagrangian as lag
 
 
 parameters = pam.Parameters()
 
 rdt.checkSizes(parameters)
 
-belonging = rdt.getBelongingList()
-adjMatrix = rdt.getAdjMatrix()
-facilities = rdt.getFacilities(belonging)
-zones = rdt.getZones(facilities, adjMatrix)
-vehicles = rdt.getVehicles()
+parameters.getData()
 
 G, weights = nrk.createNetwork()
 
-distMatrix = dmtx.getDistMatrix(G, weights, facilities, vehicles)
+parameters.distMatrix = dmtx.getDistMatrix(G, weights, parameters.facilities, parameters.vehicles)
 
 # ######### OPT solution ##############
 # print(adjMatrix)
 # campl.convertToAMPL(facilities, zones, vehicles, belonging, adjMatrix)
 
-# ######### Approximate solution
-initSol = intl.initialise(parameters, belonging, facilities, zones, distMatrix)
+# ######### Approximate solution #####################
 
-initSol.printSol(parameters, belonging, facilities, zones, distMatrix)
 
-ls.neighborhood(parameters, initSol, zones, distMatrix)
+
+initSol = intl.initialise(parameters)
+ls.reduceCPs(parameters, initSol)
+for zone in parameters.zones:
+    zoneFacilities = zone.facilities
+    ls.redistributeCPs(initSol, zoneFacilities)
+lag.lagrangian(initSol, parameters)
+
+
+
+# T = []
+# for facility in parameters.facilities:
+#     T.append(facility.capacity)
+#     print("T: id is %d and capacity is %d" %(facility.id, facility.capacity))
+# # print("T is ",T)
+
+# Lcap = sorted(parameters.facilities, key=lambda x: x.capacity, reverse=True)
+# for facility in Lcap:
+#     T.append(facility.capacity)
+#     print("Lcap: id is %d and capacity is %d" %(facility.id, facility.capacity))
+# # print("Lcap is ", Lcap)
+
+
+# for i in range(len(initSol.y)):
+#     print("Unsorted y: y[%d] = %d" %(i, initSol.y[i]))
+
+# Ly = sorted(range(len(initSol.y)), key=lambda k: initSol.y[k])
+
+# for index in Ly:
+#     print("Sorted y: y[%d] = %d" %(index, initSol.y[index]))
+
+# print("Indices of Ly are ", Ly)
+
+# Ly = sorted(initSol, key=lambda x: x.y, reverse=False)
+
+# ls.neighborhood(parameters, initSol, parameters.zones, distMatrix)

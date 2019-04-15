@@ -4,16 +4,15 @@ import copy
 
 
 
-def initialise(parameters, belonging, facilities, zones, distMatrix):
+def initialise(parameters):
 	S = sl.Solution(parameters)
-	for zone in zones:
-		z = zone.id
+	for zone in parameters.zones:
 		for facility in zone.facilities:
 			if facility.alpha == 0:								# open off-street facilities first
 				k = facility.id
 				while S.y[k] < facility.capacity:
 					installCP(parameters.R, S, k)
-	for zone in zones:
+	for zone in parameters.zones:
 		z = zone.id
 		for facility in zone.facilities:
 			if facility.alpha == 1:								# open on-street facilities
@@ -21,14 +20,7 @@ def initialise(parameters, belonging, facilities, zones, distMatrix):
 				if S.zoneOnstreetCPs(zone.facilities) < zone.onStreetBound:
 					while (S.y[k] < facility.capacity) and (S.zoneOnstreetCPs(zone.facilities) < zone.onStreetBound):
 						installCP(parameters.R, S, k)
-	for i in range(parameters.Nov):
-		closest = distMatrix[i][0]
-		closestFac = 0
-		for j in range(parameters.Nof):
-			if distMatrix[i][j] < closest:
-				closest = distMatrix[i][j]
-				closestFac = j
-		S.connect(i, closestFac)
+	findClosestFacilitiesToVehicles(S, parameters)
 	return S
 
 
@@ -40,6 +32,15 @@ def installCP(R, S, k):
 	S.y[k] += 1
 
 
+def findClosestFacilitiesToVehicles(S, parameters):
+	for i in range(parameters.Nov):
+		closest = parameters.distMatrix[i][0]
+		closestFac = 0
+		for j in range(parameters.Nof):
+			if parameters.distMatrix[i][j] < closest:
+				closest = parameters.distMatrix[i][j]
+				closestFac = j
+		S.connect(i, closestFac)
 
 
 
