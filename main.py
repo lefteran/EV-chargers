@@ -6,6 +6,7 @@ import distMatrix as dmtx
 import local_search as ls
 import convertToAMPL as campl
 import lagrangian as lag
+import redistribute as rdb
 
 
 parameters = pam.Parameters()
@@ -30,7 +31,7 @@ initSol = intl.initialise(parameters)
 ls.reduceCPs(parameters, initSol)
 for zone in parameters.zones:
     zoneFacilities = zone.facilities
-    ls.redistributeCPs(initSol, zoneFacilities)
+    rdb.redistributeCPs(initSol, zoneFacilities)
 lag.lagrangian(initSol, parameters)
 
 
