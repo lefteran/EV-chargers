@@ -7,6 +7,7 @@ import local_search as ls
 import convertToAMPL as campl
 import lagrangian as lag
 import redistribute as rdb
+import optimal as opt
 
 
 parameters = pam.Parameters()
@@ -20,19 +21,29 @@ G, weights = nrk.createNetwork()
 parameters.distMatrix = dmtx.getDistMatrix(G, weights, parameters.facilities, parameters.vehicles)
 
 # ######### OPT solution ##############
-# print(adjMatrix)
-# campl.convertToAMPL(facilities, zones, vehicles, belonging, adjMatrix)
+campl.convertToAMPL(parameters)
+opt.printOptimal()
 
 # ######### Approximate solution #####################
 
+# initSol = intl.initialise(parameters)
+# ls.reduceCPs(parameters, initSol)
+# for zone in parameters.zones:
+#     zoneFacilities = zone.facilities
+#     rdb.redistributeCPs(initSol, zoneFacilities)
+# lag.lagrangian(initSol, parameters)
+# newS = ls.localSearch(initSol, parameters)
+# print("-------- AFTER LOCAL SEARCH ---------------")
+# lag.lagrangian(newS, parameters)
 
 
-initSol = intl.initialise(parameters)
-ls.reduceCPs(parameters, initSol)
-for zone in parameters.zones:
-    zoneFacilities = zone.facilities
-    rdb.redistributeCPs(initSol, zoneFacilities)
-lag.lagrangian(initSol, parameters)
+
+
+
+
+
+
+
 
 
 

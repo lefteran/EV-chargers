@@ -135,3 +135,4 @@ def localSearch(S, parameters):
 				flag = False
 			else:
 				S = newS
+	return newS

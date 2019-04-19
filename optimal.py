@@ -14,6 +14,8 @@ model.Z = Set()
 model.V = Set()
 
 # ### PARAMETERS ###
+# Budget
+model.B = Param(within=PositiveIntegers)
 # Distance of a vehicle to a facility
 model.dist = Param(model.V, model.F, within=PositiveReals)
 # Cost of opening a facility
@@ -31,7 +33,7 @@ model.dem = Param(model.Z, within=PositiveIntegers, mutable=True)
 # Limit on the number of on-street spaces in zone z
 model.Nz = Param(model.Z, within=PositiveIntegers)
 # Binary (belonging) matrix denoting whether a facility belongs to a zone
-model.B = Param(model.F, model.Z, within=Binary, mutable=True)
+model.H = Param(model.F, model.Z, within=Binary, mutable=True)
 # Adjacency matrix denoting whether a zone is adjacent to another
 model.A = Param(model.Z, model.Z, within=Binary, mutable=True)
 # Minimum number of rapid chargers
@@ -117,29 +119,34 @@ model.capacity_limit = Constraint(model.F, rule=capacity)
 
 
 
+def printOptimal():
+	instance = model.create_instance("amplData.dat")
+	# instance.display()
+	opt = pyomo.opt.SolverFactory("glpk")
+	results=opt.solve(instance)
+	# instance.solutions.store_to(results)
+	# print(results)
+	if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
+		print("\nfeasible")
+	else:
+		print("\ninfeasible")
 
-instance = model.create_instance("BFL_data.dat")
-# instance.display()
-opt = pyomo.opt.SolverFactory("glpk")
-results=opt.solve(instance)
-# instance.solutions.store_to(results)
-# print(results)
-if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
-    print("\nfeasible")
-else:
-	print("\ninfeasible")
+	print("\nObjective is: ", value(instance.cost))
 
-print("\nObjective is: ", value(instance.cost))
-
-print("\nFacilities (omega): ")
-for i in range(len(instance.F)):
-	print(value(instance.omega[i+1]))
-print("\nStandard chargers: ")
-for i in range(len(instance.F)):
-	print(value(instance.st[i+1]))
-print("\nRapid chargers: ")
-for i in range(len(instance.F)):
-	print(value(instance.r[i+1]))
-print("\nAll chargers: ")
-for i in range(len(instance.F)):
-	print(value(instance.y[i+1]))
+	print("\nConnectivity (x[i][j]): ")
+	for i in range(len(instance.V)):
+		for j in range(len(instance.F)):
+			print(value(instance.x[i+1,j+1]))
+		print("\n\n")
+	print("\nFacilities (omega): ")
+	for j in range(len(instance.F)):
+		print(value(instance.omega[j+1]))
+	print("\nStandard chargers: ")
+	for j in range(len(instance.F)):
+		print(value(instance.st[j+1]))
+	print("\nRapid chargers: ")
+	for j in range(len(instance.F)):
+		print(value(instance.r[j+1]))
+	print("\nAll chargers: ")
+	for j in range(len(instance.F)):
+		print(value(instance.y[j+1]))

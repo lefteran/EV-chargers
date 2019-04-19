@@ -1,4 +1,4 @@
-def lagrangian(initSol, parameters):
+def lagrangian(S, parameters):
     lambdaVal = 0
     # curSol = initSol
     # lambdaLeft = 0
@@ -24,4 +24,4 @@ def lagrangian(initSol, parameters):
 
 
 
-    initSol.printSol(parameters, lambdaVal)
+    S.printSol(parameters, lambdaVal)
