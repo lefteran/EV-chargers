@@ -1,28 +1,23 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import math
+import json
 
 
-def createNetwork(plot=False):
-	nodes_file = 'SiouxFalls/SiouxFalls_node.tntp'
-	fpn = open(nodes_file,"r")
-	xcoords = []
-	ycoords = []
+
+def createNetwork():
 	G = nx.Graph()
-	index = 1
-	next(fpn)
-	for line in fpn:
-		elements = line.split("\t")
-		x = float(elements[1])
-		y = float(elements[2])
-		G.add_node(index, pos = (x/10000, y/10000))
-		index += 1
-	fpn.close()
+	with open('SiouxFalls/SiouxFallsCoordinates.geojson') as fp:
+		data = json.load(fp)
+	for feature in data['features']:
+		nodeId = feature['properties']['id']
+		coordinates = feature['geometry']['coordinates']
+		lat = coordinates[1]
+		lon = coordinates[0]
+		G.add_node(nodeId, pos = (lat, lon))
 
 	net_file = 'SiouxFalls/SiouxFalls_net.tntp'
 	fpe = open(net_file,"r")
-	origin_nodes = []
-	dest_nodes = []
 	weights = []
 	for i in range(8):
 		next(fpe)
@@ -47,7 +42,10 @@ def plotNetwork(G):
 	plt.show()
 
 
-# G, weights = createNetwork(True)
+# G, weights = createNetwork()
+# edges = G.edges()
+# print(edges)
+# print(G[1][2]['weight'])
 # path = nx.dijkstra_path(G, source=1, target=4, weight='weight')
 # print(path)
 # dist = nx.shortest_path_length(G, source=1, target=4, weight='weight')

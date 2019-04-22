@@ -1,4 +1,6 @@
 import read_data as rdt
+import random
+import vehicle as vcl
 
 class Parameters:
 	def __init__(self): #Nof, Nov, Noz, Nos, scenarios, probabilities, beta, distances):
@@ -15,7 +17,7 @@ class Parameters:
 		self.R = 4
 		self.gamma = 0.5
 		self.swaps = 2
-		self.lambdaMax = 100000000			# THIS NEEDS TO BE lambdaMax = max dist[i][j]
+		self.lambdaMax = 100000000			# THIS NEEDS TO BE lambdaMax = max dist[i][j] check kulik schachnai paper
 
 		self.facilities = []
 		self.zones = []
@@ -30,4 +32,22 @@ class Parameters:
 		self.adjMatrix = rdt.getAdjMatrix()
 		self.facilities = rdt.getFacilities(self.belonging)
 		self.zones = rdt.getZones(self.facilities, self.adjMatrix)
-		self.vehicles = rdt.getVehicles()
+		# self.vehicles = rdt.getVehicles()				# If we read vehicle data (locations) from a file
+
+	# the location of a vehicle should be not only on a node of G but at some (random) point of any edge
+	def getVehiclesAtRandomLocations(self, nodesLen):
+		for vehId in range(self.Nov):
+			locations = []
+			locations = [random.randint(1,nodesLen) for scenario in range(self.Nos)]
+			vehicle = vcl.Vehicle(vehId, locations)
+			self.vehicles.append(vehicle)
+
+	
+	def getVehiclesAtRandomLocations1(self, G):
+		edges = G.edges()
+		vehiclesLocations = []
+		for vehId in range(self.Nov):
+			locations = [[random.sample(edges, 1), random.uniform(0, 1)] for scenario in range(self.Nos)]
+			vehiclesLocations.append(locations)
+			vehicle = vcl.Vehicle(vehId, locations)
+			self.vehicles.append(vehicle)
