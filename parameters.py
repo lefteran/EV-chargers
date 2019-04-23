@@ -17,7 +17,8 @@ class Parameters:
 		self.R = 4
 		self.gamma = 0.5
 		self.swaps = 2
-		self.lambdaMax = 100000000			# THIS NEEDS TO BE lambdaMax = max dist[i][j] check kulik schachnai paper
+		self.lambdaMax = 10000000			# THIS NEEDS TO BE lambdaMax = max dist[i][j] check kulik schachnai paper
+		self.epsilon = 2
 
 		self.facilities = []
 		self.zones = []
@@ -34,16 +35,15 @@ class Parameters:
 		self.zones = rdt.getZones(self.facilities, self.adjMatrix)
 		# self.vehicles = rdt.getVehicles()				# If we read vehicle data (locations) from a file
 
-	# the location of a vehicle should be not only on a node of G but at some (random) point of any edge
-	def getVehiclesAtRandomLocations(self, nodesLen):
-		for vehId in range(self.Nov):
-			locations = []
-			locations = [random.randint(1,nodesLen) for scenario in range(self.Nos)]
-			vehicle = vcl.Vehicle(vehId, locations)
-			self.vehicles.append(vehicle)
+	# def getVehiclesAtRandomLocations(self, nodesLen):
+	# 	for vehId in range(self.Nov):
+	# 		locations = []
+	# 		locations = [random.randint(1,nodesLen) for scenario in range(self.Nos)]
+	# 		vehicle = vcl.Vehicle(vehId, locations)
+	# 		self.vehicles.append(vehicle)
 
 	
-	def getVehiclesAtRandomLocations1(self, G):
+	def getVehiclesAtRandomLocations(self, G):
 		edges = G.edges()
 		vehiclesLocations = []
 		for vehId in range(self.Nov):
@@ -51,3 +51,18 @@ class Parameters:
 			vehiclesLocations.append(locations)
 			vehicle = vcl.Vehicle(vehId, locations)
 			self.vehicles.append(vehicle)
+
+		########## DETERMINISTIC INPUT FOR DEBUGGING (comment below for random input) ##########
+		self.vehicles = []
+		# vehiclesLocations = [[[[(8, 16)], 0.1841314237047884], [[(23, 14)], 0.713438577667904], [[(11, 14)], 0.598855543617694]],\
+		# [[[(19, 17)], 0.48835321198895876], [[(8, 9)], 0.6478369013401375], [[(3, 12)], 0.8992587424601035]],\
+		# [[[(10, 17)], 0.5335953067269413], [[(7, 18)], 0.5939801822255262], [[(7, 18)], 0.14908187175492338]]]
+		vehiclesLocations = [[[[(18, 20)], 0.5564960348475084], [[(13, 24)], 0.06964220466962756], [[(22, 20)], 0.4261882559596851]],\
+		[[[(12, 13)], 0.720950178659288], [[(15, 14)], 0.46764388628758347], [[(3, 12)], 0.5572469484137]],\
+		[[[(10, 15)], 0.008096552852991157], [[(18, 20)], 0.25488543690567333], [[(19, 17)], 0.9108432659015407]]]
+		for vehId in range(self.Nov):
+			vehicle = vcl.Vehicle(vehId, vehiclesLocations[vehId])
+			self.vehicles.append(vehicle)
+		#######################################################################################
+
+		# print("random input locations", vehiclesLocations)

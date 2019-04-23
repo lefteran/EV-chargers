@@ -30,10 +30,10 @@ class Solution:
 		# Budget constraint
 		land_cost = sum(x * y for x, y in zip(parameters.c, self.omega))
 		cp_cost = parameters.cst * sum(self.st) + parameters.cr * sum(self.r)
-		print("Land and cp cost are %f" %(land_cost + cp_cost))
+		print("Land and cp cost are %.2f" %(land_cost + cp_cost))
 		if land_cost + cp_cost > parameters.B:
 			return False
-		return True
+		return self.isFeasibleWithoutBudget(parameters)
 
 	def isFeasibleWithoutBudget(self, parameters):
 
@@ -156,12 +156,17 @@ class Solution:
 
 	def getCostLagrangian(self, parameters, lambdaVal):
 		lagrangianCost = 0
+		# lambdaFactorsCost = 0
 		for i in range(parameters.Nov):
 			for j in range(parameters.Nof):
 				lagrangianCost += parameters.distMatrix[i][j] * self.x[i][j]
+		# print("Initially cost is %.2f" %lagrangianCost)
 		lagrangianCost -= lambdaVal * parameters.B
+		# print("Budget factor  is %.2f" %(lambdaVal * parameters.B))
 		for j in range(parameters.Nof):
-			lagrangianCost += parameters.c[j] * self.omega[j] + parameters.cst * self.st[j] + parameters.cr * self.r[j]
+			# lambdaFactorsCost += lambdaVal *( parameters.c[j] * self.omega[j] + parameters.cst * self.st[j] + parameters.cr * self.r[j])
+			lagrangianCost += lambdaVal *( parameters.c[j] * self.omega[j] + parameters.cst * self.st[j] + parameters.cr * self.r[j])
+		# print("lambda factors cost is %.2f" %lambdaFactorsCost)
 		return lagrangianCost
 
 	def printSol(self, parameters, lambdaVal):
@@ -170,11 +175,10 @@ class Solution:
 		print("r is ", self.r)
 		print("y is ", self.y)
 		print("omega is ", self.omega)
-		print("Cost of objective is ", self.getCost(parameters))
-		print("Cost of lagrangian objective is ", self.getCostLagrangian(parameters, lambdaVal))
+		print("Cost of objective is %.2f" %self.getCost(parameters))
+		print("Cost of lagrangian objective is %.2f" %self.getCostLagrangian(parameters, lambdaVal))
 		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters))
 		print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
-		print("------------------------------------")
 
 
 # parameters = pam.Parameters()

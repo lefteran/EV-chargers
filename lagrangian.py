@@ -1,27 +1,38 @@
-def lagrangian(S, parameters):
-    lambdaVal = 0
-    # curSol = initSol
-    # lambdaLeft = 0
-    # lambdaRight = LambdaMax
-    # bestLambda = 0
-    # bestCost = S.getCost()
-    # curcost = S.getCost()
-    # prevLambda = lambdaMax
-    # while | curLambda - prevLambda | > epsilon
-        # curLambda = (lamdaRight - lambdaLeft) / 2
-        # curSol = localSearch()
-        # curCost = S.get_cost()
-        # if curcost < bestCost:
-        #   bestCost = curCost
-        #   bestLambda = curLambda
-        #   lambdaRight remains unchanged
-        #   lambdaLeft = curLambda
-        # else:
-        #   lambdaRight = curLambda 
-        #   lambdaLeft remains unchanged
-        #   prevLambda = curLambda 
+import initialise as intl
+import local_search as ls
 
 
+def getSolution(parameters, lambdaVal):
+    initSol = intl.initialise(parameters, lambdaVal)
+    sol = ls.localSearch(initSol, parameters, lambdaVal)
+    return sol
+
+def lagrangian(parameters):
+    lambda1 = 0
+    lambda2 = parameters.lambdaMax
+    lambdaVal = lambda1
+    bestSol = getSolution(parameters, lambdaVal)
+    bestCost = bestSol.getCostLagrangian(parameters, lambdaVal)
+    bestLambda = lambda1
+    lambdaVal = lambda2
+    while lambda2 - lambda1 > parameters.epsilon:
+        sol = getSolution(parameters, lambdaVal)
+        solCost = sol.getCostLagrangian(parameters, lambdaVal)
+        if sol.IsFeasibleWithBudget(parameters):
+            if solCost < bestCost:
+                bestSol = sol
+                bestCost = solCost
+                bestLambda = lambdaVal
+                print("------------------ LOCAL SEARCH (lambda = %.2f) ----------------------" %lambdaVal)
+                bestSol.printSol(parameters, lambda1)
+            lambdaVal = (lambda2 + lambda1) / 2
+            lambda1 = lambdaVal
+        else:
+            lambdaVal = (lambda2 + lambda1) / 2
+            lambda2 = lambdaVal
+            
+    print("-------- BEST SOLUTION (lambda = %.2f) ---------------" %bestLambda)
+    bestSol.printSol(parameters, bestLambda)
 
 
-    S.printSol(parameters, lambdaVal)
+    

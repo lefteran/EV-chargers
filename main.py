@@ -1,16 +1,15 @@
-import initialise as intl
 import parameters as pam
 import read_data as rdt
 import network as nrk
 import distMatrix as dmtx
-import local_search as ls
 import convertToAMPL as campl
 import lagrangian as lag
-import redistribute as rdb
 import optimal as opt
-# import time
+import time
 
-# start_time = time.time()
+
+print("#########################################################\n#########################################################")
+start_time = time.time()
 parameters = pam.Parameters()
 
 rdt.checkSizes(parameters)
@@ -19,30 +18,19 @@ parameters.getData()
 
 G, weights = nrk.createNetwork()
 
-# parameters.getVehiclesAtRandomLocations(len(G.nodes()))
-parameters.getVehiclesAtRandomLocations1(G)
+parameters.getVehiclesAtRandomLocations(G)
 
-# parameters.distMatrix = dmtx.getDistMatrix(G, weights, parameters.facilities, parameters.vehicles)
-parameters.distMatrix = dmtx.getDistMatrixFromEdgePoints(G, weights, parameters.facilities, parameters.vehicles)
+parameters.distMatrix = dmtx.getDistMatrix(G, parameters.facilities, parameters.vehicles)
 
 # ######### OPT solution ##############
 # campl.convertToAMPL(parameters)
 # opt.printOptimal()
 
 # ######### Approximate solution #####################
-
-initSol = intl.initialise(parameters)
-ls.reduceCPs(parameters, initSol)
-for zone in parameters.zones:
-    zoneFacilities = zone.facilities
-    rdb.redistributeCPs(initSol, zoneFacilities)
-lag.lagrangian(initSol, parameters)
-newS = ls.localSearch(initSol, parameters)
-print("-------- AFTER LOCAL SEARCH ---------------")
-lag.lagrangian(newS, parameters)
+lag.lagrangian(parameters)
 
 
-# print("--- %s seconds ---" % (time.time() - start_time))
+print("--- %s seconds ---" % (time.time() - start_time))
 
 
 

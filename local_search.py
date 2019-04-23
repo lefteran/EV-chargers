@@ -109,8 +109,8 @@ def reduceCPs(parameters, S):
 				break
 
 
-def getZoneNewSolution(S, parameters, zone):
-	lambdaVal = 0
+def getZoneNewSolution(S, parameters, zone, lambdaVal):
+	# lambdaVal = 0
 	newS = S
 	openFacs, closedFacs = getOpenAndClosedFacIds(S, zone)
 	openFacCombs = combinations(openFacs, parameters.swaps)
@@ -126,11 +126,11 @@ def getZoneNewSolution(S, parameters, zone):
 	return newS
 
 
-def localSearch(S, parameters):
+def localSearch(S, parameters, lambdaVal):
 	for zone in parameters.zones:
 		flag = True
 		while flag:
-			newS = getZoneNewSolution(S, parameters, zone)
+			newS = getZoneNewSolution(S, parameters, zone, lambdaVal)
 			if newS == S:
 				flag = False
 			else:
