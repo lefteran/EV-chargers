@@ -19,7 +19,7 @@ def lagrangian(parameters):
         sol = getSolution(parameters, lambdaVal)
         solCost = sol.getCostLagrangian(parameters, lambdaVal)
         if sol.IsFeasibleWithBudget(parameters):
-            if solCost < bestCost:
+            if solCost > bestCost:
                 bestSol = sol
                 bestCost = solCost
                 bestLambda = lambdaVal
