@@ -23,11 +23,11 @@ parameters.getVehiclesAtRandomLocations(G)
 parameters.distMatrix = dmtx.getDistMatrix(G, parameters.facilities, parameters.vehicles)
 
 # ######### OPT solution ##############
-# campl.convertToAMPL(parameters)
-# opt.printOptimal()
+campl.convertToAMPL(parameters)
+opt.printOptimal()
 
 # ######### Approximate solution #####################
-lag.lagrangian(parameters)
+# lag.lagrangian(parameters)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))

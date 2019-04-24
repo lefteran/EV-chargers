@@ -12,6 +12,9 @@ model.F = Set()
 model.Z = Set()
 # Vehicles
 model.V = Set()
+# Capacities
+model.C = Set()
+
 
 # ### PARAMETERS ###
 # Budget
@@ -55,6 +58,12 @@ model.omega = Var(model.F, domain=Binary, initialize=0)
 # Indication of whether a vehicle is connected to a station or not
 model.x = Var(model.V, model.F, domain=Binary, initialize=0)
 
+# ### AUXILIARY VARIABLES ###
+# Binary variables b_jk for each integer variable y_j
+model.b = Var(model.F, model.C, domain=Binary, initialize=0)
+# Binary variables equal to the product omega_j * b_{jk}
+model.psi = Var(model.F, model.C, domain=Binary, initialize=0)
+
 
 
 # ### OBJECTIVE ###
@@ -65,7 +74,6 @@ model.cost = Objective(rule=cost_rule)
 
 
 # ### CONSTRAINTS ###
-
 # Budget constraint
 def budget(model):
 	return sum(model.c[j] * model.omega[j] + model.cst * model.st[j] + model.cr * model.r[j] for j in model.F) <= model.B
@@ -82,8 +90,14 @@ def open_station(model, i, j):
 model.open_station_constraint = Constraint(model.V, model.F, rule=open_station)
 
 # y_j >= omega_j
-def chargers_number(model, j):
+def open_station_facilities(model, j):
 	return model.y[j] >= model.omega[j]
+model.open_station_facilities_constraint = Constraint(model.F, rule=open_station_facilities)
+
+# y_j (1 - omega_j) == 0 in the equivalent linearised form
+def chargers_number(model, j):
+	return model.y[j] - sum(k * model.psi[j,k] for k in model.C) == 0
+	# return model.y[j] - sum((2**k) * model.psi[j,k] for k in model.C) == 0		# if log(C)+ 1 digits are used
 model.chargers_number_constraint = Constraint(model.F, rule=chargers_number)
 
 # rapid chargers 
@@ -116,6 +130,27 @@ def capacity(model, j):
 	return model.y[j] <= model.cap[j]
 model.capacity_limit = Constraint(model.F, rule=capacity)
 
+# ### CONSTRAINTS OF AUXILIARY VARIABLES ###
+
+# \sum_k^C b_{jk} <= 1
+def bsum(model, j):
+	return sum(model.b[j,k] for k in model.C) <= 1
+model.b_sum = Constraint(model.F, rule=bsum)
+
+# psi_{jk} <= omega_j
+def psi_omega(model, j, k):
+	return model.psi[j,k] <= model.omega[j]
+model.psiOmega = Constraint(model.F, model.C, rule=psi_omega)
+
+# psi_{jk} <= b_{jk}
+def psi_b(model, j, k):
+	return model.psi[j,k] <= model.b[j,k]
+model.psib = Constraint(model.F, model.C, rule=psi_b)
+
+# psi_{jk} <= b_{jk}
+def psi_omega_b(model, j, k):
+	return model.psi[j,k] >= model.omega[j] + model.b[j,k] - 1
+model.psiOmegab = Constraint(model.F, model.C, rule=psi_omega_b)
 
 
 
@@ -133,20 +168,30 @@ def printOptimal():
 
 	print("\nObjective is: ", value(instance.cost))
 
-	print("\nConnectivity (x[i][j]): ")
+	print("\nConnectivity x[i][j] (row=vehicle, column=facility): ")
 	for i in range(len(instance.V)):
 		for j in range(len(instance.F)):
-			print(value(instance.x[i+1,j+1]))
-		print("\n\n")
-	print("\nFacilities (omega): ")
+			print("%d  " %value(instance.x[i+1,j+1]), end='', flush=True)
+		print("\n")
+	print("Facilities (omega): ")
 	for j in range(len(instance.F)):
-		print(value(instance.omega[j+1]))
-	print("\nStandard chargers: ")
+		print("%d  " %value(instance.omega[j+1]), end='', flush=True)
+	print("\nStandard chargers (st): ")
 	for j in range(len(instance.F)):
-		print(value(instance.st[j+1]))
-	print("\nRapid chargers: ")
+		print("%d  " %value(instance.st[j+1]), end='', flush=True)
+	print("\nRapid chargers (r): ")
 	for j in range(len(instance.F)):
-		print(value(instance.r[j+1]))
-	print("\nAll chargers: ")
+		print("%d  " %value(instance.r[j+1]), end='', flush=True)
+	print("\nAll chargers (y): ")
 	for j in range(len(instance.F)):
-		print(value(instance.y[j+1]))
+		print("%d  " %value(instance.y[j+1]), end='', flush=True)
+	print("\npsi (row=facility, column=capacity): ")
+	for j in range(len(instance.F)):
+		for k in range(len(instance.C)):
+			print("%d  " %value(instance.psi[j+1,k+1]), end='', flush=True)
+		print("\n")
+	print("\nb (row=facility, column=capacity): ")
+	for j in range(len(instance.F)):
+		for k in range(len(instance.C)):
+			print("%d  " %value(instance.b[j+1,k+1]), end='', flush=True)
+		print("\n")

@@ -1,3 +1,5 @@
+# import math
+
 def convertToAMPL(parameters):
 	amplDataFile = "amplData.dat"
 	fp = open(amplDataFile,"w")
@@ -17,6 +19,21 @@ def convertToAMPL(parameters):
 	for vehicle in parameters.vehicles:
 		fp.write("%d " %(vehicle.id + 1))
 	fp.write(";\n\n")
+
+	fp.write("set C := ")
+	maxCapacity = max(facility.capacity for facility in parameters.facilities)
+	for capacity in range(maxCapacity):
+		fp.write("%d " %(capacity + 1))
+	fp.write(";\n\n")	
+
+	# IF log(C) + 1 DIGITS ARE USED
+	# fp.write("set C := ")
+	# maxCapacity = max(facility.capacity for facility in parameters.facilities)
+	# maxLogCapacity = math.floor(math.log(maxCapacity,2)) + 1
+	# for capacity in range(maxLogCapacity):
+	# 	fp.write("%d " %(capacity + 1))
+	# fp.write(";\n\n")	
+
 
 	fp.write("param a :=\n")
 	for facility in parameters.facilities:
