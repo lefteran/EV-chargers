@@ -33,6 +33,7 @@ def lagrangian(parameters):
             
     print("-------- BEST SOLUTION (lambda = %.2f) ---------------" %bestLambda)
     bestSol.printSol(parameters, bestLambda)
+    return bestCost
 
 
     

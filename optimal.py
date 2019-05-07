@@ -153,12 +153,11 @@ def psi_omega_b(model, j, k):
 model.psiOmegab = Constraint(model.F, model.C, rule=psi_omega_b)
 
 
+def getOptimalValue(instance):
+	return value(instance.cost)
 
-def printOptimal():
-	instance = model.create_instance("amplData.dat")
-	# instance.display()
-	opt = pyomo.opt.SolverFactory("glpk")
-	results=opt.solve(instance)
+
+def printOptimal(instance, results):
 	# instance.solutions.store_to(results)
 	# print(results)
 	if (results.solver.status == SolverStatus.ok) and (results.solver.termination_condition == TerminationCondition.optimal):
@@ -168,11 +167,11 @@ def printOptimal():
 
 	print("\nObjective is: ", value(instance.cost))
 
-	print("\nConnectivity x[i][j] (row=vehicle, column=facility): ")
-	for i in range(len(instance.V)):
-		for j in range(len(instance.F)):
-			print("%d  " %value(instance.x[i+1,j+1]), end='', flush=True)
-		print("\n")
+	# print("\nConnectivity x[i][j] (row=vehicle, column=facility): ")
+	# for i in range(len(instance.V)):
+	# 	for j in range(len(instance.F)):
+	# 		print("%d  " %value(instance.x[i+1,j+1]), end='', flush=True)
+	# 	print("\n")
 	print("Facilities (omega): ")
 	for j in range(len(instance.F)):
 		print("%d  " %value(instance.omega[j+1]), end='', flush=True)
@@ -185,13 +184,22 @@ def printOptimal():
 	print("\nAll chargers (y): ")
 	for j in range(len(instance.F)):
 		print("%d  " %value(instance.y[j+1]), end='', flush=True)
-	print("\npsi (row=facility, column=capacity): ")
-	for j in range(len(instance.F)):
-		for k in range(len(instance.C)):
-			print("%d  " %value(instance.psi[j+1,k+1]), end='', flush=True)
-		print("\n")
-	print("\nb (row=facility, column=capacity): ")
-	for j in range(len(instance.F)):
-		for k in range(len(instance.C)):
-			print("%d  " %value(instance.b[j+1,k+1]), end='', flush=True)
-		print("\n")
+	print("\n")
+	# print("\npsi (row=facility, column=capacity): ")
+	# for j in range(len(instance.F)):
+	# 	for k in range(len(instance.C)):
+	# 		print("%d  " %value(instance.psi[j+1,k+1]), end='', flush=True)
+	# 	print("\n")
+	# print("\nb (row=facility, column=capacity): ")
+	# for j in range(len(instance.F)):
+	# 	for k in range(len(instance.C)):
+	# 		print("%d  " %value(instance.b[j+1,k+1]), end='', flush=True)
+	# 	print("\n")
+
+
+def solveOptimal():
+	instance = model.create_instance("amplData.dat")
+	# instance.display()
+	opt = pyomo.opt.SolverFactory("glpk")
+	results = opt.solve(instance)
+	return instance, results

@@ -109,8 +109,8 @@ def reduceCPs(parameters, S):
 				break
 
 
+# Returns a new solution swapping between a set of open and a set of closed facilities for a given zone
 def getZoneNewSolution(S, parameters, zone, lambdaVal):
-	# lambdaVal = 0
 	newS = S
 	openFacs, closedFacs = getOpenAndClosedFacIds(S, zone)
 	openFacCombs = combinations(openFacs, parameters.swaps)
@@ -125,6 +125,89 @@ def getZoneNewSolution(S, parameters, zone, lambdaVal):
 				break
 	return newS
 
+
+# ############################ GLOBAL SWAPS LOCAL SEARCH ####################################
+
+# def hasOpenFacility(S, comb):
+# 	for facId in comb:
+# 		if S.is_open(facId):
+# 			return True
+# 	return False
+
+# def hasClosedFacility(S, comb):
+# 	for facId in comb:
+# 		if not S.is_open(facId):
+# 			return True
+# 	return False
+
+# def swapFacilitiesGlobally(S, parameters):
+# 	newS = copy.deepcopy(S)
+# 	# standard, rapid = getFacsCPs(S, openFacIds)
+	
+# 	return newS
+
+
+# def calculateZoneDemand(parameters, S, z):
+# 	currentZoneDemand = 0
+# 	for facility in parameters.facilities:
+# 		if facility.id == z and S.is_open(facility.id):
+# 			currentZoneDemand += S.y[facility.id]
+# 	return currentZoneDemand
+
+
+
+# def isSolZoneFeasible(parameters, S, zone):
+# 	totalZoneDemand = 0
+# 	for adjZoneId in zone.adjacent:
+# 		totalZoneDemand += calculateZoneDemand(parameters, S, adjZoneId)
+# 	if totalZoneDemand < parameters.gamma * zone.demand:
+# 		return False
+
+
+# def getNewSolution(parameters, S, facilitiesToOpen, facilitiesToClose):
+# 	newS = copy.deepcopy(S)
+# 	rapid = 0
+# 	standard = 0
+# 	total = 0
+# 	for facilityToClose in facilitiesToClose:
+# 		if newS.is_open(facilityToClose):
+# 			rapid += newS.r[facilityToClose]
+# 			standard += newS.st[facilityToClose]
+# 			total += newS.y[facilityToClose]
+# 			newS.close_facility(facilityToClose)
+
+#  	Lcap = sorted(facilitiesToOpen, key=lambda x: x.capacity, reverse=True)
+
+
+
+
+
+	# for facilityToOpen in facilitiesToOpen:
+	# 	facilityId = facilitiesToOpen.id
+		# if not newS.is_open(facilityId):
+			
+
+
+
+	
+# def getZoneNewSolutionGlobally(S, parameters, zone, lambdaVal):
+# 	# TO CHECK BELOW PSEUDOCODE
+# 	newS = S
+# 	allCombs = combinations(parameters.facilities , parameters.swaps)
+# 	for facsToAdd in allCombs:
+# 		for facsToRemove in allCombs:
+# 			if facsToAdd != facsToRemove\
+# 			and hasClosedFacility(S, facsToAdd)\
+# 			and hasOpenFacility(S, facsToRemove):
+# 				if isSwapFeasibleGlobally(S):
+# 					oldCost = S.getCostLagrangian(parameters, lambdaVal)
+# 					newS = swapFacilities(S, parameters, facsToAdd, facsToRemove)
+# 					newCost = newS.getCostLagrangian(parameters, lambdaVal)
+# 					if newCost < oldCost:
+# 						break
+# 	return newS
+
+# ####################################################################################
 
 def localSearch(S, parameters, lambdaVal):
 	for zone in parameters.zones:

@@ -45,8 +45,8 @@ def naiveSolution(parameters):
 
 def initialise(parameters, lambdaVal):
 	initSol = naiveSolution(parameters)
-	print("------------------ INITIAL SOLUTION (lambda = %.2f) ----------------------" %lambdaVal)
-	initSol.printSol(parameters, lambdaVal)
+	# print("------------------ INITIAL SOLUTION (lambda = %.2f) ----------------------" %lambdaVal)
+	# initSol.printSol(parameters, lambdaVal)
 	if initSol.isFeasibleWithoutBudget(parameters):
 		ls.reduceCPs(parameters, initSol)
 		for zone in parameters.zones:

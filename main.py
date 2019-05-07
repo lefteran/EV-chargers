@@ -24,12 +24,14 @@ parameters.distMatrix = dmtx.getDistMatrix(G, parameters.facilities, parameters.
 
 # ######### OPT solution ##############
 campl.convertToAMPL(parameters)
-opt.printOptimal()
+instance, results = opt.solveOptimal()
+optimalValue = opt.getOptimalValue(instance)
+# opt.printOptimal(instance, results)
 
 # ######### Approximate solution #####################
-# lag.lagrangian(parameters)
+approximateValue = lag.lagrangian(parameters)
 
-
+print("Approximation ratio: %f" %(approximateValue / optimalValue))
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
@@ -68,3 +70,12 @@ print("--- %s seconds ---" % (time.time() - start_time))
 # Ly = sorted(initSol, key=lambda x: x.y, reverse=False)
 
 # ls.neighborhood(parameters, initSol, parameters.zones, distMatrix)
+
+
+
+# from shapely.geometry import Point, LineString
+# for node in G.nodes_iter():
+#     if G.degree(node) > 2:
+#         print Point(node) #the nodes
+#         for edge in G.edges(node):
+#             print LineString(edge) # the edges (>2)

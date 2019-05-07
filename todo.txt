@@ -1,0 +1,62 @@
+****************** TODO ********************
+
+3. write down the local search algorithm for every zone first and then globally
+4. sample the locations of the vehicles using randomisation, using a preprocessing to create the file with vehicles' locations
+5. osmnx network visualisation
+6. Nof, Nov, Nos to be removed from the parameters file
+7. values for beta to be read from a separate file
+
+
+
+8. write the demand constraint differently in the pseudocode i.e.
+if facility j belongs in zone z then 
+\sum_{zeta \in N(z)} where N(z) the neighboring zones of z
+
+9. prove (in words) that the initial solution is feasible
+
+
+10. In the end of the algorithm
+if the demand on each zone is not met then there is no feasible solution
+
+
+11. randomness in localsearch?
+
+12. CAs of fixed bundle size, spceifically size 3
+
+13. demand prediction
+
+14. Preprocessing file to check the tables (read_data checkSizes(parameters)) and a method to convert the input data to AMPL format for pyomo
+
+16. add dictionaries to speed up
+
+17. add a number of facilities in one zone for debugging
+
+18. replace the list of facilities with a dictionary where the key wil be the facility id and value the object of that facility
+Each zone will have a list of ids of its facilities
+Similarly replace the list of zones with a dictionary
+Each facility will keep a value of the key of the zone it belongs to
+
+
+19. compare values of lagrangian and opt
+
+20. In getDistMatrix() the 'weights' arguments can be omitted
+
+21. visualize the nodes and edges
+
+
+EXPERIMENTS
+1. Show experimentally by how much the budget constraint is violated using lagrangian relaxation
+2. different demand scenarios
+3. what happens if the number of EVs changes significantly
+
+
+
+################################ PREPROCESSSING #####################################
+1. create a dictionary "adjacencyDict" where the keys are the boundary ids and initially the values will be empty lists.
+For every combination if two polygons are adjacent add their ids to the respective lists of the dictionary
+i.e. add the key of the one to the list of the other
+2. Check if a polygon is inside another one
+check if this can be done by polygone1.contains(polygon2)
+3. boundaryNodes.txt
+nodeBoundary.txt
+polygonInPolygon

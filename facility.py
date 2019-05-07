@@ -5,4 +5,4 @@ class Facility:
 		self.cost = cost
 		self.capacity = capacity
 		self.alpha = alpha
-		self.zone = zone
+		self.zone = zone			# zone id

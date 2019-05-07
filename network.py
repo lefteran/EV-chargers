@@ -1,8 +1,47 @@
 import matplotlib.pyplot as plt
+from shapely import geometry
 import networkx as nx
 import math
 import json
+import itertools
+import fiona
 
+def getNetworkNodes():
+	G = nx.Graph()
+	with open('Chicago/ChicagoNodes.geojson') as fn:
+		data = json.load(fn)
+	for feature in data['features']:
+		nodeId = feature['properties']['identifier']
+		coordinates = feature['geometry']['coordinates']
+		lat = coordinates[0]
+		lon = coordinates[1]
+		G.add_node(nodeId, pos = (lat, lon))
+	return G
+
+
+def getNetworkEdges(G):
+	with open('Chicago/ChicagoEdges.geojson') as fe:
+		data = json.load(fe)
+	for feature in data['features']:
+		startNode = feature['properties']['startNode']
+		endNode = feature['properties']['endNode']
+		length = feature['properties']['length']
+		G.add_edge(startNode, endNode, weight = length)
+
+
+def importAdjacencyDict():
+	adjacencyDict = {}
+	boundaryAdjacencies = "boundaryAdjacencies.txt"
+	fp = open(boundaryAdjacencies,"r")
+	for line in fp:
+		elements = line.split(",")
+		key = elements[0].strip()
+		adjacencyDict[key] = []
+		for i in range(len(elements) - 1):
+			adjacencyDict[key].append(elements[i+1].strip())
+	print(adjacencyDict["22477"])
+	fp.close()
+	return adjacencyDict
 
 
 def createNetwork():
@@ -40,6 +79,26 @@ def plotNetwork(G):
 	# labels=nx.draw_networkx_labels(G,pos=nx.spring_layout(G))
 	nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
 	plt.show()
+
+
+def plotBoundary(poly):			 #, point):
+	fig = plt.figure(1, figsize=(5,5), dpi=90)
+	ax = fig.add_subplot(111)
+	x,y = poly.exterior.xy
+	ax.plot(x, y, color='#6699cc', alpha=0.7, linewidth=3, solid_capstyle='round', zorder=2)
+	# plt.scatter(point.x, point.y, s=10, c='red')
+	ax.set_title('Polygon')
+	plt.show()
+
+
+def polyContainsPoint(polygon, point):
+	return polygon.contains(point)
+
+
+# G = getNetworkNodes()
+# getNetworkEdges(G)
+
+
 
 
 # G, weights = createNetwork()

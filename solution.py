@@ -30,7 +30,7 @@ class Solution:
 		# Budget constraint
 		land_cost = sum(x * y for x, y in zip(parameters.c, self.omega))
 		cp_cost = parameters.cst * sum(self.st) + parameters.cr * sum(self.r)
-		print("Land and cp cost are %.2f" %(land_cost + cp_cost))
+		# print("Land and cp cost are %.2f" %(land_cost + cp_cost))
 		if land_cost + cp_cost > parameters.B:
 			return False
 		return self.isFeasibleWithoutBudget(parameters)
@@ -51,6 +51,11 @@ class Solution:
 		# y_j >= omega_j
 		for j in range(parameters.Nof):
 			if self.y[j] < self.omega[j]:
+				return False
+
+		# y_j (1 - omega_j) >= 0
+		for j in range(parameters.Nof):
+			if self.y[j] * (1 - self.omega[j]) < 0:
 				return False
 
 		# sum of y_j^r >= R

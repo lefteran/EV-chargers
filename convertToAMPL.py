@@ -103,3 +103,23 @@ def convertToAMPL(parameters):
 
 
 	fp.close()
+
+
+
+# def exportAdjacencyDictToAmpl(adjacencyDict):
+# 	amplDataFile = "amplData1.dat"
+# 	fp = open(amplDataFile,"w")
+# 	keyIdDict = {}
+# 	keyId = 1
+# 	for key, adjList in adjacencyDict.items():
+# 		keyIdDict[keyId] = key
+# 		keyId += 1
+# 	for i in range(len(keyIdDict)):
+# 		for j in range(len(keyIdDict)):
+# 			isAdjacent = 0
+# 			key = keyIdDict[i+1]
+# 			value = keyIdDict[j+1]
+# 			if value in adjacencyDict[key]:
+# 				isAdjacent = 1
+# 			fp.write("%d %d %d\n" %(i, j, isAdjacent))
+# 	fp.close()
