@@ -31,7 +31,6 @@ def importEdges(G, filename):
 		G.add_edge(startNode, endNode, weight = length)
 
 
-# boundaryAdjacencies.csv
 def importAdjacencyDict(filename):
 	adjacencyDict = {}
 	fp = open(filename,"r")

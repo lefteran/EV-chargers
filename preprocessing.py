@@ -44,7 +44,7 @@ def getNodeInBoundaryDict(boundariesDict, G):
 		for boundaryKey, polygon in boundariesDict.items():
 			if polyContainsPoint(polygon, point):
 				belongingDict[nodeId].append(boundaryKey)
-		print("Point No: ", count)
+		print("Point No (belonging): ", count)
 	return belongingDict
 
 
@@ -77,10 +77,14 @@ def exportBelonging(belongingDict, filename):
 # #################### ADJACENCY #################################
 
 def getAdjacenciesDict(boundariesDict):
-	count = 0
+	countAdjacencies = 0
 	adjacencyDict = {}
 	combinations = [[key for key in dictItem] for dictItem in itertools.combinations(boundariesDict, 2)]
+	totalCombinations = len(combinations)
+	combinationCount = 0
 	for combination in combinations:
+		combinationCount += 1
+		print("Checking adjacency %d of %d" %(combinationCount, totalCombinations))
 		id1 = combination[0]
 		id2 = combination[1]
 		if id1 not in adjacencyDict:
@@ -92,10 +96,10 @@ def getAdjacenciesDict(boundariesDict):
 		if polygon1.touches(polygon2) or polygon1.contains(polygon2) or polygon2.contains(polygon1):
 			adjacencyDict[id1].append(id2)
 			adjacencyDict[id2].append(id1)
-			count +=1
+			countAdjacencies +=1
 	for key, adjList in adjacencyDict.items():
 		adjacencyDict[key].append(key)
-	print("there are %d adjacencies" %count)
+	print("there are %d adjacencies" %countAdjacencies)
 	return adjacencyDict
 
 
@@ -125,57 +129,3 @@ def preprocessing(doPreprocessing):
 		exportAdjacencyDict(adjacencyDict, "Chicago/adjacencies.csv")
 		
 		print("--- Preprocessing: %s seconds ---" % (time.time() - start_time))
-
-
-
-
-
-# G = impdt.getNetworkNodes()
-# boundariesDict = getNetworkBoundariesDict()
-# belongingDict = importNodeInBoundaryDict()
-# newBelongingDict = ensureNodeBelongsToOneBounary(belongingDict, boundariesDict)
-# exportBelonging(newBelongingDict)
-# belongingDict = getBelongingDictNode_Boundary(boundariesDict, G)
-# exportBelonging(belongingDict)
-# adjacencyDict = findAdjacencies(boundariesDict)
-# exportAdjacencyDict(adjacencyDict)
-
-
-
-
-
-
-
-# def getBelongingDictBoundary_Node(boundariesDict, G):
-# 	belongingDict = {}
-# 	count = 0
-# 	for boundaryKey, polygon in boundariesDict.items():
-# 		count += 1
-# 		if boundaryKey not in belongingDict:
-# 			belongingDict[boundaryKey] = []
-# 		for nodeId, data in G.nodes(data=True):
-# 			lat = G.nodes[nodeId]['pos'][0]
-# 			lon = G.nodes[nodeId]['pos'][1]
-# 			point = geometry.Point(lat,lon)
-# 			if polyContainsPoint(polygon, point):
-# 				belongingDict[boundaryKey].append(nodeId)
-# 		print("boundary No: ", count)
-# 	return belongingDict
-
-
-
-
-
-# def createZones():
-# 	zone = zn.Zone(boundaryId, adjacent, demand, zoneFacilities, onStreetBound)
-
-
-
-
-
-
-
-
-	# for polygon1,polygon2 in itertools.combinations(polygons, 2):
-	# 	if polygon1.touches(polygon2):
-	# 		print("there are adjacencies")

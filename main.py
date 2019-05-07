@@ -10,32 +10,32 @@ import preprocessing as pre
 
 
 print("#########################################################\n#########################################################")
-pre.preprocessing(False)
+pre.preprocessing(True)
 
-start_time = time.time()
-parameters = pam.Parameters()
+# start_time = time.time()
+# parameters = pam.Parameters()
 
-rdt.checkSizes(parameters)
+# rdt.checkSizes(parameters)
 
-parameters.getData()
+# parameters.getData()
 
-G, weights = impdt.createNetwork()
+# G, weights = impdt.createNetwork()
 
-parameters.getVehiclesAtRandomLocations(G)
+# parameters.getVehiclesAtRandomLocations(G)
 
-parameters.distMatrix = dmtx.getDistMatrix(G, parameters.facilities, parameters.vehicles)
+# parameters.distMatrix = dmtx.getDistMatrix(G, parameters.facilities, parameters.vehicles)
 
-# ######### OPT solution ##############
-campl.convertToAMPL(parameters)
-instance, results = opt.solveOptimal()
-optimalValue = opt.getOptimalValue(instance)
-# opt.printOptimal(instance, results)
+# # ######### OPT solution ##############
+# campl.convertToAMPL(parameters)
+# instance, results = opt.solveOptimal()
+# optimalValue = opt.getOptimalValue(instance)
+# # opt.printOptimal(instance, results)
 
-# ######### Approximate solution #####################
-approximateValue = lag.lagrangian(parameters)
+# # ######### Approximate solution #####################
+# approximateValue = lag.lagrangian(parameters)
 
-print("Approximation ratio: %f" %(approximateValue / optimalValue))
-print("--- %s seconds ---" % (time.time() - start_time))
+# print("Approximation ratio: %f" %(approximateValue / optimalValue))
+# print("--- %s seconds ---" % (time.time() - start_time))
 
 
 
