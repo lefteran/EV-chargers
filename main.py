@@ -1,14 +1,17 @@
 import parameters as pam
 import read_data as rdt
-import network as nrk
+import importData as impdt
 import distMatrix as dmtx
 import convertToAMPL as campl
 import lagrangian as lag
 import optimal as opt
 import time
+import preprocessing as pre
 
 
 print("#########################################################\n#########################################################")
+pre.preprocessing(False)
+
 start_time = time.time()
 parameters = pam.Parameters()
 
@@ -16,7 +19,7 @@ rdt.checkSizes(parameters)
 
 parameters.getData()
 
-G, weights = nrk.createNetwork()
+G, weights = impdt.createNetwork()
 
 parameters.getVehiclesAtRandomLocations(G)
 
