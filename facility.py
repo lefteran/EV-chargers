@@ -1,8 +1,7 @@
 class Facility:
-	def __init__(self, idNum, location, cost, capacity, alpha, zone):
+	def __init__(self, idNum, cost, capacity, alpha, zoneId):
 		self.id = idNum
-		self.location = location
 		self.cost = cost
 		self.capacity = capacity
 		self.alpha = alpha
-		self.zone = zone			# zone id
+		self.zoneId = zoneId

@@ -4,6 +4,7 @@ import itertools
 import time
 import importData as impdt
 import sys
+from random import randint
 
 
 def polyContainsPoint(polygon, point):
@@ -74,6 +75,30 @@ def exportBelonging(belongingDict, filename):
 		fp.write("\n")
 	fp.close()
 
+
+def inverseBelonging(filenameIn, filenameOut):
+	fpi = open(filenameIn,"r")
+	fpo = open(filenameOut,"w")
+	invBelongingDict = {}
+	for line in fpi:
+		elements = line.split(",")
+		if len(elements) == 2:
+			nodeId = elements[0].strip()
+			zoneId = elements[1].strip()
+			if zoneId not in invBelongingDict:
+				invBelongingDict[zoneId] = [nodeId]
+			else:
+				invBelongingDict[zoneId].append(nodeId)
+	for zoneId, nodeIdList in invBelongingDict.items():
+		fpo.write("%s" %zoneId)
+		for item in nodeIdList:
+			fpo.write(", %s" %item)
+		fpo.write("\n")
+	fpi.close()
+	fpo.close()
+
+
+
 # #################### ADJACENCY #################################
 
 def getAdjacenciesDict(boundariesDict):
@@ -113,19 +138,48 @@ def exportAdjacencyDict(adjacencyDict, filename):
 	fp.close()
 
 
+def generateDeterministicFacilityData(G, filename):
+	fp = open(filename,"w")
+	count = 0
+	for nodeId, data in G.nodes(data=True):
+		count += 1
+		cost = randint(400,800)
+		capacity = randint(10,20)
+		alpha = randint(0, 1)
+		fp.write("%s, %s, %s, %s\n" %(nodeId, cost, capacity, alpha))
+	fp.close()
+
+
+def generateDeterministicZoneData(filenameIn, filenameOut):
+	fpi = open(filenameIn,"r")
+	fpo = open(filenameOut,"w")
+	for line in fpi:
+		elements = line.split(",")
+		zoneId = elements[0].strip()
+		demand = randint(100,200)
+		onStreetBound = randint(100,200)
+		fpo.write("%s, %s, %s\n" %(zoneId, demand, onStreetBound))
+	fpi.close()
+	fpo.close()
+
 
 def preprocessing(doPreprocessing):
 	if doPreprocessing:
 		start_time = time.time()
+		print("Preprocessing data ...")
 
 		G = impdt.importNodes('Chicago/ChicagoNodes.geojson')
 		boundariesDict = getNetworkBoundariesDict('Chicago/ChicagoZoning.geojson')
 
 		nodeInBoundaryDict = getNodeInBoundaryDict(boundariesDict, G)
 		belongingDict = ensureNodeBelongsToOneBounary(nodeInBoundaryDict, boundariesDict)
-		exportBelonging(belongingDict, "Chicago/belongingNode_Boundary.csv")
+		exportBelonging(belongingDict, "Chicago/nodeInBoundary.csv")
+		inverseBelonging('Chicago/nodeInBoundary.csv', 'Chicago/BoundaryNodes.csv')
 		
 		adjacencyDict = getAdjacenciesDict(boundariesDict)
 		exportAdjacencyDict(adjacencyDict, "Chicago/adjacencies.csv")
-		
+
+		generateDeterministicFacilityData(G, 'Chicago/FacilityData.csv')
+		generateDeterministicZoneData('Chicago/adjacencies.csv', 'Chicago/ZoneData.csv')
+
 		print("--- Preprocessing: %s seconds ---" % (time.time() - start_time))

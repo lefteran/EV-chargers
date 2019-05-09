@@ -20,7 +20,6 @@ def importNodes(filename):
 	return G
 
 
-# 'Chicago/ChicagoEdges.geojson'
 def importEdges(G, filename):
 	with open(filename) as fe:
 		data = json.load(fe)
@@ -29,6 +28,23 @@ def importEdges(G, filename):
 		endNode = feature['properties']['endNode']
 		length = feature['properties']['length']
 		G.add_edge(startNode, endNode, weight = length)
+
+
+def importBelongingDict(filename):
+	belongingDict = {}
+	nonBelongingNodeIds = []
+	fp = open(filename,"r")
+	for line in fp:
+		elements = line.split(",")
+		key = elements[0].strip()
+		if len(elements) < 2:
+			nonBelongingNodeIds.append(key)
+		else:
+			belongingDict[key] = []
+			for i in range(len(elements) - 1):
+				belongingDict[key].append(elements[i+1].strip())
+	fp.close()
+	return belongingDict, nonBelongingNodeIds
 
 
 def importAdjacencyDict(filename):
@@ -43,17 +59,17 @@ def importAdjacencyDict(filename):
 	fp.close()
 	return adjacencyDict
 
-def importBelongingDict(filename):
-	belongingDict = {}
+def importFacilityData(filename):
+	facilityDataDict = {}
 	fp = open(filename,"r")
 	for line in fp:
 		elements = line.split(",")
 		key = elements[0].strip()
-		belongingDict[key] = []
+		facilityDataDict[key] = []
 		for i in range(len(elements) - 1):
-			belongingDict[key].append(elements[i+1].strip())
+			facilityDataDict[key].append(elements[i+1].strip())
 	fp.close()
-	return belongingDict
+	return facilityDataDict
 
 
 def createNetwork():

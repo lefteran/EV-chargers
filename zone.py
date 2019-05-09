@@ -5,4 +5,3 @@ class Zone:
 		self.adjacent = adjacent
 		self.facilities = facilities
 		self.onStreetBound = onStreetBound
-		self.polygon = []
