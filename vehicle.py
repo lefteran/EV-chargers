@@ -1,4 +1,6 @@
 class Vehicle:
-	def __init__(self, idNum, location):
+	def __init__(self, idNum, startNode, endNode, rn):
 		self.id = idNum
-		self.location = location
+		self.startNode = startNode
+		self.endNode = endNode
+		self.pointInEdge = rn

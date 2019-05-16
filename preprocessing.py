@@ -5,6 +5,8 @@ import time
 import importData as impdt
 import sys
 from random import randint
+from random import choice
+from random import uniform
 
 
 def polyContainsPoint(polygon, point):
@@ -138,6 +140,8 @@ def exportAdjacencyDict(adjacencyDict, filename):
 	fp.close()
 
 
+# #################### FACILITY, ZONE, VEHCILE DATA #################################
+
 def generateDeterministicFacilityData(G, filename):
 	fp = open(filename,"w")
 	count = 0
@@ -162,6 +166,17 @@ def generateDeterministicZoneData(filenameIn, filenameOut):
 	fpi.close()
 	fpo.close()
 
+def generateDeterministicVehicleData(G, vehiclesNo, filenameOut):
+	fpo = open(filenameOut,"w")
+	edges = list(G.edges())
+	for i in range(vehiclesNo):
+		vehicleId = i + 1
+		edge = choice(edges)
+		(startNode, endNode) = edge
+		rn = uniform(0, 1)
+		fpo.write("%s, %s, %s, %s\n" %(vehicleId, startNode, endNode, rn))
+	fpo.close()
+
 
 def preprocessing(doPreprocessing):
 	if doPreprocessing:
@@ -169,6 +184,7 @@ def preprocessing(doPreprocessing):
 		print("Preprocessing data ...")
 
 		G = impdt.importNodes('Chicago/ChicagoNodes.geojson')
+		impdt.importEdges(G, 'Chicago/ChicagoEdges.geojson')
 		boundariesDict = getNetworkBoundariesDict('Chicago/ChicagoZoning.geojson')
 
 		nodeInBoundaryDict = getNodeInBoundaryDict(boundariesDict, G)
@@ -181,5 +197,6 @@ def preprocessing(doPreprocessing):
 
 		generateDeterministicFacilityData(G, 'Chicago/FacilityData.csv')
 		generateDeterministicZoneData('Chicago/adjacencies.csv', 'Chicago/ZoneData.csv')
+		generateDeterministicVehicleData(G, 30, 'Chicago/VehicleData.csv')
 
 		print("--- Preprocessing: %s seconds ---" % (time.time() - start_time))

@@ -2,7 +2,9 @@ import parameters as pam
 # import read_data as rdt
 import importData as impdt
 import facility as fl
-# import distMatrix as dmtx
+import zone as zn
+import vehicle as vh
+import tripTimes as trtim
 # import convertToAMPL as campl
 # import lagrangian as lag
 # import optimal as opt
@@ -19,6 +21,7 @@ parameters = pam.Parameters()
 G = impdt.importNodes('Chicago/ChicagoNodes.geojson')
 impdt.importEdges(G, 'Chicago/ChicagoEdges.geojson')
 belongingDict, nonBelongingNodeIds = impdt.importBelongingDict('Chicago/nodeInBoundary.csv')
+invBelongingDict = impdt.importInvBelonging('Chicago/BoundaryNodes.csv')
 G.remove_nodes_from(nonBelongingNodeIds)
 adjacencyDict = impdt.importAdjacencyDict('Chicago/adjacencies.csv')
 
@@ -31,11 +34,28 @@ for facilityId, facilityList in facilityDataDict.items():
 		facilityList[2], belongingDict[facilityId])
 
 
+zoneDataDict = impdt.importZoneData('Chicago/ZoneData.csv')
+zonesDict = {}
+for zoneId, zoneDataList in zoneDataDict.items():
+	if zoneId in invBelongingDict:
+		zonesDict[zoneId] = zn.Zone(zoneId, adjacencyDict[zoneId], zoneDataList[0], invBelongingDict[zoneId], zoneDataList[1])
 
-# 1. CREATE FACILITIES INITIALLY WITH DETERMINISTIC DATA (FOR COST, CAPACITY AND ALPHA) THAT WILL NEED TO BE
-# IMPORTED FROM A SEPARATE FILE. ONCE THIS WORKS THE VALUES WILL BE RANDOM
-# 2. CREATE ZONES (SIMILARLY IMPORT DATA AS FACILITIES)
-# 3. CREATE VEHICLES AT FIXED LOCATIONS AGAIN BY IMPORTING DATA FROM FILE
+vehicleDataDict = impdt.importVehicleData('Chicago/VehicleData.csv')
+vehiclesDict = {}
+for vehicleId, vehicleDataList in vehicleDataDict.items():
+	startNode = vehicleDataList[0]
+	endNode = vehicleDataList[1]
+	if G.has_edge(startNode, endNode):
+		vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
+timesDict = impdt.importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
+a = timesDict["30"]
+print(a["6416485637"])
+# timesDict = trtim.getTimeDict(G, facilitiesDict, vehiclesDict)
+# trtim.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')
+
+
+
+
 # 4. COMPUTE DISTANCES. THE BETA VALUES WILL BE THE SUM OF THE EDGES' WEIGHTS OF THE SELECTED PATH FROM VEHICLE TO FACILITY
 
 
@@ -106,3 +126,6 @@ print("--- %s seconds ---" % (time.time() - start_time))
 #         print Point(node) #the nodes
 #         for edge in G.edges(node):
 #             print LineString(edge) # the edges (>2)
+
+
+# print(G.edges(1))			# print edges adjacent to node 1

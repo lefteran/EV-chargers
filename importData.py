@@ -26,7 +26,7 @@ def importEdges(G, filename):
 	for feature in data['features']:
 		startNode = feature['properties']['startNode']
 		endNode = feature['properties']['endNode']
-		length = feature['properties']['length']
+		length = float(feature['properties']['length'])
 		G.add_edge(startNode, endNode, weight = length)
 
 
@@ -45,6 +45,19 @@ def importBelongingDict(filename):
 				belongingDict[key].append(elements[i+1].strip())
 	fp.close()
 	return belongingDict, nonBelongingNodeIds
+
+
+def importInvBelonging(filename):
+	invBelongingDict = {}
+	fp = open(filename,"r")
+	for line in fp:
+		elements = line.split(",")
+		key = elements[0].strip()
+		invBelongingDict[key] = []
+		for i in range(len(elements) - 1):
+			invBelongingDict[key].append(elements[i+1].strip())
+	fp.close()
+	return invBelongingDict
 
 
 def importAdjacencyDict(filename):
@@ -71,6 +84,51 @@ def importFacilityData(filename):
 	fp.close()
 	return facilityDataDict
 
+def importZoneData(filename):
+	zoneDataDict = {}
+	fp = open(filename,"r")
+	for line in fp:
+		elements = line.split(",")
+		key = elements[0].strip()
+		zoneDataDict[key] = []
+		for i in range(len(elements) - 1):
+			zoneDataDict[key].append(elements[i+1].strip())
+	fp.close()
+	return zoneDataDict
+
+def importVehicleData(filename):
+	vehicleDataDict = {}
+	fp = open(filename,"r")
+	for line in fp:
+		elements = line.split(",")
+		key = elements[0].strip()
+		vehicleDataDict[key] = []
+		for i in range(len(elements) - 1):
+			vehicleDataDict[key].append(elements[i+1].strip())
+	fp.close()
+	return vehicleDataDict
+
+def importDeterministicTripTimes(filename):
+	timesDict = {}
+	vehicleTimesDict = {}
+	fp = open(filename,"r")
+	vehicleKey = 0
+	for line in fp:
+		elements = line.split(",")
+		key = elements[0].strip()
+		facilityKey = elements[1].strip()
+		tripTime = float(elements[2].strip())
+		if key != vehicleKey and vehicleKey != 0:
+			timesDict[vehicleKey] = vehicleTimesDict
+			vehicleTimesDict = {}
+			vehicleKey = key
+		vehicleTimesDict[facilityKey] = tripTime
+		vehicleKey = key
+	timesDict[vehicleKey] = vehicleTimesDict
+	fp.close()
+	return timesDict
+
+# ####################### Sioux Falls ###################################
 
 def createNetwork():
 	G = nx.Graph()
@@ -99,28 +157,10 @@ def createNetwork():
 	return G, weights
 
 
-def plotNetwork(G):
-	pos = nx.get_node_attributes(G,'pos')
-	nx.draw(G, pos)
-	labels = nx.get_edge_attributes(G,'weight')
-	nx.draw(G, pos, with_labels = True)
-	# labels=nx.draw_networkx_labels(G,pos=nx.spring_layout(G))
-	nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-	plt.show()
 
 
-def plotBoundary(poly):			 #, point):
-	fig = plt.figure(1, figsize=(5,5), dpi=90)
-	ax = fig.add_subplot(111)
-	x,y = poly.exterior.xy
-	ax.plot(x, y, color='#6699cc', alpha=0.7, linewidth=3, solid_capstyle='round', zorder=2)
-	# plt.scatter(point.x, point.y, s=10, c='red')
-	ax.set_title('Polygon')
-	plt.show()
-
-
-def polyContainsPoint(polygon, point):
-	return polygon.contains(point)
+# def polyContainsPoint(polygon, point):
+# 	return polygon.contains(point)
 
 
 # G = getNetworkNodes()
@@ -145,9 +185,3 @@ def polyContainsPoint(polygon, point):
 
 
 
-
-
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-# ax.scatter(xcoords, ycoords, color='darkgreen', marker='o')
-# plt.show()
