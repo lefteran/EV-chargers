@@ -32,7 +32,6 @@ def naiveSolution(parameters):
 				while S.y[k] < facility.capacity:
 					installCP(parameters.R, S, k)
 	for zone in parameters.zones:
-		z = zone.id
 		for facility in zone.facilities:
 			if facility.alpha == 1:								# open on-street facilities
 				k = facility.id

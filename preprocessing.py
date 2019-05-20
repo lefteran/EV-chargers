@@ -4,9 +4,7 @@ import itertools
 import time
 import importData as impdt
 import sys
-from random import randint
-from random import choice
-from random import uniform
+from random import randint, choice, uniform
 
 
 def polyContainsPoint(polygon, point):

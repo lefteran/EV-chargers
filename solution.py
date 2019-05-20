@@ -1,5 +1,5 @@
 # import read_data as rdt
-import distMatrix as dmtx
+# import distMatrix as dmtx
 import parameters as pam
 
 class Solution:
