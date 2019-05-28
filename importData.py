@@ -1,10 +1,13 @@
 import matplotlib.pyplot as plt
 from shapely import geometry
 import networkx as nx
-import math
+# import math
+import facility as fl
+import zone as zn
+import vehicle as vh
 import json
-import itertools
-import fiona
+import dataClass
+# import itertools
 
 
 def importNodes(filename):
@@ -90,6 +93,8 @@ def importZoneData(filename):
 	for line in fp:
 		elements = line.split(",")
 		key = elements[0].strip()
+		if key == '621':
+			a=2
 		zoneDataDict[key] = []
 		for i in range(len(elements) - 1):
 			zoneDataDict[key].append(elements[i+1].strip())
@@ -128,33 +133,99 @@ def importDeterministicTripTimes(filename):
 	fp.close()
 	return timesDict
 
-# ####################### Sioux Falls ###################################
 
-def createNetwork():
-	G = nx.Graph()
-	with open('SiouxFalls/SiouxFallsCoordinates.geojson') as fp:
-		data = json.load(fp)
-	for feature in data['features']:
-		nodeId = feature['properties']['id']
-		coordinates = feature['geometry']['coordinates']
-		lat = coordinates[1]
-		lon = coordinates[0]
-		G.add_node(nodeId, pos = (lat, lon))
+def cleanZoneIds(adjacencyDict, IdsList):
+	for IdToRemove in IdsList:
+		if IdToRemove in adjacencyDict:
+			for neighboringZoneId in adjacencyDict[IdToRemove]:
+				adjacencyDict[neighboringZoneId].remove(IdToRemove)
+	# zoneId='621' was not found in zoneDict because it is not in invBelongingDict
+	# (check the next method). 
+	# if zoneId not in invBelongingDict remove it from the adjacencyDict
+	# i.e. for any neighbZoneId in zoneDict[zoneId].adjacent
+	# 			zoneDict[neighbZoneId].adjacent.remove(zoneId)
 
-	net_file = 'SiouxFalls/SiouxFalls_net.tntp'
-	fpe = open(net_file,"r")
-	weights = []
-	for i in range(8):
-		next(fpe)
-	for line in fpe:
-		elements = line.split("\t")
-		origin = int(elements[1])
-		dest = int(elements[2])
-		capacity = round(float(elements[3]) / 100, 2)
-		weights.append(capacity)
-		G.add_edge(origin, dest, weight = capacity)
-	fpe.close()
-	return G, weights
+
+def importNetworkAndDicts():
+	G = importNodes('Chicago/ChicagoNodes.geojson')
+	importEdges(G, 'Chicago/ChicagoEdges.geojson')
+	belongingDict, nonBelongingNodeIds = importBelongingDict('Chicago/nodeInBoundary.csv')
+	invBelongingDict = importInvBelonging('Chicago/BoundaryNodes.csv')
+	G.remove_nodes_from(nonBelongingNodeIds)
+	adjacencyDict = importAdjacencyDict('Chicago/adjacencies.csv')
+
+	facilityDataDict = importFacilityData('Chicago/FacilityData.csv')
+	facilitiesDict = {}
+	for facilityId, facilityList in facilityDataDict.items():
+		if facilityId in belongingDict:
+			facilitiesDict[facilityId] = fl.Facility(facilityId, float(facilityList[0]), int(facilityList[1]),\
+			int(facilityList[2]), belongingDict[facilityId])
+
+	zoneDataDict = importZoneData('Chicago/ZoneData.csv')
+	zonesDict = {}
+	nonBelongingZoneDictIds = []
+	for zoneId, zoneDataList in zoneDataDict.items():
+		if zoneId in invBelongingDict:
+			zonesDict[zoneId] = zn.Zone(zoneId, adjacencyDict[zoneId], int(zoneDataList[0]), invBelongingDict[zoneId],\
+			int(zoneDataList[1]))
+		else:
+			nonBelongingZoneDictIds.append(zoneId)
+	cleanZoneIds(adjacencyDict, nonBelongingZoneDictIds)
+
+	vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
+	vehiclesDict = {}
+	for vehicleId, vehicleDataList in vehicleDataDict.items():
+		startNode = vehicleDataList[0]
+		endNode = vehicleDataList[1]
+		if G.has_edge(startNode, endNode):
+			vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
+	timesDict = importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
+	# timesDict = trtim.getTimeDict(G, facilitiesDict, vehiclesDict)
+	# trtim.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')
+
+	parameters = dataClass.dataClass()
+	parameters.adjacencyDict = adjacencyDict
+	parameters.belongingDict = belongingDict
+	parameters.facilitiesDict = facilitiesDict
+	parameters.zonesDict = zonesDict
+	parameters.vehiclesDict = vehiclesDict
+	parameters.timesDict = timesDict
+
+	return parameters
+
+
+
+
+
+
+
+# # ####################### Sioux Falls ###################################
+
+# def createNetwork():
+# 	G = nx.Graph()
+# 	with open('SiouxFalls/SiouxFallsCoordinates.geojson') as fp:
+# 		data = json.load(fp)
+# 	for feature in data['features']:
+# 		nodeId = feature['properties']['id']
+# 		coordinates = feature['geometry']['coordinates']
+# 		lat = coordinates[1]
+# 		lon = coordinates[0]
+# 		G.add_node(nodeId, pos = (lat, lon))
+
+# 	net_file = 'SiouxFalls/SiouxFalls_net.tntp'
+# 	fpe = open(net_file,"r")
+# 	weights = []
+# 	for i in range(8):
+# 		next(fpe)
+# 	for line in fpe:
+# 		elements = line.split("\t")
+# 		origin = int(elements[1])
+# 		dest = int(elements[2])
+# 		capacity = round(float(elements[3]) / 100, 2)
+# 		weights.append(capacity)
+# 		G.add_edge(origin, dest, weight = capacity)
+# 	fpe.close()
+# 	return G, weights
 
 
 

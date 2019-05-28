@@ -138,7 +138,7 @@ def exportAdjacencyDict(adjacencyDict, filename):
 	fp.close()
 
 
-# #################### FACILITY, ZONE, VEHCILE DATA #################################
+# #################### FACILITY, ZONE, VEHCILE, COST DATA #################################
 
 def generateDeterministicFacilityData(G, filename):
 	fp = open(filename,"w")
@@ -158,7 +158,7 @@ def generateDeterministicZoneData(filenameIn, filenameOut):
 	for line in fpi:
 		elements = line.split(",")
 		zoneId = elements[0].strip()
-		demand = randint(100,200)
+		demand = randint(10,20)
 		onStreetBound = randint(100,200)
 		fpo.write("%s, %s, %s\n" %(zoneId, demand, onStreetBound))
 	fpi.close()

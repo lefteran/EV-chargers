@@ -3,13 +3,21 @@
 import parameters as pam
 
 class Solution:
-
 	def __init__(self, parameters):
-	  	self.x = [ [0] * parameters.Nof ] * parameters.Nov
-	  	self.omega = [1] * parameters.Nof
-	  	self.st = [0] * parameters.Nof
-	  	self.r = [0] * parameters.Nof
-	  	self.y = [0] * parameters.Nof
+		self.x = {}
+		self.omega = {}
+		self.st = {}
+		self.r = {}
+		self.y = {}
+		for vehicleKey, _ in parameters.vehiclesDict.items():
+			xFacilitiesDict = {}
+			for facilityKey, _ in parameters.facilitiesDict.items():
+				xFacilitiesDict[facilityKey] = 0
+				self.omega[facilityKey] = 1
+				self.st[facilityKey] = 0
+				self.r[facilityKey] = 0
+				self.y[facilityKey] = 0
+			self.x[vehicleKey] = xFacilitiesDict
 
 	def set_values(self, parameters, x, omega, st, r, y):
 		self.x = x
@@ -28,101 +36,95 @@ class Solution:
 
 	def IsFeasibleWithBudget(self, parameters):
 		# Budget constraint
-		land_cost = sum(x * y for x, y in zip(parameters.c, self.omega))
-		cp_cost = parameters.cst * sum(self.st) + parameters.cr * sum(self.r)
-		# print("Land and cp cost are %.2f" %(land_cost + cp_cost))
-		if land_cost + cp_cost > parameters.B:
+		land_cost = 0
+		for facilityKey, facilityObject in parameters.facilitiesDict.items():
+			land_cost += facilityObject.cost * self.omega[facilityKey]
+		cp_cost = parameters.standardCost * sum(self.st.values()) + parameters.rapidCost * sum(self.r.values())
+		if land_cost + cp_cost > parameters.budget:
 			return False
 		return self.isFeasibleWithoutBudget(parameters)
 
 	def isFeasibleWithoutBudget(self, parameters):
-
+		# ############### VEHICLE ONLY CONSTRAINTS ###############
 		# sum of x_{ij}
-		for i in range(parameters.Nov):
-			if sum(self.x[i]) < 1:
+		for vehicleKey, _ in parameters.vehiclesDict.items():
+			if sum(self.x[vehicleKey].values()) < 1:
 				return False
 
-		# omega_j >= x_{ij}
-		for i in range(parameters.Nov):
-			for j in range(parameters.Nof):
-				if self.omega[j] < self.x[i][j]:
+		# ############### VEHICLE - FACILITY CONSTRAINTS ###############
+		for vehicleKey, _ in parameters.vehiclesDict.items():
+			for facilityKey, _ in parameters.facilitiesDict.items():
+				# omega_j >= x_{ij}
+				if self.omega[facilityKey] < self.x[vehicleKey][facilityKey]:
 					return False
-
-		# y_j >= omega_j
-		for j in range(parameters.Nof):
-			if self.y[j] < self.omega[j]:
-				return False
-
-		# y_j (1 - omega_j) >= 0
-		for j in range(parameters.Nof):
-			if self.y[j] * (1 - self.omega[j]) < 0:
-				return False
-
-		# sum of y_j^r >= R
-		if sum(self.r) < parameters.R:
-			return False
-
-		# y_j = y_j^{st} + y_j^r
-		for j in range(parameters.Nof):
-			if self.y[j] != self.st[j] + self.r[j]:
-				return False
-
-		# Demand constraint
-		for z in range(parameters.Noz):
-			zoneDeamand = self.currentDemand(parameters, z)
-			if zoneDeamand < parameters.gamma * parameters.zones[z].demand:
-				return False
-
-		# On-street constraint
-		for z in range(parameters.Noz):
-			zoneOnstreetCPs = self.zoneOnstreetCPs(parameters.zones[z].facilities)
-			if zoneOnstreetCPs > parameters.zones[z].onStreetBound:
-				return False
-
-		# capacity constraint
-		for j in range(parameters.Nof):
-			if self.y[j] > parameters.facilities[j].capacity:
-				return False
-
-		# Binary variables
-		for i in range(parameters.Nov):
-			for j in range(parameters.Nof):
-				if self.x[i][j] < 0 or (self.x[i][j] > 0 and self.x[i][j] < 1) or self.x[i][j] > 1\
-				or self.omega[j] < 0 or (self.omega[j] > 0 and self.omega[j] < 1) or self.omega[j] > 1:
+				# Binary variables
+				if self.x[vehicleKey][facilityKey] < 0 or (self.x[vehicleKey][facilityKey] > 0\
+				and self.x[vehicleKey][facilityKey] < 1) or self.x[vehicleKey][facilityKey] > 1\
+				or self.omega[facilityKey] < 0 or (self.omega[facilityKey] > 0\
+				and self.omega[facilityKey] < 1) or self.omega[facilityKey] > 1:
 					return False			
 
-		# Integer variables
-		for j in range(parameters.Nof):
-			if (not float(self.y[j]).is_integer()) or  (not float(self.st[j]).is_integer()) or (not float(self.r[j]).is_integer()):
+		# ############### FACILITY ONLY CONSTRAINTS ###############
+		for facilityKey, _ in parameters.facilitiesDict.items():
+			# y_j >= omega_j
+			if self.y[facilityKey] < self.omega[facilityKey]:
+				return False
+			# y_j (1 - omega_j) >= 0
+			if self.y[facilityKey] * (1 - self.omega[facilityKey]) < 0:
+				return False
+			# y_j = y_j^{st} + y_j^r
+			if self.y[facilityKey] != self.st[facilityKey] + self.r[facilityKey]:
+				return False
+			# capacity constraint
+			if self.y[facilityKey] > parameters.facilitiesDict[facilityKey].capacity:
+				return False
+			# Integer variables
+			if (not float(self.y[facilityKey]).is_integer()) or  (not float(self.st[facilityKey]).is_integer())\
+			or (not float(self.r[facilityKey]).is_integer()):
 				return False
 
+		# ############### GLOBAL CONSTRAINTS ###############
+		# sum of y_j^r >= R
+		if sum(self.r.values()) < parameters.R:
+			return False
+
+		# ############### ZONE CONSTRAINTS ###############
+		for zoneKey, zoneObject in parameters.zonesDict.items():
+			# Demand constraint
+			zoneDeamand = self.currentDemand(parameters, zoneKey)
+			if zoneDeamand < parameters.gamma * zoneObject.demand:
+				return False
+			# On-street constraint
+			zoneOnstreetCPs = self.zoneOnstreetCPs(parameters.zonesDict[zoneKey].facilities, parameters.facilitiesDict)
+			if zoneOnstreetCPs > parameters.zonesDict[zoneKey].onStreetBound:
+				return False
 		return True
 
-	def currentDemand(self, parameters, z):
+
+	def currentDemand(self, parameters, zoneId):
 		value = 0
-		for zeta in parameters.zones[z].adjacent:
-			for j in range(parameters.Nof):
-				if parameters.belonging[j] == zeta:
-					value += self.y[j]
+		for zetaId in parameters.zonesDict[zoneId].adjacent:
+			for facilityId in parameters.zonesDict[zetaId].facilities:
+				value += self.y[facilityId]
 		return value
 
-	def zoneOnstreetCPs(self, zoneFacilities):
+	def zoneOnstreetCPs(self, zoneFacilityIds, facilitiesDict):
 		value = 0
-		for facility in zoneFacilities:
-			value += facility.alpha * self.y[facility.id]
+		for facilityId in zoneFacilityIds:
+			value += facilitiesDict[facilityId].alpha * self.y[facilityId]
 		return value
 
-	def open_facility(self, facId):
-		self.omega[facId] = 1
+	def open_facility(self, facilityId):
+		self.omega[facilityId] = 1
 
-	def close_facility(self, facId):
-		self.omega[facId] = 0
-		self.st[facId] = 0
-		self.r[facId] = 0
-		self.y[facId] = 0
+	def close_facility(self, facilityId):
+		self.omega[facilityId] = 0
+		self.st[facilityId] = 0
+		self.r[facilityId] = 0
+		self.y[facilityId] = 0
 
-	def is_open(self, facId):
-		return self.omega[facId]
+	def is_open(self, facilityId):
+		return self.omega[facilityId]
 
 	def canRemoveRapidCP(self, facility):
 		return True if self.r[facility] > 0 else False
@@ -130,24 +132,24 @@ class Solution:
 	def canRemoveStandardCP(self, facility):
 		return True if self.st[facility] > 0 else False
 
-	def removeRapidCP(self, facId):
-		self.r[facId] -= 1
-		self.y[facId] -= 1
+	def removeRapidCP(self, facilityId):
+		self.r[facilityId] -= 1
+		self.y[facilityId] -= 1
 
-	def removeStandardCP(self, facId):
-		self.st[facId] -= 1
-		self.y[facId] -= 1
+	def removeStandardCP(self, facilityId):
+		self.st[facilityId] -= 1
+		self.y[facilityId] -= 1
 
-	def increaseRapidCP(self, facId):
-		self.r[facId] += 1
-		self.y[facId] += 1
+	def increaseRapidCP(self, facilityId):
+		self.r[facilityId] += 1
+		self.y[facilityId] += 1
 
-	def increaseStandardCP(self, facId):
-		self.st[facId] += 1
-		self.y[facId] += 1
+	def increaseStandardCP(self, facilityId):
+		self.st[facilityId] += 1
+		self.y[facilityId] += 1
 
-	def connect(self, vehicle, facId):
-		self.x[vehicle][facId] = 1
+	def connect(self, vehicleId, facilityId):
+		self.x[vehicleId][facilityId] = 1
 
 	def disconnect(self, vehicle, facility):
 		self.x[vehicle][facility] = 0

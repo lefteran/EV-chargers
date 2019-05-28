@@ -1,15 +1,17 @@
-import parameters as pam
+# import parameters as pam
 # import read_data as rdt
 import importData as impdt
-import facility as fl
-import zone as zn
-import vehicle as vh
-import tripTimes as trtim
+# import facility as fl
+# import zone as zn
+# import vehicle as vh
+# import tripTimes as trtim
 # import convertToAMPL as campl
 # import lagrangian as lag
 # import optimal as opt
 import time
 import preprocessing as pre
+import initialise as intl
+import solution as sl
 
 
 
@@ -17,40 +19,11 @@ if __name__ == "__main__":
 	start_time = time.time()
 	print("#########################################################\n#########################################################")
 	pre.preprocessing(False)
-	parameters = pam.Parameters()
-	# ############################ IMPORT NETWORK AND DICTIONARIES ##########################################
-	G = impdt.importNodes('Chicago/ChicagoNodes.geojson')
-	impdt.importEdges(G, 'Chicago/ChicagoEdges.geojson')
-	belongingDict, nonBelongingNodeIds = impdt.importBelongingDict('Chicago/nodeInBoundary.csv')
-	invBelongingDict = impdt.importInvBelonging('Chicago/BoundaryNodes.csv')
-	G.remove_nodes_from(nonBelongingNodeIds)
-	adjacencyDict = impdt.importAdjacencyDict('Chicago/adjacencies.csv')
 
-	facilityDataDict = impdt.importFacilityData('Chicago/FacilityData.csv')
-	facilitiesDict = {}
-	for facilityId, facilityList in facilityDataDict.items():
-		if facilityId in belongingDict:
-			facilitiesDict[facilityId] = fl.Facility(facilityId, facilityList[0], facilityList[1],\
-			facilityList[2], belongingDict[facilityId])
-
-	zoneDataDict = impdt.importZoneData('Chicago/ZoneData.csv')
-	zonesDict = {}
-	for zoneId, zoneDataList in zoneDataDict.items():
-		if zoneId in invBelongingDict:
-			zonesDict[zoneId] = zn.Zone(zoneId, adjacencyDict[zoneId], zoneDataList[0], invBelongingDict[zoneId], zoneDataList[1])
-
-	vehicleDataDict = impdt.importVehicleData('Chicago/VehicleData.csv')
-	vehiclesDict = {}
-	for vehicleId, vehicleDataList in vehicleDataDict.items():
-		startNode = vehicleDataList[0]
-		endNode = vehicleDataList[1]
-		if G.has_edge(startNode, endNode):
-			vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
-	timesDict = impdt.importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
-	# timesDict = trtim.getTimeDict(G, facilitiesDict, vehiclesDict)
-	# trtim.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')	
-	# ##################################################################################################################
-
+	parameters = impdt.importNetworkAndDicts()
+	# # S = sl.Solution(parameters)
+	# # S.IsFeasibleWithBudget(parameters)
+	S = intl.initialise(parameters,0)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 
