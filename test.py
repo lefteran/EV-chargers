@@ -157,11 +157,7 @@
 # # print(G.nodes())
 # # print(G.edges())
 
-
-newDict = {}
-newDict["1"] = 5
-newDict["2"] = 13
-newDict["3"] = ['a', 'b', 'c']
-
-newDict["3"].remove('b')
-print(newDict)
+a=['1564564']
+print(a)
+b=a[0]
+print(b)

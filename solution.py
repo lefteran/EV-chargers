@@ -1,6 +1,7 @@
 # import read_data as rdt
 # import distMatrix as dmtx
 import parameters as pam
+import _pickle as pickle
 
 class Solution:
 	def __init__(self, parameters):
@@ -13,11 +14,12 @@ class Solution:
 			xFacilitiesDict = {}
 			for facilityKey, _ in parameters.facilitiesDict.items():
 				xFacilitiesDict[facilityKey] = 0
-				self.omega[facilityKey] = 1
-				self.st[facilityKey] = 0
-				self.r[facilityKey] = 0
-				self.y[facilityKey] = 0
 			self.x[vehicleKey] = xFacilitiesDict
+		for facilityKey, _ in parameters.facilitiesDict.items():
+			self.omega[facilityKey] = 1
+			self.st[facilityKey] = 0
+			self.r[facilityKey] = 0
+			self.y[facilityKey] = 0
 
 	def set_values(self, parameters, x, omega, st, r, y):
 		self.x = x
@@ -49,6 +51,7 @@ class Solution:
 		# sum of x_{ij}
 		for vehicleKey, _ in parameters.vehiclesDict.items():
 			if sum(self.x[vehicleKey].values()) < 1:
+				# print("constraint 1 and vehicle key is ", vehicleKey)
 				return False
 
 		# ############### VEHICLE - FACILITY CONSTRAINTS ###############
@@ -56,43 +59,83 @@ class Solution:
 			for facilityKey, _ in parameters.facilitiesDict.items():
 				# omega_j >= x_{ij}
 				if self.omega[facilityKey] < self.x[vehicleKey][facilityKey]:
+					# print("constraint 2 and facility key is ", facilityKey)
 					return False
 				# Binary variables
 				if self.x[vehicleKey][facilityKey] < 0 or (self.x[vehicleKey][facilityKey] > 0\
 				and self.x[vehicleKey][facilityKey] < 1) or self.x[vehicleKey][facilityKey] > 1\
 				or self.omega[facilityKey] < 0 or (self.omega[facilityKey] > 0\
 				and self.omega[facilityKey] < 1) or self.omega[facilityKey] > 1:
+					# print("constraint 3 and facility key is ", facilityKey)
 					return False			
 
 		# ############### FACILITY ONLY CONSTRAINTS ###############
 		for facilityKey, _ in parameters.facilitiesDict.items():
 			# y_j >= omega_j
 			if self.y[facilityKey] < self.omega[facilityKey]:
+				# print("constraint 4 and facility key is ", facilityKey)
 				return False
 			# y_j (1 - omega_j) >= 0
 			if self.y[facilityKey] * (1 - self.omega[facilityKey]) < 0:
+				# print("constraint 5 and facility key is ", facilityKey)
 				return False
 			# y_j = y_j^{st} + y_j^r
 			if self.y[facilityKey] != self.st[facilityKey] + self.r[facilityKey]:
+				# print("constraint 6 and facility key is ", facilityKey)
 				return False
 			# capacity constraint
 			if self.y[facilityKey] > parameters.facilitiesDict[facilityKey].capacity:
+				# print("constraint 7 and facility key is ", facilityKey)
 				return False
 			# Integer variables
 			if (not float(self.y[facilityKey]).is_integer()) or  (not float(self.st[facilityKey]).is_integer())\
 			or (not float(self.r[facilityKey]).is_integer()):
+				# print("constraint 8 and facility key is ", facilityKey)
 				return False
 
 		# ############### GLOBAL CONSTRAINTS ###############
 		# sum of y_j^r >= R
 		if sum(self.r.values()) < parameters.R:
+			# print("constraint 9")
 			return False
 
 		# ############### ZONE CONSTRAINTS ###############
 		for zoneKey, zoneObject in parameters.zonesDict.items():
 			# Demand constraint
+			# if zoneKey == '32801':
+			# 	a=2
 			zoneDeamand = self.currentDemand(parameters, zoneKey)
 			if zoneDeamand < parameters.gamma * zoneObject.demand:
+				# print("constraint 10 and zonekey is ", zoneKey)
+				return False
+			# On-street constraint
+			zoneOnstreetCPs = self.zoneOnstreetCPs(parameters.zonesDict[zoneKey].facilities, parameters.facilitiesDict)
+			if zoneOnstreetCPs > parameters.zonesDict[zoneKey].onStreetBound:
+				# print("constraint 11 and zonekey is ", zoneKey)
+				return False
+		return True
+
+	def isFeasibleWithReducedCPs(self, parameters, facilityId):
+		# y_j >= omega_j
+		if self.y[facilityId] < self.omega[facilityId]:
+			return False
+		# y_j (1 - omega_j) >= 0
+		if self.y[facilityId] * (1 - self.omega[facilityId]) < 0:
+			return False
+		# sum of y_j^r >= R
+		if sum(self.r.values()) < parameters.R:
+			return False
+
+		# ############### ZONE CONSTRAINTS ###############
+		zoneId = parameters.facilitiesDict[facilityId].zoneId
+		# zoneObject = parameters.zonesDict[zoneId]
+		adjacentZoneIds = parameters.zonesDict[zoneId].adjacent		# 32801, 763
+		for zoneKey in adjacentZoneIds:
+			zoneObject = parameters.zonesDict[zoneKey]
+		# for zoneKey, zoneObject in parameters.zonesDict.items():
+			# Demand constraint
+			zoneDemand = self.currentDemand(parameters, zoneKey)
+			if zoneDemand < parameters.gamma * zoneObject.demand:
 				return False
 			# On-street constraint
 			zoneOnstreetCPs = self.zoneOnstreetCPs(parameters.zonesDict[zoneKey].facilities, parameters.facilitiesDict)
@@ -187,8 +230,13 @@ class Solution:
 		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters))
 		print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
 
+	def exportSolutionObject(self):
+		with open('Chicago/solutionObject.pkl', 'wb') as solOutput:
+			pickle.dump(self, solOutput, -1)
 
-# parameters = pam.Parameters()
-# testSol = Solution(parameters)
-# cost = testSol.getCost(parameters)
-# print(cost)
+	def importSolutionObject(self):
+		with open('Chicago/solutionObject.pkl', 'rb') as solInput:
+			self = pickle.load(solInput)
+
+
+

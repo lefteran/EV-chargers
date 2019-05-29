@@ -29,8 +29,6 @@ def naiveSolution(parameters):
 	S = sl.Solution(parameters)
 	for _, zoneObject in parameters.zonesDict.items():
 		for facilityId in zoneObject.facilities:
-			# if facilityId == '26817937':
-			# 	a=2
 			facility = parameters.facilitiesDict[facilityId]
 			if facility.alpha == 0:								# open off-street facilities first
 				currentRapid = sum(S.r.values())
@@ -43,8 +41,6 @@ def naiveSolution(parameters):
 	print("off-street done")
 	for _, zoneObject in parameters.zonesDict.items():
 		for facilityId in zoneObject.facilities:
-			# if facilityId == '26817937':
-			# 	a=2
 			facility = parameters.facilitiesDict[facilityId]
 			if facility.alpha == 1:								# open on-street facilities
 				currentRapid = sum(S.r.values())
@@ -73,8 +69,14 @@ def initialise(parameters, lambdaVal):
 		print("solution is feasible without budget")
 	else:
 		print("not feasible")
-		# ls.reduceCPs(parameters, initSol)
-		# for zone in parameters.zones:
-		# 	zoneFacilities = zone.facilities
-		# 	rdb.redistributeCPs(initSol, zoneFacilities)
+	# initSol.exportSolution('Chicago/naiveSolution.csv', parameters)
+	initSol.exportSolutionObject()
+	# ls.reduceCPs(parameters, initSol)
+	# if initSol.isFeasibleWithoutBudget(parameters):
+	# 	print("solution is feasible without budget")
+	# else:
+	# 	print("not feasible")
+	# for _, zoneObject in parameters.zonesDict.items():
+	# 	# zoneFacilities = zone.facilities
+	# 	rdb.redistributeCPs(initSol, zoneObject.facilities)
 	return initSol

@@ -159,7 +159,7 @@ def importNetworkAndDicts():
 	for facilityId, facilityList in facilityDataDict.items():
 		if facilityId in belongingDict:
 			facilitiesDict[facilityId] = fl.Facility(facilityId, float(facilityList[0]), int(facilityList[1]),\
-			int(facilityList[2]), belongingDict[facilityId])
+			int(facilityList[2]), belongingDict[facilityId][0])
 
 	zoneDataDict = importZoneData('Chicago/ZoneData.csv')
 	zonesDict = {}

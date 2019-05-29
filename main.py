@@ -23,7 +23,10 @@ if __name__ == "__main__":
 	parameters = impdt.importNetworkAndDicts()
 	# # S = sl.Solution(parameters)
 	# # S.IsFeasibleWithBudget(parameters)
-	S = intl.initialise(parameters,0)
+	S = sl.Solution(parameters)
+	S.importSolutionObject()
+	# UNCOMMENT NEXT TO INITIALISE NEW SOLUTION INSEAD OF IMPORTING. APPROXIMATE TIME: 180s
+	# S = intl.initialise(parameters,0)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 

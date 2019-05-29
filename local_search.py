@@ -94,18 +94,22 @@ def getOpenAndClosedFacIds(S, zone):
 
 
 # Removes as many rapid and standard CPs until the solution is infeasible
+# *** THE FOLLOWING METHOD TO BE MOVED INSIDE SOLUTION CLASS ***
 def reduceCPs(parameters, S):
-	for facility in parameters.facilities:
-		facId = facility.id
-		for i in range(S.r[facId]):
-			S.removeRapidCP(facId)
-			if not S.isFeasibleWithoutBudget(parameters):
-				S.increaseRapidCP(facId)
+	count = 0
+	total = len(parameters.facilitiesDict)
+	for facilityKey, _ in parameters.facilitiesDict.items():
+		count += 1
+		print("facility %d of %d" %(count, total))
+		for i in range(S.r[facilityKey]):
+			S.removeRapidCP(facilityKey)
+			if not S.isFeasibleWithReducedCPs(parameters, facilityKey):
+				S.increaseRapidCP(facilityKey)
 				break
-		for i in range(S.st[facId]):
-			S.removeStandardCP(facId)
-			if not S.isFeasibleWithoutBudget(parameters):
-				S.increaseStandardCP(facId)
+		for i in range(S.st[facilityKey]):
+			S.removeStandardCP(facilityKey)
+			if not S.isFeasibleWithReducedCPs(parameters, facilityKey):
+				S.increaseStandardCP(facilityKey)
 				break
 
 

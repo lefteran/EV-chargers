@@ -7,16 +7,17 @@ def hasFacilityStandardCPs(S, facId):
 def hasFacilityRapidCPs(S, facId):
 	return S.r[facId] != 0
 
-def getNextNonFullFac(S, sortedByCapacity, index):
+def getNextNotFullFacility(S, sortedByCapacity, index):
 	for i in range(index, len(sortedByCapacity)):
 		facility = sortedByCapacity[i]
 		if not isFacilityFull(S, facility):
 			return sortedByCapacity[i]
 
+# *** THE FOLLOWING METHOD TO BE MOVED INSIDE SOLUTION CLASS ***
 def redistributeCPs(S, zoneFacilities):
 	sortedByCapacity = sorted(zoneFacilities, key=lambda x: x.capacity, reverse=True)
 	index = 0
-	facilityToFill = getNextNonFullFac(S, sortedByCapacity, index)
+	facilityToFill = getNextNotFullFacility(S, sortedByCapacity, index)
 	for facilityToEmpty in sortedByCapacity[::-1]:
 		standardFacsToMove = S.st[facilityToEmpty.id]
 		rapidFacsToMove = S.r[facilityToEmpty.id]
@@ -26,7 +27,7 @@ def redistributeCPs(S, zoneFacilities):
 			if (not hasFacilityStandardCPs(S, facilityToEmpty.id)) and (not hasFacilityRapidCPs(S, facilityToEmpty.id)):
 				S.close_facility(facilityToEmpty.id)
 			if isFacilityFull(S, facilityToFill):
-				facilityToFill = getNextNonFullFac(S, sortedByCapacity, index)
+				facilityToFill = getNextNotFullFacility(S, sortedByCapacity, index)
 			if facilityToEmpty.id == facilityToFill.id:
 				break
 		for i in range(rapidFacsToMove):
@@ -38,3 +39,5 @@ def redistributeCPs(S, zoneFacilities):
 				facilityToFill = getNextNonFullFac(S, sortedByCapacity, index)
 			if facilityToEmpty.id == facilityToFill.id:
 				break
+	
+	# **** CHECK AFTER CLOSING EMPTY FACILITIES, IF THE VEHICLES ARE ASSIGNED TO NEW ONES ******
