@@ -1,9 +1,9 @@
 import solution as sl
 import parameters as pam
-import redistribute as rdb
 import local_search as ls
 import copy
 import sys
+import _pickle as pickle
 
 # def installCP(R, S, k):
 # 	if sum(S.r.values()) < R:
@@ -13,6 +13,7 @@ import sys
 # 	S.y[k] += 1
 
 
+# CALL THE METHOD getClosestFacilityToVehicle() FROM THE SOLUTION CLASS INSTEAD OF THE CODE BELOW
 def findClosestFacilitiesToVehicles(S, parameters):
 	for vehicleKey, _ in parameters.vehiclesDict.items():
 		initialFacilityKey = list(parameters.facilitiesDict.keys())[0]
@@ -25,6 +26,7 @@ def findClosestFacilitiesToVehicles(S, parameters):
 		S.connect(vehicleKey, closestFacility)
 
 
+# TO BE MOVED INSIDE THE SOLUTION CLASS
 def naiveSolution(parameters):
 	S = sl.Solution(parameters)
 	for _, zoneObject in parameters.zonesDict.items():
@@ -55,28 +57,43 @@ def naiveSolution(parameters):
 				S.y[facilityId] += standardToAdd
 				if S.y[facilityId] == 0:
 					S.close_facility(facilityId)
-					
 	print("on-street done")
 	findClosestFacilitiesToVehicles(S, parameters)
 	return S
 
+def getFacilitiesListByIds(parameters, listOfIds):
+	facilitiesList = []
+	for facilityId in listOfIds:
+		facilitiesList.append(parameters.facilitiesDict[facilityId])
+	return facilitiesList
 
-def initialise(parameters, lambdaVal):
-	initSol = naiveSolution(parameters)
+
+# IMPORT SOLUTION OBJECT FROM FILE
+def importSolutionObject():
+	with open('Chicago/solutionObject.pkl', 'rb') as solInput:
+		return pickle.load(solInput)
+
+
+def initialise(importSol, parameters, lambdaVal):
+	# initSol = naiveSolution(parameters)
 	# print("------------------ INITIAL SOLUTION (lambda = %.2f) ----------------------" %lambdaVal)
 	# initSol.printSol(parameters, lambdaVal)
-	if initSol.isFeasibleWithoutBudget(parameters):
-		print("solution is feasible without budget")
+	if importSol:
+		initSol = importSolutionObject()
+		if initSol.isFeasibleWithoutBudget(parameters):
+			print("solution is feasible without budget")
+		else:
+			print("not feasible")
 	else:
-		print("not feasible")
-	# initSol.exportSolution('Chicago/naiveSolution.csv', parameters)
-	initSol.exportSolutionObject()
-	# ls.reduceCPs(parameters, initSol)
-	# if initSol.isFeasibleWithoutBudget(parameters):
-	# 	print("solution is feasible without budget")
-	# else:
-	# 	print("not feasible")
-	# for _, zoneObject in parameters.zonesDict.items():
-	# 	# zoneFacilities = zone.facilities
-	# 	rdb.redistributeCPs(initSol, zoneObject.facilities)
+		initSol = naiveSolution(parameters)
+		initSol.closeRedundantFacilities(parameters)
+		initSol.reduceCPs(parameters)
+		for _, zoneObject in parameters.zonesDict.items():
+			zoneFacilities = getFacilitiesListByIds(parameters, zoneObject.facilities)
+			initSol.redistributeCPs(parameters, zoneFacilities)
+		if initSol.isFeasibleWithoutBudget(parameters):
+			print("solution is feasible without budget")
+		else:
+			print("not feasible")
+		initSol.exportSolutionObject()
 	return initSol
