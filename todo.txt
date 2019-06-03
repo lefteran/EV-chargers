@@ -51,4 +51,11 @@ EXPERIMENTS
 
 
 
-################################ PREPROCESSSING #####################################
+################################ LOCAL SEARCH #####################################
+Instead of swapping do the following:
+- open/close new facilities for the current solution S
+- compute the new cost
+- if better 
+    return the solution
+  else
+    revert to previous solution by close/open new facilities

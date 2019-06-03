@@ -157,7 +157,41 @@
 # # print(G.nodes())
 # # print(G.edges())
 
-a=['1564564']
-print(a)
-b=a[0]
-print(b)
+# import operator
+import _pickle as pickle
+import ujson
+
+class Student:
+    def __init__(self, name, grade, age):
+        self.name = name
+        self.grade = grade
+        self.age = age
+
+
+studi1=Student('john', 'A', 15)
+studi2=Student('dave', 'B', 10)
+studi3=Student('jane', 'B', 12)
+
+# student_Dict = {}
+# student_Dict[studi1.name]=studi1
+# student_Dict[studi2.name]=studi2
+# student_Dict[studi3.name]=studi3
+
+# L = sorted(student_Dict.values(), key=operator.attrgetter('age'), reverse=True)
+# L.sort(key=operator.attrgetter('age'), reverse=False)
+# for student in L:
+#     print(student.name)
+
+
+# import itertools
+
+
+# L=[1,2,3]
+# for i in range(2):
+#     M=list(itertools.combinations(L, i+1))
+#     print(M)
+
+
+g = pickle.loads(pickle.dumps(studi3, -1))
+e = ujson.loads(ujson.dumps(studi3))
+a=2

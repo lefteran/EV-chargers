@@ -56,7 +56,7 @@ def naiveSolution(parameters):
 				S.st[facilityId] += standardToAdd
 				S.y[facilityId] += standardToAdd
 				if S.y[facilityId] == 0:
-					S.close_facility(facilityId)
+					S.closeFacility(facilityId)
 	print("on-street done")
 	findClosestFacilitiesToVehicles(S, parameters)
 	return S
@@ -80,10 +80,10 @@ def initialise(importSol, parameters, lambdaVal):
 	# initSol.printSol(parameters, lambdaVal)
 	if importSol:
 		initSol = importSolutionObject()
-		if initSol.isFeasibleWithoutBudget(parameters):
-			print("solution is feasible without budget")
-		else:
-			print("not feasible")
+		# if initSol.isFeasibleWithoutBudget(parameters):
+		# 	print("solution is feasible without budget")
+		# else:
+		# 	print("not feasible")
 	else:
 		initSol = naiveSolution(parameters)
 		initSol.closeRedundantFacilities(parameters)

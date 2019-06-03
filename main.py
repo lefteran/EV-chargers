@@ -6,11 +6,11 @@ import importData as impdt
 # import vehicle as vh
 # import tripTimes as trtim
 # import convertToAMPL as campl
-# import lagrangian as lag
+import lagrangian as lag
 # import optimal as opt
 import time
 import preprocessing as pre
-import initialise as intl
+# import initialise as intl
 import solution as sl
 
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 	pre.preprocessing(False)
 
 	parameters = impdt.importNetworkAndDicts()
-	S = intl.initialise(True, parameters,0)
+	S = lag.lagrangian(True, parameters)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -94,3 +94,6 @@ if __name__ == "__main__":
 
 
 # print(G.edges(1))			# print edges adjacent to node 1
+
+
+# https://stackoverflow.com/questions/10052912/how-to-sort-dictionaries-of-objects-by-attribute-value-in-python

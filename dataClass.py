@@ -14,3 +14,6 @@ class dataClass:
 		self.vehiclesNo = 0
 		self.gamma = 0.5
 		self.R = 10
+		self.lambdaMax = 10
+		self.epsilon = 2
+		self.swaps = 2

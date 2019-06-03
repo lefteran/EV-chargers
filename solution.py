@@ -153,10 +153,10 @@ class Solution:
 			value += facilitiesDict[facilityId].alpha * self.y[facilityId]
 		return value
 
-	def open_facility(self, facilityId):
+	def openFacility(self, facilityId):
 		self.omega[facilityId] = 1
 
-	def close_facility(self, facilityId):
+	def closeFacility(self, facilityId):
 		self.omega[facilityId] = 0
 		self.st[facilityId] = 0
 		self.r[facilityId] = 0
@@ -166,7 +166,7 @@ class Solution:
 		for facilityKey, _ in parameters.facilitiesDict.items():
 			if self. is_open(facilityKey) and self.y[facilityKey] == 0:
 				self.connectVehiclesToNewFacility(parameters, facilityKey)
-				self.close_facility(facilityKey)
+				self.closeFacility(facilityKey)
 
 	def is_open(self, facilityId):
 		return self.omega[facilityId]
@@ -229,33 +229,37 @@ class Solution:
 
 	def getCost(self, parameters):
 		cost = 0
-		for i in range(parameters.Nov):
-			for j in range(parameters.Nof):
-				cost += parameters.distMatrix[i][j] * self.x[i][j]
+		for vehicleKey, _ in parameters.vehiclesDict.items():
+			vehicleBestCost = float("inf")
+			for facilityKey, _ in parameters.facilitiesDict.items():
+				if parameters.timesDict[vehicleKey][facilityKey] < vehicleBestCost:
+					vehicleBestCost = parameters.timesDict[vehicleKey][facilityKey]
+				if self.x[vehicleKey][facilityKey] != 0:
+					cost += parameters.timesDict[vehicleKey][facilityKey]
+			# print("vehicle's %s time cost is %f" %(vehicleKey, vehicleBestCost))
 		return cost
 
-	def getCostLagrangian(self, parameters, lambdaVal):
-		lagrangianCost = 0
-		for i in range(parameters.Nov):
-			for j in range(parameters.Nof):
-				lagrangianCost += parameters.distMatrix[i][j] * self.x[i][j]
-		lagrangianCost -= lambdaVal * parameters.B
-		for j in range(parameters.Nof):
-			lagrangianCost += lambdaVal *( parameters.c[j] * self.omega[j] + parameters.cst * self.st[j] + parameters.cr * self.r[j])
+	def getLagrangianCost(self, parameters, lambdaVal):
+		# print("\tgetting new Lagrangian cost")
+		lagrangianCost = self.getCost(parameters)
+		lagrangianCost -= lambdaVal * parameters.budget
+		for facilityKey, facilityObject in parameters.facilitiesDict.items():
+			lagrangianCost += lambdaVal *(facilityObject.cost * self.omega[facilityKey]\
+			+ parameters.standardCost * self.st[facilityKey] + parameters.rapidCost * self.r[facilityKey])
 		return lagrangianCost
 
 	def printSol(self, parameters, lambdaVal):
-		print("x is ", self.x)
-		print("st is ", self.st)
-		print("r is ", self.r)
-		print("y is ", self.y)
-		print("omega is ", self.omega)
+		# print("x is ", self.x)
+		# print("st is ", self.st)
+		# print("r is ", self.r)
+		# print("y is ", self.y)
+		# print("omega is ", self.omega)
 		print("Cost of objective is %.2f" %self.getCost(parameters))
-		print("Cost of lagrangian objective is %.2f" %self.getCostLagrangian(parameters, lambdaVal))
+		# print("Cost of lagrangian objective is %.2f" %self.getCostLagrangian(parameters, lambdaVal))
 		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters))
 		print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
 
-	# REDUCE THE NUMBER OF CHARGING POINTS PER FACILITY MAINTAINING FEASIBILITY
+	# REDUCE THE NUMBER OF CHARGING POINTS PER FACILITY BY MAINTAINING FEASIBILITY
 	def reduceCPs(self, parameters):
 		count = 0
 		total = len(parameters.facilitiesDict)
@@ -318,7 +322,7 @@ class Solution:
 				self.removeStandardCP(facilityToEmpty.id)
 				if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
 					self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
-					self.close_facility(facilityToEmpty.id)
+					self.closeFacility(facilityToEmpty.id)
 				if self.isFacilityFull(facilityToFill):
 					facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
 				if facilityToFill == None:
@@ -330,7 +334,7 @@ class Solution:
 				self.removeRapidCP(facilityToEmpty.id)
 				if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
 					self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
-					self.close_facility(facilityToEmpty.id)
+					self.closeFacility(facilityToEmpty.id)
 				if self.isFacilityFull(facilityToFill):
 					facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
 				if facilityToFill == None:
