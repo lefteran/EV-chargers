@@ -1,6 +1,4 @@
-# import read_data as rdt
-# import distMatrix as dmtx
-import parameters as pam
+# import parameters as pam
 import _pickle as pickle
 
 class Solution:
@@ -20,21 +18,6 @@ class Solution:
 			self.st[facilityKey] = 0
 			self.r[facilityKey] = 0
 			self.y[facilityKey] = 0
-
-	# def set_values(self, parameters, x, omega, st, r, y):
-	# 	self.x = x
-	# 	self.omega = omega
-	# 	self.st = st
-	# 	self.r = r
-	# 	self.y = y
-	# 	if len(x) != parameters.Nov or len(x[0]) != parameters.Nof \
-	# 	or len(omega) != parameters.Nof or len(st) != parameters.Nof or len(r) != parameters.Nof\
-	# 	or len(y) != parameters.Nof:
-	# 		print("*** Incorrect size of arrays in solution ***")
-	# 	for i in range(parameters.Nof):
-	# 		if self.st[i] + self.r[i] != self.y[i]:
-	# 			print("*** The sum of standard and rapid chargers does not match the total chargers ***")
-
 
 	def IsFeasibleWithBudget(self, parameters):
 		# Budget constraint

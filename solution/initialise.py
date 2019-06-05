@@ -1,17 +1,9 @@
-import solution as sl
-import parameters as pam
-import local_search as ls
+import solution.solution as sl
+# import parameters as pam
+import solution.local_search as ls
 import copy
 import sys
 import _pickle as pickle
-
-# def installCP(R, S, k):
-# 	if sum(S.r.values()) < R:
-# 		S.r[k] += 1
-# 	else:
-# 		S.st[k] += 1
-# 	S.y[k] += 1
-
 
 # CALL THE METHOD getClosestFacilityToVehicle() FROM THE SOLUTION CLASS INSTEAD OF THE CODE BELOW
 def findClosestFacilitiesToVehicles(S, parameters):
@@ -74,7 +66,7 @@ def importSolutionObject():
 		return pickle.load(solInput)
 
 
-def initialise(importSol, parameters, lambdaVal):
+def initialiseSolution(importSol, parameters, lambdaVal):
 	# initSol = naiveSolution(parameters)
 	# print("------------------ INITIAL SOLUTION (lambda = %.2f) ----------------------" %lambdaVal)
 	# initSol.printSol(parameters, lambdaVal)

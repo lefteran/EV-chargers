@@ -6,12 +6,12 @@ import importData as impdt
 # import vehicle as vh
 # import tripTimes as trtim
 # import convertToAMPL as campl
-import lagrangian as lag
+import solution.lagrangian as lag
 # import optimal as opt
 import time
 import preprocessing as pre
 # import initialise as intl
-import solution as sl
+import solution.solution as sl
 
 
 
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 	pre.preprocessing(False)
 
 	parameters = impdt.importNetworkAndDicts()
-	S = lag.lagrangian(True, parameters)
+	S = lag.lagrangianRelaxation(True, parameters)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 

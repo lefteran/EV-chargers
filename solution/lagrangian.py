@@ -1,13 +1,12 @@
-import initialise as intl
-import local_search as ls
-
+import solution.initialise as intl
+import solution.local_search as ls
 
 def getSolution(importSol, parameters, lambdaVal):
-    initSol = intl.initialise(importSol, parameters, lambdaVal)
+    initSol = intl.initialiseSolution(importSol, parameters, lambdaVal)
     sol = ls.localSearch(initSol, parameters, lambdaVal)
     return sol
 
-def lagrangian(importSol, parameters):
+def lagrangianRelaxation(importSol, parameters):
     lambda1 = 0
     lambda2 = parameters.lambdaMax
     lambdaVal = lambda1
