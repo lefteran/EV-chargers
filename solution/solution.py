@@ -285,6 +285,27 @@ class Solution:
 		for vehicleId in vehicleIdsList:
 			self.connectVehicleToClosestFacility(parameters, vehicleId, facilityId)
 
+	def getOpenFacilityIds(self, zoneFacilities):
+		openFacilityIds = []
+		for zoneFacility in zoneFacilities:
+			if self.is_open(zoneFacility.id):
+				openFacilityIds.append(zoneFacility.id)
+		return openFacilityIds
+
+	def isCandidateSolutionCostFinite(self, parameters, zoneFacilities, facilitiesToRemove):
+		openFacilityIds = self.getOpenFacilityIds(zoneFacilities)
+		for facilityToRemove in facilitiesToRemove:
+			if facilityToRemove in openFacilityIds:
+				openFacilityIds.remove(facilityToRemove)
+		for vehicleKey,_ in parameters.vehiclesDict.items():
+			isFinite = False
+			for facilityId in openFacilityIds:
+				if parameters.timesDict[vehicleKey][facilityId] != float("inf"):
+					isFinite = True
+					break
+		return isFinite
+
+
 
 	# REDISTRIBUTE THE CHARGING POINTS TO OTHER FACILITIES TO HAVE AS LESS FACILITIES OPEN AS POSSIBLE
 	def redistributeCPs(self, parameters, zoneFacilities):
@@ -295,38 +316,52 @@ class Solution:
 		facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
 		if facilityToFill == None:
 			return
+		# count = 0
+		necessaryFacilities = []
 		for facilityToEmpty in sortedByCapacity[::-1]:
-			standardCPsToMove = self.st[facilityToEmpty.id]
-			rapidCPsToMove = self.r[facilityToEmpty.id]
-			for i in range(standardCPsToMove):
-				if facilityToEmpty.id == facilityToFill.id:
-					break
-				self.increaseStandardCP(facilityToFill.id)
-				self.removeStandardCP(facilityToEmpty.id)
-				if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
-					self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
-					self.closeFacility(facilityToEmpty.id)
-				if self.isFacilityFull(facilityToFill):
-					facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
+			# count+=1
+			necessaryFacilities.append(facilityToEmpty)
+			if not self.isCandidateSolutionCostFinite(parameters, zoneFacilities, necessaryFacilities):
+				# print("%d/%d - infinite cost solution without %s" %(count, len(sortedByCapacity), facilityToEmpty.id))
 				if facilityToFill == None:
 					return
-			for i in range(rapidCPsToMove):
 				if facilityToEmpty.id == facilityToFill.id:
 					break
-				self.increaseRapidCP(facilityToFill.id)
-				self.removeRapidCP(facilityToEmpty.id)
-				if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
-					self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
-					self.closeFacility(facilityToEmpty.id)
-				if self.isFacilityFull(facilityToFill):
-					facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
-				if facilityToFill == None:
-					return
+				continue
+			else:
+				necessaryFacilities.remove(facilityToEmpty)
+				# print("%d/%d - finite cost solution without %s" %(count, len(sortedByCapacity), facilityToEmpty.id))
+				standardCPsToMove = self.st[facilityToEmpty.id]
+				rapidCPsToMove = self.r[facilityToEmpty.id]
+				for i in range(standardCPsToMove):
+					if facilityToEmpty.id == facilityToFill.id:
+						break
+					self.increaseStandardCP(facilityToFill.id)
+					self.removeStandardCP(facilityToEmpty.id)
+					if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
+						self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
+						self.closeFacility(facilityToEmpty.id)
+					if self.isFacilityFull(facilityToFill):
+						facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
+					if facilityToFill == None:
+						return
+				for i in range(rapidCPsToMove):
+					if facilityToEmpty.id == facilityToFill.id:
+						break
+					self.increaseRapidCP(facilityToFill.id)
+					self.removeRapidCP(facilityToEmpty.id)
+					if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
+						self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
+						self.closeFacility(facilityToEmpty.id)
+					if self.isFacilityFull(facilityToFill):
+						facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
+					if facilityToFill == None:
+						return
 		
 
 	# EXPORT OBJECT TO FILE
-	def exportSolutionObject(self):
-		with open('Chicago/solutionObject.pkl', 'wb') as solOutput:
+	def exportSolutionObject(self, filename):
+		with open(filename, 'wb') as solOutput:
 			pickle.dump(self, solOutput, -1)
 
 

@@ -3,8 +3,8 @@ import solution.local_search as ls
 
 def getSolution(importSol, parameters, lambdaVal):
     initSol = intl.initialiseSolution(importSol, parameters, lambdaVal)
-    sol = ls.localSearch(initSol, parameters, lambdaVal)
-    return sol
+    # sol = ls.localSearch(initSol, parameters, lambdaVal)
+    return initSol #CHECK THE RETURNED VALUE!!!!!!!!!!
 
 def lagrangianRelaxation(importSol, parameters):
     lambda1 = 0
@@ -32,7 +32,7 @@ def lagrangianRelaxation(importSol, parameters):
             
     # print("-------- BEST SOLUTION (lambda = %.2f) ---------------" %bestLambda)
     # bestSol.printSol(parameters, bestLambda)
-    return bestCost
+    return bestSol, bestCost
 
 
     

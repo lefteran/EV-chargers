@@ -1,17 +1,9 @@
-# import parameters as pam
-# import read_data as rdt
 import importData as impdt
-# import facility as fl
-# import zone as zn
-# import vehicle as vh
-# import tripTimes as trtim
-# import convertToAMPL as campl
 import solution.lagrangian as lag
-# import optimal as opt
 import time
 import preprocessing as pre
-# import initialise as intl
 import solution.solution as sl
+import solution.initialise as intl
 
 
 
@@ -21,7 +13,14 @@ if __name__ == "__main__":
 	pre.preprocessing(False)
 
 	parameters = impdt.importNetworkAndDicts()
-	S = lag.lagrangianRelaxation(True, parameters)
+
+	S, lagCost = lag.lagrangianRelaxation(True, parameters)
+	cost = S.getCost(parameters)
+	print("cost is %f" %cost)
+
+	# CHECK WHETHER THERE IS A SOLUTION WITH FINITE COST. THEN COMPUTE COST BY DISCARDING inf VALUES.
+	# SOLVE FIRST THE UNBUDGETED PROBLEM!!!!!!!!!!!!
+	# INSTEAD OF A FOLDER SOLUTION CREATE TWO FOLDERS NAMED BUDGETED AND UNBUDGETED
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 

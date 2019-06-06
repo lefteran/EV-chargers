@@ -1,5 +1,4 @@
 import solution.solution as sl
-# import parameters as pam
 import solution.local_search as ls
 import copy
 import sys
@@ -61,21 +60,14 @@ def getFacilitiesListByIds(parameters, listOfIds):
 
 
 # IMPORT SOLUTION OBJECT FROM FILE
-def importSolutionObject():
-	with open('Chicago/solutionObject.pkl', 'rb') as solInput:
+def importSolutionObject(filename):
+	with open(filename, 'rb') as solInput:
 		return pickle.load(solInput)
 
 
 def initialiseSolution(importSol, parameters, lambdaVal):
-	# initSol = naiveSolution(parameters)
-	# print("------------------ INITIAL SOLUTION (lambda = %.2f) ----------------------" %lambdaVal)
-	# initSol.printSol(parameters, lambdaVal)
 	if importSol:
-		initSol = importSolutionObject()
-		# if initSol.isFeasibleWithoutBudget(parameters):
-		# 	print("solution is feasible without budget")
-		# else:
-		# 	print("not feasible")
+		initSol = importSolutionObject('Chicago/initialSolutionFiniteCost.pkl')
 	else:
 		initSol = naiveSolution(parameters)
 		initSol.closeRedundantFacilities(parameters)
@@ -87,5 +79,5 @@ def initialiseSolution(importSol, parameters, lambdaVal):
 			print("solution is feasible without budget")
 		else:
 			print("not feasible")
-		initSol.exportSolutionObject()
+		initSol.exportSolutionObject('Chicago/solutionObject.pkl')
 	return initSol

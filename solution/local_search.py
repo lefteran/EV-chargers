@@ -1,12 +1,5 @@
 import itertools
 import _pickle as pickle
-# import ujson
-
-# def combinations(L, p):
-# 	combs = []
-# 	for subset in itertools.combinations(L, p):
-# 		combs.append(list(subset))
-# 	return combs
 
 def combinationsUpToParameter(L, p):
 	combs = []
@@ -74,16 +67,13 @@ def closeOldFacilities(newS, openfacilityIds):
 		newS.closeFacility(facilityId)
 
 def swapFacilities(S, parameters, openFacilityIds, closedFacilityIds):
-	# print("\tswapping facilities")
 	newS = pickle.loads(pickle.dumps(S, -1))
-	# newS = ujson.loads(ujson.dumps(S))
-	# print("\t--copied")
 	standard, rapid = getFacilityCPs(S, openFacilityIds)
-	# print("\t--got CPs")
 	openNewFacilities(newS, parameters, closedFacilityIds, standard, rapid)
-	# print("\t--open new facilites")
+	# print("after openNewFacilities")
+	for openFacilityId in openFacilityIds:
+		S.connectVehiclesToNewFacility(parameters, openFacilityId)
 	closeOldFacilities(newS, openFacilityIds)
-	# print("\tswapped facilities")
 	return newS
 
 # RETURNS THE NUMBER OF STANDARD/RAPID CPs FOR THE GIVEN FACILITY IDS 
@@ -104,6 +94,15 @@ def getOpenAndClosedFacilityIds(S, parameters, zoneId):
 		openFacilities.append(facilityId) if S.is_open(facilityId) else closedFacilities.append(facilityId)
 	return openFacilities, closedFacilities
 
+def isCostFinite(parameters, facilityIds):
+	for vehicleKey,_ in parameters.vehiclesDict.items():
+		isFinite = False
+		for facilityId in facilityIds:
+			if parameters.timesDict[vehicleKey][facilityId] != float("inf"):
+				isFinite = True
+				break
+	return isFinite
+
 
 # RETURNS A NEW SOLUTION BY SWAPPING AT MOST swaps OPEN/CLOSED FACILITIES FOR A GIVEN ZONE
 # OTHERWISE THE SAME SOLUTION IS RETURNED
@@ -117,23 +116,33 @@ def getZoneNewSolution(S, parameters, zoneId, lambdaVal):
 	oldCost = S.getLagrangianCost(parameters, lambdaVal)
 	newS = S
 	count = 0
+	swapsLen = len(allSwaps)
 	for swap in allSwaps:
 		count+=1
-		swapsLen = len(allSwaps)
-		# print("\tswap %d of %d swaps" %(count, swapsLen))
-		if isSwapFeasible(S, parameters, swap[0], swap[1]):
-			newS = swapFacilities(S, parameters, swap[0], swap[1])
-			# newCost = newS.getLagrangianCost(parameters, lambdaVal)
-			newCost = float("inf")
-			if newCost < oldCost:
-				foundBetterSolution = True
-				break
+		openFacilityIds = swap[0]
+		closedFacilityIds = swap[1]
+		if isSwapFeasible(S, parameters, openFacilityIds, closedFacilityIds):
+			if isCostFinite(parameters, closedFacilityIds):
+				isCostFinite(parameters, closedFacilityIds)
+				newS = swapFacilities(S, parameters, openFacilityIds, closedFacilityIds)
+				newCost = newS.getLagrangianCost(parameters, lambdaVal)
+				print("Swap %d of %d is feasible. Oldcost is %f and newCost is %f" %(count, swapsLen, oldCost, newCost))
+				if newCost < oldCost:
+					foundBetterSolution = True
+					break
+			else:
+				print("Cost of swap %d of %d is not finite" %(count, swapsLen))
+		else:
+			print("Swap %d of %d is not feasible" %(count, swapsLen))
 	return newS, foundBetterSolution
 
 def localSearch(S, parameters, lambdaVal):
 	zonesLen = len(parameters.zonesDict.items())
+	count=0
 	for zoneKey, _ in parameters.zonesDict.items():
-		print("Checking zone %s (of total %d zones) which has %d facilities" %(zoneKey, zonesLen, len(parameters.zonesDict[zoneKey].facilities)))
+		count+=1
+		print("Checking zone %d (of total %d zones) which has %d facilities. Current solution cost is %f"\
+		%(count, zonesLen, len(parameters.zonesDict[zoneKey].facilities), S.getLagrangianCost(parameters, lambdaVal)))
 		flag = True
 		while flag:
 			newS, foundBetterSolution = getZoneNewSolution(S, parameters, zoneKey, lambdaVal)
