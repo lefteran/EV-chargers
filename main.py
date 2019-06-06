@@ -1,16 +1,7 @@
-# import parameters as pam
-# import read_data as rdt
 import importData as impdt
-# import facility as fl
-# import zone as zn
-# import vehicle as vh
-# import tripTimes as trtim
-# import convertToAMPL as campl
 import solution.lagrangian as lag
-# import optimal as opt
 import time
 import preprocessing as pre
-# import initialise as intl
 import solution.solution as sl
 
 
