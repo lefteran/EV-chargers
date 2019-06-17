@@ -1,4 +1,3 @@
-import parameters as pam
 import networkx as nx
 from math import sin, cos, sqrt, atan2, radians
 
@@ -12,7 +11,7 @@ def getTimeDict(G, facilitiesDict, vehiclesDict):
         startNode = vehicleObject.startNode
         endNode = vehicleObject.endNode
         edgeWeight = float(G[startNode][endNode]['weight'])
-        for facilityKey, facilityObject in facilitiesDict.items():
+        for facilityKey,_ in facilitiesDict.items():
             if nx.has_path(G, startNode, facilityKey):
                 time1 = edgeWeight * vehicleObject.pointInEdge +\
                 nx.shortest_path_length(G, source=startNode, target=facilityKey, weight='weight') / beta[timeOfDay]

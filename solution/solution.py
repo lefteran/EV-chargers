@@ -1,4 +1,3 @@
-# import parameters as pam
 import _pickle as pickle
 
 class Solution:
@@ -122,7 +121,6 @@ class Solution:
 				return False
 		return True
 
-
 	def currentDemand(self, parameters, zoneId):
 		value = 0
 		for zetaId in parameters.zonesDict[zoneId].adjacent:
@@ -185,14 +183,33 @@ class Solution:
 	def disconnect(self, vehicleId, facilityId):
 		self.x[vehicleId][facilityId] = 0
 
+	def subtractDisconnectedPairTimes(self, parameters, disconnectedPairs):
+		disconnectionSubtractedCost = 0
+		for pair in disconnectedPairs:
+			disconnectionSubtractedCost += parameters.timesDict[pair[0]][pair[1]]
+		return disconnectionSubtractedCost
+
+	def addConnectedPairTimes(self, parameters, connectedPairs):
+		connectionAddedCost = 0
+		for pair in connectedPairs:
+			connectionAddedCost += parameters.timesDict[pair[0]][pair[1]]
+		return connectionAddedCost
+
 	def connectVehiclesToNewFacility(self, parameters, facilityId):
 		vehicleIdsList = []
+		disconnectedPairs = []
+		connectedPairs = []
 		for vehicleKey, _ in parameters.vehiclesDict.items():
 			if self.isConnected(vehicleKey, facilityId):
 				vehicleIdsList.append(vehicleKey)
 				self.disconnect(vehicleKey, facilityId)
+				disconnectedPairs.append((vehicleKey, facilityId))
+		disconnectionSubtractedCost = self.subtractDisconnectedPairTimes(parameters, disconnectedPairs)
 		for vehicleId in vehicleIdsList:
-			self.connectVehicleToClosestFacility(parameters, vehicleId, facilityId)
+			closestFacility = self.connectVehicleToClosestFacility(parameters, vehicleId, facilityId)
+			connectedPairs.append((vehicleId, closestFacility))
+		connectionAddedCost = self.addConnectedPairTimes(parameters, connectedPairs)
+		return connectionAddedCost - disconnectionSubtractedCost
 
 	def getOpenFacilityToConnect(self, parameters, facilityToRemove):
 		for facilityKey, _ in parameters.facilitiesDict.items():
@@ -209,6 +226,7 @@ class Solution:
 					closest = parameters.timesDict[vehicleId][facilityKey]
 					closestFacility = facilityKey
 		self.connect(vehicleId, closestFacility)
+		return closestFacility
 
 	def getCost(self, parameters):
 		cost = 0
@@ -231,16 +249,16 @@ class Solution:
 			+ parameters.standardCost * self.st[facilityKey] + parameters.rapidCost * self.r[facilityKey])
 		return lagrangianCost
 
-	def printSol(self, parameters, lambdaVal):
-		# print("x is ", self.x)
-		# print("st is ", self.st)
-		# print("r is ", self.r)
-		# print("y is ", self.y)
-		# print("omega is ", self.omega)
-		print("Cost of objective is %.2f" %self.getCost(parameters))
-		# print("Cost of lagrangian objective is %.2f" %self.getCostLagrangian(parameters, lambdaVal))
-		print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters))
-		print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
+	# def printSol(self, parameters, lambdaVal):
+	# 	# print("x is ", self.x)
+	# 	# print("st is ", self.st)
+	# 	# print("r is ", self.r)
+	# 	# print("y is ", self.y)
+	# 	# print("omega is ", self.omega)
+	# 	print("Cost of objective is %.2f" %self.getCost(parameters))
+	# 	# print("Cost of lagrangian objective is %.2f" %self.getCostLagrangian(parameters, lambdaVal))
+	# 	print("Solution feasible (without budget): %r" %self.isFeasibleWithoutBudget(parameters))
+	# 	print("Solution feasible (with budget): %r" %self.IsFeasibleWithBudget(parameters))
 
 	# REDUCE THE NUMBER OF CHARGING POINTS PER FACILITY BY MAINTAINING FEASIBILITY
 	def reduceCPs(self, parameters):
@@ -285,6 +303,27 @@ class Solution:
 		for vehicleId in vehicleIdsList:
 			self.connectVehicleToClosestFacility(parameters, vehicleId, facilityId)
 
+	def getOpenFacilityIds(self, zoneFacilities):
+		openFacilityIds = []
+		for zoneFacility in zoneFacilities:
+			if self.is_open(zoneFacility.id):
+				openFacilityIds.append(zoneFacility.id)
+		return openFacilityIds
+
+	def isCandidateSolutionCostFinite(self, parameters, zoneFacilities, facilitiesToRemove):
+		openFacilityIds = self.getOpenFacilityIds(zoneFacilities)
+		for facilityToRemove in facilitiesToRemove:
+			if facilityToRemove in openFacilityIds:
+				openFacilityIds.remove(facilityToRemove)
+		for vehicleKey,_ in parameters.vehiclesDict.items():
+			isFinite = False
+			for facilityId in openFacilityIds:
+				if parameters.timesDict[vehicleKey][facilityId] != float("inf"):
+					isFinite = True
+					break
+		return isFinite
+
+
 
 	# REDISTRIBUTE THE CHARGING POINTS TO OTHER FACILITIES TO HAVE AS LESS FACILITIES OPEN AS POSSIBLE
 	def redistributeCPs(self, parameters, zoneFacilities):
@@ -295,38 +334,52 @@ class Solution:
 		facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
 		if facilityToFill == None:
 			return
+		# count = 0
+		necessaryFacilities = []
 		for facilityToEmpty in sortedByCapacity[::-1]:
-			standardCPsToMove = self.st[facilityToEmpty.id]
-			rapidCPsToMove = self.r[facilityToEmpty.id]
-			for i in range(standardCPsToMove):
-				if facilityToEmpty.id == facilityToFill.id:
-					break
-				self.increaseStandardCP(facilityToFill.id)
-				self.removeStandardCP(facilityToEmpty.id)
-				if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
-					self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
-					self.closeFacility(facilityToEmpty.id)
-				if self.isFacilityFull(facilityToFill):
-					facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
+			# count+=1
+			necessaryFacilities.append(facilityToEmpty)
+			if not self.isCandidateSolutionCostFinite(parameters, zoneFacilities, necessaryFacilities):
+				# print("%d/%d - infinite cost solution without %s" %(count, len(sortedByCapacity), facilityToEmpty.id))
 				if facilityToFill == None:
 					return
-			for i in range(rapidCPsToMove):
 				if facilityToEmpty.id == facilityToFill.id:
 					break
-				self.increaseRapidCP(facilityToFill.id)
-				self.removeRapidCP(facilityToEmpty.id)
-				if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
-					self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
-					self.closeFacility(facilityToEmpty.id)
-				if self.isFacilityFull(facilityToFill):
-					facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
-				if facilityToFill == None:
-					return
+				continue
+			else:
+				necessaryFacilities.remove(facilityToEmpty)
+				# print("%d/%d - finite cost solution without %s" %(count, len(sortedByCapacity), facilityToEmpty.id))
+				standardCPsToMove = self.st[facilityToEmpty.id]
+				rapidCPsToMove = self.r[facilityToEmpty.id]
+				for i in range(standardCPsToMove):
+					if facilityToEmpty.id == facilityToFill.id:
+						break
+					self.increaseStandardCP(facilityToFill.id)
+					self.removeStandardCP(facilityToEmpty.id)
+					if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
+						self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
+						self.closeFacility(facilityToEmpty.id)
+					if self.isFacilityFull(facilityToFill):
+						facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
+					if facilityToFill == None:
+						return
+				for i in range(rapidCPsToMove):
+					if facilityToEmpty.id == facilityToFill.id:
+						break
+					self.increaseRapidCP(facilityToFill.id)
+					self.removeRapidCP(facilityToEmpty.id)
+					if (not self.hasFacilityStandardCPs(facilityToEmpty.id)) and (not self.hasFacilityRapidCPs(facilityToEmpty.id)):
+						self.reassignVehiclesToFacilities(parameters, facilityToEmpty.id)
+						self.closeFacility(facilityToEmpty.id)
+					if self.isFacilityFull(facilityToFill):
+						facilityToFill = self.getNextNotFullFacility(sortedByCapacity, index)
+					if facilityToFill == None:
+						return
 		
 
 	# EXPORT OBJECT TO FILE
-	def exportSolutionObject(self):
-		with open('Chicago/solutionObject.pkl', 'wb') as solOutput:
+	def exportSolutionObject(self, filename):
+		with open(filename, 'wb') as solOutput:
 			pickle.dump(self, solOutput, -1)
 
 

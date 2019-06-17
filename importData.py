@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
 from shapely import geometry
 import networkx as nx
-# import math
 import facility as fl
 import zone as zn
 import vehicle as vh
 import json
 import dataClass
-# import itertools
 
 
 def importNodes(filename):
@@ -93,8 +91,6 @@ def importZoneData(filename):
 	for line in fp:
 		elements = line.split(",")
 		key = elements[0].strip()
-		if key == '621':
-			a=2
 		zoneDataDict[key] = []
 		for i in range(len(elements) - 1):
 			zoneDataDict[key].append(elements[i+1].strip())
@@ -139,12 +135,6 @@ def cleanZoneIds(adjacencyDict, IdsList):
 		if IdToRemove in adjacencyDict:
 			for neighboringZoneId in adjacencyDict[IdToRemove]:
 				adjacencyDict[neighboringZoneId].remove(IdToRemove)
-	# zoneId='621' was not found in zoneDict because it is not in invBelongingDict
-	# (check the next method). 
-	# if zoneId not in invBelongingDict remove it from the adjacencyDict
-	# i.e. for any neighbZoneId in zoneDict[zoneId].adjacent
-	# 			zoneDict[neighbZoneId].adjacent.remove(zoneId)
-
 
 def importNetworkAndDicts():
 	G = importNodes('Chicago/ChicagoNodes.geojson')

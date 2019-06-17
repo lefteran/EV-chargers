@@ -158,19 +158,19 @@
 # # print(G.edges())
 
 # import operator
-import _pickle as pickle
-import ujson
+# import _pickle as pickle
+# import ujson
 
-class Student:
-    def __init__(self, name, grade, age):
-        self.name = name
-        self.grade = grade
-        self.age = age
+# class Student:
+#     def __init__(self, name, grade, age):
+#         self.name = name
+#         self.grade = grade
+#         self.age = age
 
 
-studi1=Student('john', 'A', 15)
-studi2=Student('dave', 'B', 10)
-studi3=Student('jane', 'B', 12)
+# studi1=Student('john', 'A', 15)
+# studi2=Student('dave', 'B', 10)
+# studi3=Student('jane', 'B', 12)
 
 # student_Dict = {}
 # student_Dict[studi1.name]=studi1
@@ -192,6 +192,19 @@ studi3=Student('jane', 'B', 12)
 #     print(M)
 
 
-g = pickle.loads(pickle.dumps(studi3, -1))
-e = ujson.loads(ujson.dumps(studi3))
-a=2
+# g = pickle.loads(pickle.dumps(studi3, -1))
+# e = ujson.loads(ujson.dumps(studi3))
+# a=2
+
+
+# vehicle=2
+# facility=3
+# L=[]
+# L.append((2,3))
+# print(L[0][1])
+#
+# newdict = {1:0, 2:0, 3:0}
+# print(list(newdict.keys()))
+
+# a=2
+# print(f"a is {a}")
