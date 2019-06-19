@@ -1,5 +1,4 @@
 import solution.solution as sl
-import solution.localSolution as lsl
 import solution.local_search as ls
 import copy
 import sys

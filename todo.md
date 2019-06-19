@@ -72,4 +72,26 @@ checked
 - split the lagrangian file into budgeted and unbudgeted
 
 
-- a dictionary of dictionaries of Values for the x dictionary of dictionaries and an array of arrays of locks 
+- a dictionary of dictionaries of Values for the x dictionary of dictionaries and an array of arrays of locks
+
+
+################################ MULTIPROCESSING OF FILES #####################################
+- [ ] when reading a file pass as parameters to each process the pointer positions where it should start and end 
+reading **[30 mins]**
+- [ ] when writing a file, in order to uses multiprocessing, write to different files, one for each process, and in
+ the end merge the files **[30 mins]**
+
+
+################################ TESTING #####################################
+- [ ] Before getting an initial solution check if for each vehicle there is at least one facility with NON infinite 
+time cost https://docs.python.org/3/library/unittest.html
+
+################################ VISUALISATION #####################################
+- [ ] Visualise network nodes
+- [ ] Visualise network edges
+- [ ] Visualise facilities (different colour than nodes)
+- [ ] Visualise vehicles (different colour than nodes and facilities)
+- [ ] Show the id of an element when the mouse hovers over it
+
+################################ TIME IMPROVEMENT #####################################
+- [ ] Consider only node to open facilities for which every vehicle has not infinite time

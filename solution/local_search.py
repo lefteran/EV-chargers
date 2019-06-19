@@ -1,7 +1,6 @@
 import itertools
 import _pickle as pickle
-import solution.localSolution as lsl
-from mpi4py import MPI
+
 
 def combinationsUpToParameter(L, p):
 	combs = []
@@ -136,7 +135,8 @@ def getZoneNewSolution(S, parameters, zoneId, lambdaVal):
 	openFacilityCombinations = combinationsUpToParameter(openFacilities, parameters.swaps)
 	closedFacilityCombinations = combinationsUpToParameter(closedFacilities, parameters.swaps)
 	allSwaps = list(itertools.product(openFacilityCombinations, closedFacilityCombinations))
-	
+	if allSwaps:
+		a=2								##### DELETE
 	# oldCost = S.getLagrangianCost(parameters, lambdaVal)
 	newS = S
 	count = 0
@@ -161,24 +161,9 @@ def getZoneNewSolution(S, parameters, zoneId, lambdaVal):
 	return newS, foundBetterSolution
 
 
-# def parallelLocalSearch(parameters, lambdaVal):
-# 	for zoneKey, _ in parameters.zonesDict.items():
-# 		# print("Checking zone %d (of total %d zones) which has %d facilities."\
-# 		# %(count, zonesLen, len(parameters.zonesDict[zoneKey].facilities)))
-# 		# print("Current solution cost is %f" %(S.getLagrangianCost(parameters, lambdaVal)))
-# 		flag = True
-# 		while flag:
-# 			newS, foundBetterSolution = getZoneNewSolution(S, parameters, zoneKey, lambdaVal)
-# 			if not foundBetterSolution:
-# 				flag = False
-# 			else:
-# 				S = newS
-
 def localSearch(S, parameters, lambdaVal):
 	zonesLen = len(parameters.zonesDict.items())
 	count=0
-	# comm = MPI.COMM_WORLD
-	# rank = comm.Get_rank()
 	for zoneKey, _ in parameters.zonesDict.items():
 		count+=1
 		print("Checking zone %d (of total %d zones) which has %d facilities."\
@@ -191,6 +176,4 @@ def localSearch(S, parameters, lambdaVal):
 				flag = False
 			else:
 				S = newS
-		# if count == 1000:
-		# 	return newS
 	return newS

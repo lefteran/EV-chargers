@@ -5,7 +5,8 @@ import time
 import preprocessing as pre
 import solution.solution as sl
 import solution.initialise as intl
-
+import unittest
+import unitTests.test_Times as test_Times
 
 
 if __name__ == "__main__":
@@ -13,12 +14,17 @@ if __name__ == "__main__":
 	print("#########################################################\n#########################################################")
 	pre.preprocessing(False)
 
+	####################### TESTING #####################################
+	suite = unittest.TestLoader().loadTestsFromModule(test_Times)
+	unittest.TextTestRunner(verbosity=2).run(suite)
+	#####################################################################
+
 	parameters = impdt.importNetworkAndDicts()
 
 	S = unbu.getUnbudgetedSolution(True, parameters)
 	cost = S.getCost(parameters)
 	# S, lagCost = lag.lagrangianRelaxation(True, parameters)
-	print("cost is %f" %cost)
+	# print("cost is %f" %cost)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 
