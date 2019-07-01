@@ -2,11 +2,17 @@ import itertools
 import _pickle as pickle
 
 
-def combinationsUpToParameter(L, p):
+def getCombinationsUpToParameter(L, p):
 	combs = []
 	for i in range(p):
 		for subset in itertools.combinations(L, i+1):
 			combs.append(list(subset))
+	return combs
+
+def getCombinationsOfExactSwaps(listOfItems, numberOfSwaps):
+	combs = []
+	for subset in itertools.combinations(listOfItems, numberOfSwaps):
+		combs.append(list(subset))
 	return combs
 
 
@@ -132,8 +138,8 @@ def isCostFinite(parameters, facilityIds):
 def getZoneNewSolution(S, parameters, zoneId, lambdaVal):
 	foundBetterSolution = False
 	openFacilities, closedFacilities = getOpenAndClosedFacilityIds(S, parameters, zoneId)
-	openFacilityCombinations = combinationsUpToParameter(openFacilities, parameters.swaps)
-	closedFacilityCombinations = combinationsUpToParameter(closedFacilities, parameters.swaps)
+	openFacilityCombinations = getCombinationsOfExactSwaps(openFacilities, parameters.swaps)
+	closedFacilityCombinations = getCombinationsOfExactSwaps(closedFacilities, parameters.swaps)
 	allSwaps = list(itertools.product(openFacilityCombinations, closedFacilityCombinations))
 	if allSwaps:
 		a=2								##### DELETE
@@ -165,9 +171,11 @@ def localSearch(S, parameters, lambdaVal):
 	zonesLen = len(parameters.zonesDict.items())
 	count=0
 	for zoneKey, _ in parameters.zonesDict.items():
-		count+=1
+		count += 1
 		print("Checking zone %d (of total %d zones) which has %d facilities."\
 		%(count, zonesLen, len(parameters.zonesDict[zoneKey].facilities)))
+		if len(parameters.zonesDict[zoneKey].facilities) >= 100:
+			a=2
 		# print("Current solution cost is %f" %(S.getLagrangianCost(parameters, lambdaVal)))
 		flag = True
 		while flag:

@@ -1,6 +1,7 @@
-import solution.localSolutionPart as lsl
-import solution.globalSolutionPart as gsl
-from multiprocessing import Process, Lock, Value
+import solution.parallelisation.localSolutionPart as lsl
+import solution.parallelisation.globalSolutionPart as gsl
+import solution.parallelisation.parallelisationMethods as prl
+from multiprocessing import Process
 from math import floor
 
 
@@ -48,20 +49,16 @@ def parallelProcessingOfZones(parameters, lambdaVal, zonesList, globalPart, loca
 def parallelProcessingLocalSearch(S, parameters, lambdaVal, numberOfProcesses):
 	zonesLen = len(parameters.zonesDict.items())
 	count=0
-	localSolutionsDict = {}
-	zoneIdsList = []
-	for zoneKey, _ in parameters.zonesDict.items():
-		localSolutionsDict[zoneKey] = lsl.localPartOfSolution(parameters, S, zoneKey)
-		zoneIdsList.append(zoneKey)
-	globalPart = gsl.globalPartOfSolution(parameters, S)
+	localPartsDict, globalPart = prl.getSolutionSharedAndIndependentParts(S, parameters)
+	zoneIdsList = list(parameters.zonesDict.keys())
 	zoneIdsListLength = len(zoneIdsList)
 	zonesPerProcess = floor(zoneIdsListLength / numberOfProcesses)
 	processes = []
 	first = 0
 	last = zonesPerProcess + 1
-    # DEBUG THE SINGLE PROCESS LOCAL SEARCH FIRST AND THEN CHECK THE PARALLEL PROCESSING
+	# DEBUG THE SINGLE PROCESS LOCAL SEARCH FIRST AND THEN CHECK THE PARALLEL PROCESSING
 	for i in range(numberOfProcesses):
-		process = Process(target=parallelProcessingOfZones, args=(parameters, lambdaVal, zoneIdsList[first, last], globalPart, localSolutionsDict))
+		process = Process(target = parallelProcessingOfZones, args = (parameters, lambdaVal, zoneIdsList[first, last], globalPart, localPartsDict))
 		processes.append(process)
 		process.start()
 		first += zonesPerProcess

@@ -15,14 +15,16 @@ if __name__ == "__main__":
 	pre.preprocessing(False)
 
 	####################### TESTING #####################################
-	suite = unittest.TestLoader().loadTestsFromModule(test_Times)
-	unittest.TextTestRunner(verbosity=2).run(suite)
+	# suite = unittest.TestLoader().loadTestsFromModule(test_Times)
+	# unittest.TextTestRunner(verbosity=2).run(suite)
 	#####################################################################
 
-	parameters = impdt.importNetworkAndDicts()
+	# parameters = impdt.importNetworkAndDicts()
+	#
+	# S = unbu.getUnbudgetedSolution(True, parameters)
+	# cost = S.getCost(parameters)
 
-	S = unbu.getUnbudgetedSolution(True, parameters)
-	cost = S.getCost(parameters)
+
 	# S, lagCost = lag.lagrangianRelaxation(True, parameters)
 	# print("cost is %f" %cost)
 

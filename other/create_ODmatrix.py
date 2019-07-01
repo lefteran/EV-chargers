@@ -4,8 +4,7 @@
 import networkx as nx
 from numpy.random import choice
 import itertools
-import matplotlib.pyplot as plt
-import create_network as cn
+from SiouxFalls import create_network as cn
 
 
 def create_ODmatrix(driversNo):

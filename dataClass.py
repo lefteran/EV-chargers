@@ -16,4 +16,4 @@ class dataClass:
 		self.R = 10
 		self.lambdaMax = 10
 		self.epsilon = 2
-		self.swaps = 2
+		self.swaps = 1

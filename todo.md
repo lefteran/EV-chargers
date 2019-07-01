@@ -21,7 +21,7 @@ if the demand on each zone is not met then there is no feasible solution
 
 11. randomness in localsearch?
 
-12. CAs of fixed bundle size, spceifically size 3
+12. CAs of fixed bundle size, specifically size 3
 
 13. demand prediction
 
@@ -37,18 +37,17 @@ Similarly replace the list of zones with a dictionary
 Each facility will keep a value of the key of the zone it belongs to
 
 
-19. compare values of lagrangian and opt
 
 20. In getDistMatrix() the 'weights' arguments can be omitted
 
 21. visualize the nodes and edges
 
 
-EXPERIMENTS
-1. Show experimentally by how much the budget constraint is violated using lagrangian relaxation
-2. different demand scenarios
-3. what happens if the number of EVs changes significantly
-
+####################### EXPERIMENTS ##############################
+- [ ] Show experimentally by how much the budget constraint is violated using lagrangian relaxation
+- [ ] different demand scenarios
+- [ ] what happens if the number of EVs changes significantly
+- [ ] compare values of lagrangian and opt
 
 
 ################################ LOCAL SEARCH #####################################
@@ -95,3 +94,6 @@ time cost https://docs.python.org/3/library/unittest.html
 
 ################################ TIME IMPROVEMENT #####################################
 - [ ] Consider only node to open facilities for which every vehicle has not infinite time
+
+
+- [ ] change import time to from time import time

@@ -208,11 +208,23 @@
 
 # a=2
 # print(f"a is {a}")
+#
+# from math import floor
+#
+# a = [1,6,9,8,7,5,6,3,4,6,56,54,57]
+# aLength = len(a)
+# k=3
+# items = floor(aLength / 3)
+# print(a[0:4])
 
-from math import floor
+import itertools
 
-a = [1,6,9,8,7,5,6,3,4,6,56,54,57]
-aLength = len(a)
-k=3
-items = floor(aLength / 3)
-print(a[0:4])
+def getCombinationsOfExactSwaps(listOfItems, numberOfSwaps):
+	combs = []
+	for subset in itertools.combinations(listOfItems, numberOfSwaps):
+		combs.append(list(subset))
+	return combs
+
+
+a=getCombinationsOfExactSwaps([1,2,3,4], 1)
+print(a)

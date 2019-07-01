@@ -2,6 +2,7 @@ import unittest
 import importData as impdt
 
 class TestTimesDict(unittest.TestCase):
+    # METHODS MUST BEGIN WITH THE WORD TEST!!!!!!!!!!
     def test_TimesDict(self):
         parameters = impdt.importNetworkAndDicts()
         finiteTimesCountList = [0] * len(parameters.vehiclesDict.items())
