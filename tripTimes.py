@@ -1,25 +1,72 @@
 import networkx as nx
+import graph_tool.all as gt
 from math import sin, cos, sqrt, atan2, radians
 
 
-def getTimeDict(G, facilitiesDict, vehiclesDict):
+# CREATE A METHOD THAT WILL RUN THE FOR LOOP ON THE FACILITIES DICT, TAKING AS AN ARGUMENT THE vehicleKey
+# IN PARALLELISATION EACH PROCESS WILL CALCULATE THE TIMES FOR A SPECIFIC NUMBER OF VEHICLES
+# CHECK WHETHER ADDING NEW ENTRIES IN DICT FROM VARIOUS PROCESSES CAN CAUSE A PROBLEM.
+# POSSIBLY LOCKS FOR timesDict MIGHT BE NEEDED
+def getTimeDictNx(Gnx, facilitiesDict, vehiclesDict):
+    print("Calculating Nx trip times ...")
     timesDict = {}
     beta = [1]
-    timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59 
+    timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
+    numberOfVehicles = len(vehiclesDict.items())
+    numberOfFacilities = len(facilitiesDict.items())
+    countVeh = 0
     for vehicleKey, vehicleObject in vehiclesDict.items():
+        countVeh += 1
+        countFac = 0
+        print("Checking vehicle %d out of %d" %(countVeh, numberOfVehicles))
         vehicleTimesDict = {}
         startNode = vehicleObject.startNode
         endNode = vehicleObject.endNode
-        edgeWeight = float(G[startNode][endNode]['weight'])
+        edgeWeight = float(Gnx[startNode][endNode]['weight'])
         for facilityKey,_ in facilitiesDict.items():
-            if nx.has_path(G, startNode, facilityKey):
-                time1 = edgeWeight * vehicleObject.pointInEdge +\
-                nx.shortest_path_length(G, source=startNode, target=facilityKey, weight='weight') / beta[timeOfDay]
-                time2 = edgeWeight * (1 - vehicleObject.pointInEdge) +\
-                nx.shortest_path_length(G, source=endNode, target=facilityKey, weight='weight') / beta[timeOfDay]
+            countFac += 1
+            print("\tChecking facility %d out of %d" % (countFac, numberOfFacilities))
+            # if nx.has_path(G, startNode, facilityKey):
+            try:
+                time1 = edgeWeight * vehicleObject.pointInEdge + \
+                        nx.shortest_path_length(Gnx, source=startNode, target=facilityKey, weight='weight') / beta[timeOfDay]
+                time2 = edgeWeight * (1 - vehicleObject.pointInEdge) + \
+                        nx.shortest_path_length(Gnx, source=endNode, target=facilityKey, weight='weight') / beta[timeOfDay]
                 tripTime = min(time1, time2)
-            else:
+            # else:
+            except nx.NetworkXNoPath:
                 tripTime = float("inf")
+            vehicleTimesDict[facilityKey] = tripTime
+        timesDict[vehicleKey] = vehicleTimesDict
+    return timesDict
+
+
+def getTimeDictGt(GtNetwork, facilitiesDict, vehiclesDict):
+    print("Calculating Gt trip times ...")
+    timesDict = {}
+    beta = [1]
+    timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
+    numberOfVehicles = len(vehiclesDict.items())
+    numberOfFacilities = len(facilitiesDict.items())
+    countVeh = 0
+    for vehicleKey, vehicleObject in vehiclesDict.items():
+        countVeh += 1
+        countFac = 0
+        print("Checking vehicle %d out of %d" %(countVeh, numberOfVehicles))
+        vehicleTimesDict = {}
+        nxStartNode = vehicleObject.startNode
+        nxEndNode = vehicleObject.endNode
+        gtEdgeId = GtNetwork.nxToGtEdgesDict[(nxStartNode, nxEndNode)]
+        edgeWeight = GtNetwork.gtEdgeWeights[gtEdgeId]
+        # edgeWeight = float(G[startNode][endNode]['weight'])
+        for facilityKey,_ in facilitiesDict.items():
+            countFac += 1
+            print("\tChecking facility %d out of %d" % (countFac, numberOfFacilities))
+            distance1 = gt.shortest_distance(GtNetwork.Ggt, source = GtNetwork.nxToGtNodesDict[nxStartNode], target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
+            time1 = edgeWeight * vehicleObject.pointInEdge + distance1 / beta[timeOfDay]
+            distance2 = gt.shortest_distance(GtNetwork.Ggt, source = GtNetwork.nxToGtNodesDict[nxEndNode], target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
+            time2 = edgeWeight * vehicleObject.pointInEdge + distance2 / beta[timeOfDay]
+            tripTime = min(time1, time2)
             vehicleTimesDict[facilityKey] = tripTime
         timesDict[vehicleKey] = vehicleTimesDict
     return timesDict
@@ -27,6 +74,7 @@ def getTimeDict(G, facilitiesDict, vehiclesDict):
 
 
 def exportDeterministicTripTimes(timesDict, filename):
+    print("Exporting trim times ...")
     fp = open(filename,"w")
     for vehicleKey, vehicleFacilityDict in timesDict.items():
         for facilityKey, vehicleFacilityTime in vehicleFacilityDict.items():

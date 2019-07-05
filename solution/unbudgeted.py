@@ -2,9 +2,9 @@ import solution.initialise as intl
 import solution.local_search as ls
 
 
-def getUnbudgetedSolution(importSol, parameters):
+def getUnbudgetedSolution(parameters):
     lambdaVal = 0
-    initSol = intl.initialiseSolution(importSol, parameters)
+    initSol = intl.initialiseSolution(parameters)
     sol = ls.localSearch(initSol, parameters, lambdaVal)
     return sol  # CHECK THE RETURNED VALUE!!!!!!!!!!
 

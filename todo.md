@@ -68,8 +68,8 @@ the zones
 *localSolutionsDict*
 - [ ] (optionally) balance the zones in the batches according to the total number of facilities/combinations that need to be
 checked  
-- split the lagrangian file into budgeted and unbudgeted
-
+- [ ]split the lagrangian file into budgeted and unbudgeted
+- [ ] Parallelise the calculation of trip times. Each process should compute the trip times for different vehicles.
 
 - a dictionary of dictionaries of Values for the x dictionary of dictionaries and an array of arrays of locks
 
@@ -97,3 +97,7 @@ time cost https://docs.python.org/3/library/unittest.html
 
 
 - [ ] change import time to from time import time
+
+
+############################## VARIOUS ##################################
+- [ ] change the name of class dataClass to Parameters 

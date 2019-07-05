@@ -11,6 +11,8 @@ def findClosestFacilitiesToVehicles(S, parameters):
 		closest = parameters.timesDict[vehicleKey][initialFacilityKey]
 		closestFacility = initialFacilityKey
 		for facilityKey, _ in parameters.facilitiesDict.items():
+			if facilityKey == '387571819':
+				a=2
 			if parameters.timesDict[vehicleKey][facilityKey] < closest and S.is_open(facilityKey):
 				closest = parameters.timesDict[vehicleKey][facilityKey]
 				closestFacility = facilityKey
@@ -71,8 +73,8 @@ def getLocalSolutionsDict(parameters, initSol):
 		zoneSolution = lsl.localSolution(parameters, zoneKey)
 
 
-def initialiseSolution(importSol, parameters):
-	if importSol:
+def initialiseSolution(parameters):
+	if parameters.importSolution:
 		initSol = importSolutionObject('Chicago/initialSolutionFiniteCost.pkl')
 	else:
 		initSol = naiveSolution(parameters)

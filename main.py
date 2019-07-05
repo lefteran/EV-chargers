@@ -2,7 +2,10 @@ import importData as impdt
 import solution.unbudgeted as unbu
 import solution.lagrangian as lag
 import time
-import preprocessing as pre
+# import preprocessing as pre
+import Parameters
+import GraphToolNetwork as gtn
+# import sys
 import solution.solution as sl
 import solution.initialise as intl
 import unittest
@@ -12,16 +15,30 @@ import unitTests.test_Times as test_Times
 if __name__ == "__main__":
 	start_time = time.time()
 	print("#########################################################\n#########################################################")
-	pre.preprocessing(False)
+	# print(sys.prefix)
+	parameters = Parameters.Parameters()
+
+	####################### PREPROCESSING #####################################
+	# pre.preprocessing(parameters.doPreprocessing)
+
+	########################## IMPORTING NETWORK (G, facilities and zones) ###########################################
+	Gnx = impdt.importNetwork(parameters)
+
+	# Ggt TO BE CREATED BASED ON Gnx
+	GtNetwork = gtn.GraphToolNetwork()
+	GtNetwork.createGraphToolNetworkFromGnx(Gnx)
+	# Ggt, gtEdgeWeights = impdt.createGraphToolNetwork(Gnx)
+
+	########################## GET VEHICLES AND COMPUTE VEHICLE-FACILITY DISTANCES ###################################
+	impdt.getVehiclesAndTimes(Gnx, GtNetwork, parameters)
+
 
 	####################### TESTING #####################################
 	# suite = unittest.TestLoader().loadTestsFromModule(test_Times)
 	# unittest.TextTestRunner(verbosity=2).run(suite)
-	#####################################################################
 
-	# parameters = impdt.importNetworkAndDicts()
-	#
-	# S = unbu.getUnbudgetedSolution(True, parameters)
+	####################### MAIN ALGORITHM #####################################
+	# S = unbu.getUnbudgetedSolution(parameters)
 	# cost = S.getCost(parameters)
 
 

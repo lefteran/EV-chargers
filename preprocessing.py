@@ -3,7 +3,6 @@ import json
 import itertools
 import time
 import importData as impdt
-import sys
 from random import randint, choice, uniform
 
 

@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
-from shapely import geometry
+# from shapely import geometry
 import networkx as nx
+import graph_tool.all as gt
 import facility as fl
 import zone as zn
 import vehicle as vh
 import json
-import dataClass
+import tripTimes
 
 
 def importNodes(filename):
@@ -136,12 +137,12 @@ def cleanZoneIds(adjacencyDict, IdsList):
 			for neighboringZoneId in adjacencyDict[IdToRemove]:
 				adjacencyDict[neighboringZoneId].remove(IdToRemove)
 
-def importNetworkAndDicts():
-	G = importNodes('Chicago/ChicagoNodes.geojson')
-	importEdges(G, 'Chicago/ChicagoEdges.geojson')
+def importNetwork(parameters):
+	Gnx = importNodes('Chicago/ChicagoNodes.geojson')
+	importEdges(Gnx, 'Chicago/ChicagoEdges.geojson')
 	belongingDict, nonBelongingNodeIds = importBelongingDict('Chicago/nodeInBoundary.csv')
 	invBelongingDict = importInvBelonging('Chicago/BoundaryNodes.csv')
-	G.remove_nodes_from(nonBelongingNodeIds)
+	Gnx.remove_nodes_from(nonBelongingNodeIds)
 	adjacencyDict = importAdjacencyDict('Chicago/adjacencies.csv')
 
 	facilityDataDict = importFacilityData('Chicago/FacilityData.csv')
@@ -162,26 +163,33 @@ def importNetworkAndDicts():
 			nonBelongingZoneDictIds.append(zoneId)
 	cleanZoneIds(adjacencyDict, nonBelongingZoneDictIds)
 
+	parameters.adjacencyDict = adjacencyDict
+	parameters.belongingDict = belongingDict
+	parameters.facilitiesDict = facilitiesDict
+	parameters.zonesDict = zonesDict
+
+	return Gnx
+
+
+def getVehiclesAndTimes(Gnx, GtNetwork, parameters):
 	vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
 	vehiclesDict = {}
 	for vehicleId, vehicleDataList in vehicleDataDict.items():
 		startNode = vehicleDataList[0]
 		endNode = vehicleDataList[1]
-		if G.has_edge(startNode, endNode):
+		if Gnx.has_edge(startNode, endNode):
 			vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
-	timesDict = importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
-	# timesDict = trtim.getTimeDict(G, facilitiesDict, vehiclesDict)
-	# trtim.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')
+	if parameters.importDeterministicTimes:
+		timesDict = importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
+	else:
+		if not parameters.useGraphTool:
+			timesDict = tripTimes.getTimeDictNx(Gnx, parameters.facilitiesDict, vehiclesDict)
+		else:
+			timesDict = tripTimes.getTimeDictGt(GtNetwork, parameters.facilitiesDict, vehiclesDict)
+		tripTimes.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')
 
-	parameters = dataClass.dataClass()
-	parameters.adjacencyDict = adjacencyDict
-	parameters.belongingDict = belongingDict
-	parameters.facilitiesDict = facilitiesDict
-	parameters.zonesDict = zonesDict
 	parameters.vehiclesDict = vehiclesDict
 	parameters.timesDict = timesDict
-
-	return parameters
 
 
 

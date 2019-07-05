@@ -2,7 +2,6 @@
 # from matplotlib import pyplot as plt
 # from random import choice
 # import itertools
-# import networkx as nx
 # import json
 
 # point1 = geometry.Point(0.5, 0.5)
@@ -134,28 +133,63 @@
 # # print("b is ", b)
 
 
- 
-
-# G = nx.Graph()
-
-# G.add_edge("1","2", weight=7)
-# G.add_edge("1","3", weight=2)
-# G.add_edge("1","4", weight=3)
-# G.add_edge("2","3", weight=4)
-# G.add_edge("2","4", weight=15)
-
+# import networkx as nx
+# import graph_tool.all as gt
+#
+# ########################## Gnx ###################################
+# Gnx = nx.Graph()
+# for i in range(5):
+#     nodeId = '7845695' + str(i)
+#     lat, lon = -87.8314656000,41.9846967000
+#     Gnx.add_node(nodeId, pos = (lat, lon))
+# nxNodes = Gnx.nodes()
+# print("nxNodes are", nxNodes)
+#
+# Gnx.add_edge("78456950","78456952", weight=7)
+# Gnx.add_edge("78456951","78456953", weight=2)
+# Gnx.add_edge("78456951","78456954", weight=3)
+# Gnx.add_edge("78456952","78456953", weight=4)
+# Gnx.add_edge("78456952","78456954", weight=15)
+#
+# a=Gnx["78456952"]["78456954"]["weight"]
+# print("a is ", a)
+#
+# nxEdges = list(Gnx.edges())
+# print("nxEdges are ", nxEdges)
+#
+#
+# ########################## Ggt ###################################
+# nxToGtNodesDict = {}                            #Alternatively use  new_vertex_property() for the node ids
+# Ggt = gt.Graph(directed=False)
+# for nxNode in nxNodes:
+#     gtNodeId = Ggt.add_vertex()
+#     nxToGtNodesDict[nxNode] = gtNodeId
+#     # print("v is ", gtNodeId)
+#
+# gtEdgeWeights = Ggt.new_edge_property("double")
+# for nxEdgeSource, nxEdgeTarget in nxEdges:
+#     print("edge source is %s and target is %s" %(nxEdgeSource, nxEdgeTarget))
+#     gtEdgeSource = nxToGtNodesDict[nxEdgeSource]
+#     gtEdgeTarget = nxToGtNodesDict[nxEdgeTarget]
+#     gtEdgeId = Ggt.add_edge(gtEdgeSource, gtEdgeTarget)
+#     gtEdgeWeights[gtEdgeId] = Gnx[nxEdgeSource][nxEdgeTarget]["weight"]
+#
+# for v in Ggt.vertices():
+#     print("v is ", v)
+# for e in Ggt.edges():
+#     print("e is ", e)
+#     print("weight of e is ", gtEdgeWeights[e])
 
 # a=nx.shortest_path_length(G, source="1", target="2", weight='weight')
-# # print("a is %f" %a)
-# edges = list(G.edges())
-# # print(G.nodes())
+# print("a is %f" %a)
+
 # edgeId = choice(edges)
 
-# # (u,v) = edgeId
-# # print("u is ", u)
-# # G.remove_nodes_from([1])
-# # print(G.nodes())
-# # print(G.edges())
+# (u,v) = edgeId
+# print("u is ", u)
+# G.remove_nodes_from([1])
+# print(G.nodes())
+# print(G.edges())
 
 # import operator
 # import _pickle as pickle
@@ -216,15 +250,15 @@
 # k=3
 # items = floor(aLength / 3)
 # print(a[0:4])
-
-import itertools
-
-def getCombinationsOfExactSwaps(listOfItems, numberOfSwaps):
-	combs = []
-	for subset in itertools.combinations(listOfItems, numberOfSwaps):
-		combs.append(list(subset))
-	return combs
-
-
-a=getCombinationsOfExactSwaps([1,2,3,4], 1)
-print(a)
+#
+# import itertools
+#
+# def getCombinationsOfExactSwaps(listOfItems, numberOfSwaps):
+# 	combs = []
+# 	for subset in itertools.combinations(listOfItems, numberOfSwaps):
+# 		combs.append(list(subset))
+# 	return combs
+#
+#
+# a=getCombinationsOfExactSwaps([1,2,3,4], 1)
+# print(a)
