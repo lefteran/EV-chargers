@@ -1,7 +1,7 @@
 import solution.solution as sl
 import solution.local_search as ls
 import copy
-import sys
+# import sys
 import _pickle as pickle
 
 # CALL THE METHOD getClosestFacilityToVehicle() FROM THE SOLUTION CLASS INSTEAD OF THE CODE BELOW

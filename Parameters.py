@@ -1,3 +1,5 @@
+import _pickle as pickle
+
 class Parameters:
 	def __init__(self):
 		self.facilitiesDict = {}
@@ -21,3 +23,9 @@ class Parameters:
 		self.importSolution = False
 		self.importDeterministicTimes = False
 		self.useGraphTool = True
+		self.parallelComputationOfTimes = True
+		self.exportParametersFlag = True
+
+	def exportParameters(self, filename):
+		with open(filename, 'wb') as parametersOutput:
+			pickle.dump(self, parametersOutput, -1)

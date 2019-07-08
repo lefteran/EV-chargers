@@ -1,21 +1,19 @@
 import networkx as nx
 import graph_tool.all as gt
-from math import sin, cos, sqrt, atan2, radians
+from math import floor
+from multiprocessing import Process, Manager
+from os import getpid, cpu_count
 
 
-# CREATE A METHOD THAT WILL RUN THE FOR LOOP ON THE FACILITIES DICT, TAKING AS AN ARGUMENT THE vehicleKey
-# IN PARALLELISATION EACH PROCESS WILL CALCULATE THE TIMES FOR A SPECIFIC NUMBER OF VEHICLES
-# CHECK WHETHER ADDING NEW ENTRIES IN DICT FROM VARIOUS PROCESSES CAN CAUSE A PROBLEM.
-# POSSIBLY LOCKS FOR timesDict MIGHT BE NEEDED
-def getTimeDictNx(Gnx, facilitiesDict, vehiclesDict):
+def getTimeDictNx(Gnx, parameters):
     print("Calculating Nx trip times ...")
     timesDict = {}
     beta = [1]
     timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
-    numberOfVehicles = len(vehiclesDict.items())
-    numberOfFacilities = len(facilitiesDict.items())
+    numberOfVehicles = len(parameters.vehiclesDict.items())
+    numberOfFacilities = len(parameters.facilitiesDict.items())
     countVeh = 0
-    for vehicleKey, vehicleObject in vehiclesDict.items():
+    for vehicleKey, vehicleObject in parameters.vehiclesDict.items():
         countVeh += 1
         countFac = 0
         print("Checking vehicle %d out of %d" %(countVeh, numberOfVehicles))
@@ -23,7 +21,7 @@ def getTimeDictNx(Gnx, facilitiesDict, vehiclesDict):
         startNode = vehicleObject.startNode
         endNode = vehicleObject.endNode
         edgeWeight = float(Gnx[startNode][endNode]['weight'])
-        for facilityKey,_ in facilitiesDict.items():
+        for facilityKey,_ in parameters.facilitiesDict.items():
             countFac += 1
             print("\tChecking facility %d out of %d" % (countFac, numberOfFacilities))
             # if nx.has_path(G, startNode, facilityKey):
@@ -41,15 +39,15 @@ def getTimeDictNx(Gnx, facilitiesDict, vehiclesDict):
     return timesDict
 
 
-def getTimeDictGt(GtNetwork, facilitiesDict, vehiclesDict):
+def getTimeDictGt(GtNetwork, parameters):
     print("Calculating Gt trip times ...")
     timesDict = {}
     beta = [1]
     timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
-    numberOfVehicles = len(vehiclesDict.items())
-    numberOfFacilities = len(facilitiesDict.items())
+    numberOfVehicles = len(parameters.vehiclesDict.items())
+    numberOfFacilities = len(parameters.facilitiesDict.items())
     countVeh = 0
-    for vehicleKey, vehicleObject in vehiclesDict.items():
+    for vehicleKey, vehicleObject in parameters.vehiclesDict.items():
         countVeh += 1
         countFac = 0
         print("Checking vehicle %d out of %d" %(countVeh, numberOfVehicles))
@@ -59,7 +57,7 @@ def getTimeDictGt(GtNetwork, facilitiesDict, vehiclesDict):
         gtEdgeId = GtNetwork.nxToGtEdgesDict[(nxStartNode, nxEndNode)]
         edgeWeight = GtNetwork.gtEdgeWeights[gtEdgeId]
         # edgeWeight = float(G[startNode][endNode]['weight'])
-        for facilityKey,_ in facilitiesDict.items():
+        for facilityKey,_ in parameters.facilitiesDict.items():
             countFac += 1
             print("\tChecking facility %d out of %d" % (countFac, numberOfFacilities))
             distance1 = gt.shortest_distance(GtNetwork.Ggt, source = GtNetwork.nxToGtNodesDict[nxStartNode], target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
@@ -72,6 +70,59 @@ def getTimeDictGt(GtNetwork, facilitiesDict, vehiclesDict):
     return timesDict
 
 
+def parallelUpdateVehiclesTimesDict(GtNetwork, parameters, timesDict, vehicleKeysList):
+    numberOfVehicles = len(vehicleKeysList)
+    countVeh = 0
+    proc_id = getpid()
+    for vehicleKey in vehicleKeysList:
+        countVeh += 1
+        print("Checking vehicle %d out of %d at process %d" % (countVeh, numberOfVehicles, proc_id))
+        vehicleObject = parameters.vehiclesDict[vehicleKey]
+        numberOfFacilities = len(parameters.facilitiesDict.items())
+        beta = [1]
+        timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
+        countFac = 0
+        vehicleTimesDict = {}
+        nxStartNode = vehicleObject.startNode
+        nxEndNode = vehicleObject.endNode
+        gtEdgeId = GtNetwork.nxToGtEdgesDict[(nxStartNode, nxEndNode)]
+        edgeWeight = GtNetwork.gtEdgeWeights[gtEdgeId]
+        for facilityKey, _ in parameters.facilitiesDict.items():
+            countFac += 1
+            print("\tChecking facility %d out of %d at process %d" % (countFac, numberOfFacilities, proc_id))
+            distance1 = gt.shortest_distance(GtNetwork.Ggt, source=GtNetwork.nxToGtNodesDict[nxStartNode],
+                                             target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
+            time1 = edgeWeight * vehicleObject.pointInEdge + distance1 / beta[timeOfDay]
+            distance2 = gt.shortest_distance(GtNetwork.Ggt, source=GtNetwork.nxToGtNodesDict[nxEndNode],
+                                             target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
+            time2 = edgeWeight * vehicleObject.pointInEdge + distance2 / beta[timeOfDay]
+            tripTime = min(time1, time2)
+            vehicleTimesDict[facilityKey] = tripTime
+        timesDict[vehicleKey] = vehicleTimesDict
+
+
+def getTimeDictGtParallel(GtNetwork, parameters):
+    print("Calculating parallel Gt trip times ...")
+    processes = []
+    numberOfVehicles = len(parameters.vehiclesDict.items())
+    numberOfProcesses = cpu_count()
+    vehiclesPerProcess = floor(numberOfVehicles / numberOfProcesses)
+    vehiclesKeys = list(parameters.vehiclesDict.keys())
+    manager = Manager()
+    timesDict = manager.dict()
+    for i in range(numberOfProcesses):
+        start = i * vehiclesPerProcess
+        if i < numberOfProcesses - 1:
+            end = (i+1) * vehiclesPerProcess
+        else:
+            end = len(vehiclesKeys)
+        process = Process(target=parallelUpdateVehiclesTimesDict, args=(GtNetwork, parameters, timesDict, vehiclesKeys[start:end]))
+        processes.append(process)
+        process.start()
+
+    for process in processes:
+        process.join()
+    return timesDict
 
 def exportDeterministicTripTimes(timesDict, filename):
     print("Exporting trim times ...")
@@ -111,25 +162,25 @@ def exportDeterministicTripTimes(timesDict, filename):
 
 
 
-
-def calculateDistanceInKm(latitude1, longitude1, latitude2, longitude2):
-    # approximate radius of earth in km
-    R = 6373.0
-
-    lat1 = radians(latitude1)
-    lon1 = radians(longitude1)
-    lat2 = radians(latitude2)
-    lon2 = radians(longitude2)
-
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-    distance = R * c
-    return distance
-
+# from math import sin, cos, sqrt, atan2, radians
+# def calculateDistanceInKm(latitude1, longitude1, latitude2, longitude2):
+#     # approximate radius of earth in km
+#     R = 6373.0
+#
+#     lat1 = radians(latitude1)
+#     lon1 = radians(longitude1)
+#     lat2 = radians(latitude2)
+#     lon2 = radians(longitude2)
+#
+#     dlon = lon2 - lon1
+#     dlat = lat2 - lat1
+#
+#     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+#     c = 2 * atan2(sqrt(a), sqrt(1 - a))
+#
+#     distance = R * c
+#     return distance
+#
 
 
 

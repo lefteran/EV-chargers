@@ -171,7 +171,8 @@ def importNetwork(parameters):
 	return Gnx
 
 
-def getVehiclesAndTimes(Gnx, GtNetwork, parameters):
+# Split the method below into two methods one for vehicles and one for times
+def getVehicles(Gnx, parameters):
 	vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
 	vehiclesDict = {}
 	for vehicleId, vehicleDataList in vehicleDataDict.items():
@@ -179,16 +180,20 @@ def getVehiclesAndTimes(Gnx, GtNetwork, parameters):
 		endNode = vehicleDataList[1]
 		if Gnx.has_edge(startNode, endNode):
 			vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
+	parameters.vehiclesDict = vehiclesDict
+
+def getTimes(Gnx, GtNetwork, parameters):
 	if parameters.importDeterministicTimes:
 		timesDict = importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
 	else:
 		if not parameters.useGraphTool:
-			timesDict = tripTimes.getTimeDictNx(Gnx, parameters.facilitiesDict, vehiclesDict)
+			timesDict = tripTimes.getTimeDictNx(Gnx, parameters)
 		else:
-			timesDict = tripTimes.getTimeDictGt(GtNetwork, parameters.facilitiesDict, vehiclesDict)
+			if parameters.parallelComputationOfTimes:
+				timesDict = tripTimes.getTimeDictGtParallel(GtNetwork, parameters)
+			else:
+				timesDict = tripTimes.getTimeDictGt(GtNetwork, parameters)
 		tripTimes.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')
-
-	parameters.vehiclesDict = vehiclesDict
 	parameters.timesDict = timesDict
 
 

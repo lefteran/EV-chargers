@@ -30,8 +30,10 @@ if __name__ == "__main__":
 	# Ggt, gtEdgeWeights = impdt.createGraphToolNetwork(Gnx)
 
 	########################## GET VEHICLES AND COMPUTE VEHICLE-FACILITY DISTANCES ###################################
-	impdt.getVehiclesAndTimes(Gnx, GtNetwork, parameters)
-
+	impdt.getVehicles(Gnx, parameters)
+	impdt.getTimes(Gnx, GtNetwork, parameters)
+	if parameters.exportParametersFlag:
+		parameters.exportParameters('Chicago/parametersObject.pkl')
 
 	####################### TESTING #####################################
 	# suite = unittest.TestLoader().loadTestsFromModule(test_Times)

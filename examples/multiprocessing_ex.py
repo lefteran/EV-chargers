@@ -7,7 +7,7 @@
 import os
 import time
 from math import sqrt
-from multiprocessing import Process, current_process
+from multiprocessing import Process, Lock, Value
 
 
 def calculate(lowerNumber, upperNumber):
@@ -19,7 +19,7 @@ def calculate(lowerNumber, upperNumber):
     # print(f"Process Name: {process_name}")
 
 
-if __name__ == '__main__':
+def multiprocessingMethod():
     start_time = time.time()
     processes = []
     numbers = [0, 25000000, 50000000, 75000000]
@@ -35,3 +35,17 @@ if __name__ == '__main__':
     for process in processes:
         process.join()
     print("--- %s seconds ---" % (time.time() - start_time))
+
+
+def singleprocessingMethod():
+    start_time = time.time()
+    lowerNumber = 0
+    upperNumber = 100000000
+    calculate(lowerNumber, upperNumber)
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+
+
+if __name__ == '__main__':
+    # singleprocessingMethod()
+    multiprocessingMethod()
