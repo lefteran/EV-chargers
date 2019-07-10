@@ -4,8 +4,8 @@ import solution.lagrangian as lag
 import time
 # import preprocessing as pre
 import Parameters
+import serialization
 import GraphToolNetwork as gtn
-# import sys
 import solution.solution as sl
 import solution.initialise as intl
 import unittest
@@ -15,7 +15,6 @@ import unitTests.test_Times as test_Times
 if __name__ == "__main__":
 	start_time = time.time()
 	print("#########################################################\n#########################################################")
-	# print(sys.prefix)
 	parameters = Parameters.Parameters()
 
 	####################### PREPROCESSING #####################################
@@ -23,24 +22,21 @@ if __name__ == "__main__":
 
 	########################## IMPORTING NETWORK (G, facilities and zones) ###########################################
 	Gnx = impdt.importNetwork(parameters)
-
-	# Ggt TO BE CREATED BASED ON Gnx
 	GtNetwork = gtn.GraphToolNetwork()
 	GtNetwork.createGraphToolNetworkFromGnx(Gnx)
-	# Ggt, gtEdgeWeights = impdt.createGraphToolNetwork(Gnx)
 
 	########################## GET VEHICLES AND COMPUTE VEHICLE-FACILITY DISTANCES ###################################
 	impdt.getVehicles(Gnx, parameters)
 	impdt.getTimes(Gnx, GtNetwork, parameters)
-	if parameters.exportParametersFlag:
-		parameters.exportParameters('Chicago/parametersObject.pkl')
 
 	####################### TESTING #####################################
-	# suite = unittest.TestLoader().loadTestsFromModule(test_Times)
+	# suite = unittest.TestLoader	().loadTestsFromModule(test_Times)
 	# unittest.TextTestRunner(verbosity=2).run(suite)
 
 	####################### MAIN ALGORITHM #####################################
 	# S = unbu.getUnbudgetedSolution(parameters)
+	# serialization.serializeAndExport(S, 'Chicago/initialSolution.json')
+	S = serialization.importAndDeserialize('Chicago/initialSolution.json')
 	# cost = S.getCost(parameters)
 
 

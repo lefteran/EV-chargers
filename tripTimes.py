@@ -76,7 +76,7 @@ def parallelUpdateVehiclesTimesDict(GtNetwork, parameters, timesDict, vehicleKey
     proc_id = getpid()
     for vehicleKey in vehicleKeysList:
         countVeh += 1
-        print("Checking vehicle %d out of %d at process %d" % (countVeh, numberOfVehicles, proc_id))
+        print(f"Checking vehicle {countVeh} from total {numberOfVehicles} at process {proc_id}")
         vehicleObject = parameters.vehiclesDict[vehicleKey]
         numberOfFacilities = len(parameters.facilitiesDict.items())
         beta = [1]
@@ -125,7 +125,7 @@ def getTimeDictGtParallel(GtNetwork, parameters):
     return timesDict
 
 def exportDeterministicTripTimes(timesDict, filename):
-    print("Exporting trim times ...")
+    print("Exporting trip times ...")
     fp = open(filename,"w")
     for vehicleKey, vehicleFacilityDict in timesDict.items():
         for facilityKey, vehicleFacilityTime in vehicleFacilityDict.items():

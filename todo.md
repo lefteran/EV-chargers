@@ -101,3 +101,4 @@ time cost https://docs.python.org/3/library/unittest.html
 
 ############################## VARIOUS ##################################
 - [ ] change the name of class dataClass to Parameters 
+- [ ] split parameters into new classes: solutionParameters, flags, networkParameters (facilities, zones etc.) and randomParameters(vehicles and times)

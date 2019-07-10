@@ -1,12 +1,14 @@
 import matplotlib.pyplot as plt
 # from shapely import geometry
 import networkx as nx
-import graph_tool.all as gt
+# import graph_tool.all as gt
+import _pickle as pickle
 import facility as fl
 import zone as zn
 import vehicle as vh
 import json
 import tripTimes
+import serialization
 
 
 def importNodes(filename):
@@ -171,15 +173,23 @@ def importNetwork(parameters):
 	return Gnx
 
 
-# Split the method below into two methods one for vehicles and one for times
+def importParameters(filename):
+	with open(filename, 'rb') as parametersInput:
+		return pickle.load(parametersInput)
+
+
 def getVehicles(Gnx, parameters):
-	vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
-	vehiclesDict = {}
-	for vehicleId, vehicleDataList in vehicleDataDict.items():
-		startNode = vehicleDataList[0]
-		endNode = vehicleDataList[1]
-		if Gnx.has_edge(startNode, endNode):
-			vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
+	if parameters.importVehiclesDict:
+		vehiclesDict = serialization.importAndDeserialize('Chicago/vehiclesDict.json')
+	else:	# INSTEAD OF IMPORTING DATA FROM THE FILE VehicleData.csv BELOW, GENERATE RANDOM INSTANCES
+		vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
+		vehiclesDict = {}
+		for vehicleId, vehicleDataList in vehicleDataDict.items():
+			startNode = vehicleDataList[0]
+			endNode = vehicleDataList[1]
+			if Gnx.has_edge(startNode, endNode):
+				vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
+	# serialization.serializeAndExport(parameters.vehiclesDict, 'Chicago/vehiclesDict.json')
 	parameters.vehiclesDict = vehiclesDict
 
 def getTimes(Gnx, GtNetwork, parameters):
@@ -193,11 +203,8 @@ def getTimes(Gnx, GtNetwork, parameters):
 				timesDict = tripTimes.getTimeDictGtParallel(GtNetwork, parameters)
 			else:
 				timesDict = tripTimes.getTimeDictGt(GtNetwork, parameters)
-		tripTimes.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')
+		tripTimes.exportDeterministicTripTimes(timesDict, 'Chicago/vehicleFacilityTimes.csv')		#MOVE THIS TO ANOTHER FILE
 	parameters.timesDict = timesDict
-
-
-
 
 
 

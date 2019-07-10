@@ -243,14 +243,14 @@
 # a=2
 # print(f"a is {a}")
 #
-from math import floor
-
-a = [1,6,9,8,7,5,6,3,4,6,56,54,57]
-aLength = len(a)
-k=3
-items = floor(aLength / 3)
-print(a[0:4])
+# from math import floor
 #
+# a = [1,6,9,8,7,5,6,3,4,6,56,54,57]
+# aLength = len(a)
+# k=3
+# items = floor(aLength / 3)
+# print(a[0:4])
+# #
 # import itertools
 #
 # def getCombinationsOfExactSwaps(listOfItems, numberOfSwaps):
@@ -262,3 +262,15 @@ print(a[0:4])
 #
 # a=getCombinationsOfExactSwaps([1,2,3,4], 1)
 # print(a)
+
+# import json
+#
+# class Foo(object):
+#     def __init__(self):
+#         self.x = 1
+#         self.y = 2
+#
+# foo = Foo()
+#
+# s = json.dumps(foo.__dict__) # s set to: {"x":1, "y":2}
+# a=2

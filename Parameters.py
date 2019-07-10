@@ -21,10 +21,13 @@ class Parameters:
 		self.swaps = 1
 		self.doPreprocessing = False
 		self.importSolution = False
-		self.importDeterministicTimes = False
+		self.importDeterministicTimes = True
 		self.useGraphTool = True
 		self.parallelComputationOfTimes = True
 		self.exportParametersFlag = True
+		self.importParametersFlag = False
+		self.importVehiclesDict = True
+
 
 	def exportParameters(self, filename):
 		with open(filename, 'wb') as parametersOutput:

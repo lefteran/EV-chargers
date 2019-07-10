@@ -32,3 +32,9 @@ ZoneId	Demand	OnStreetBound
 2488	190		150
 4088	185		122
 ```
+
+### DOCKERFILE
+To build a dockerfile type:
+> docker build -t bfljson .
+
+where bfljson is the name of the newly created image to be used as an interpreter.
