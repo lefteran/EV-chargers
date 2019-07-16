@@ -5,11 +5,11 @@ import time
 # import preprocessing as pre
 import Parameters
 import serialization
-import GraphToolNetwork as gtn
+import exportCosts
 import solution.solution as sl
 import solution.initialise as intl
 import unittest
-import unitTests.test_Times as test_Times
+# import unitTests.test_Times as test_Times
 
 
 if __name__ == "__main__":
@@ -21,11 +21,16 @@ if __name__ == "__main__":
 	# pre.preprocessing(parameters.doPreprocessing)
 
 	########################## IMPORTING NETWORK (G, facilities and zones) ###########################################
+	print("Importing network ...")
 	Gnx = impdt.importNetwork(parameters)
-	GtNetwork = gtn.GraphToolNetwork()
-	GtNetwork.createGraphToolNetworkFromGnx(Gnx)
-
+	if parameters.importTimes:
+		GtNetwork = None
+	else:
+		import GraphToolNetwork as gtn
+		GtNetwork = gtn.GraphToolNetwork()
+		GtNetwork.createGraphToolNetworkFromGnx(Gnx)
 	########################## GET VEHICLES AND COMPUTE VEHICLE-FACILITY DISTANCES ###################################
+	print("Getting vehicles and vehicle-facility times ...")
 	impdt.getVehicles(Gnx, parameters)
 	impdt.getTimes(Gnx, GtNetwork, parameters)
 
@@ -34,9 +39,26 @@ if __name__ == "__main__":
 	# unittest.TextTestRunner(verbosity=2).run(suite)
 
 	####################### MAIN ALGORITHM #####################################
-	# S = unbu.getUnbudgetedSolution(parameters)
-	# serialization.serializeAndExport(S, 'Chicago/initialSolution.json')
-	S = serialization.importAndDeserialize('Chicago/initialSolution.json')
+	# initSol = intl.initialiseSolution(parameters)
+	# localSearchSolution = serialization.importAndDeserialize('Chicago/unbudgetedLocalSearchSolution' + str(parameters.swaps) + 'Swaps.json')
+	# initialSolutionCost = initSol.getLagrangianCost(parameters, 0)
+	# localSearchSolutionCost = localSearchSolution.getLagrangianCost(parameters, 0)
+	# print(f"Initial cost: {initialSolutionCost}. Local search cost: {localSearchSolutionCost}. Number of swaps: {parameters.swaps}\n")
+	initialSolution, localSearchSolution = unbu.getUnbudgetedSolution(parameters)
+	initialSolutionCost = initialSolution.getCost(parameters)
+	localSearchSolutionCost = localSearchSolution.getCost(parameters)
+	serialization.serializeAndExport(localSearchSolution, 'Chicago/unbudgetedLocalSearchSolution' + str(parameters.swaps) + 'Swaps.json')
+	exportCosts.exportCosts('Chicago/solutionsCosts.txt', parameters, initialSolutionCost, localSearchSolutionCost)
+
+	# WRITE THE COSTS OF THE INITIAL SOLUTION AND THE COST OF THE SOLUTION FROM LOCAL SEARCH IN A FILE
+
+	# initSol = serialization.importAndDeserialize('Chicago/initialSolution.json')
+	# initSolCost = initSol.getCost(parameters)
+	# sol = serialization.importAndDeserialize('Chicago/localSearchSolution2Swaps.json')
+	# solCost = sol.getCost(parameters)
+	# print(f"Initial cost is {initSolCost} and after local search the cost is {solCost}")
+
+
 	# cost = S.getCost(parameters)
 
 

@@ -193,7 +193,7 @@ def getVehicles(Gnx, parameters):
 	parameters.vehiclesDict = vehiclesDict
 
 def getTimes(Gnx, GtNetwork, parameters):
-	if parameters.importDeterministicTimes:
+	if parameters.importTimes:
 		timesDict = importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
 	else:
 		if not parameters.useGraphTool:

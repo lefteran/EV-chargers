@@ -1,5 +1,5 @@
 import networkx as nx
-import graph_tool.all as gt
+# import graph_tool.all as gt
 from math import floor
 from multiprocessing import Process, Manager
 from os import getpid, cpu_count

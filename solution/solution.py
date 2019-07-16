@@ -211,13 +211,13 @@ class Solution:
 		connectionAddedCost = self.addConnectedPairTimes(parameters, connectedPairs)
 		return connectionAddedCost - disconnectionSubtractedCost
 
-	def getOpenFacilityToConnect(self, parameters, facilityToRemove):
+	def getAnyOpenFacilityToConnect(self, parameters, facilityToRemove):
 		for facilityKey, _ in parameters.facilitiesDict.items():
 			if self.is_open(facilityKey) and (facilityKey != facilityToRemove):
 				return facilityKey
 
 	def connectVehicleToClosestFacility(self, parameters, vehicleId, facilityToRemove):
-		initialFacilityKey = self.getOpenFacilityToConnect(parameters, facilityToRemove)
+		initialFacilityKey = self.getAnyOpenFacilityToConnect(parameters, facilityToRemove)
 		closest = parameters.timesDict[vehicleId][initialFacilityKey]
 		closestFacility = initialFacilityKey
 		for facilityKey, _ in parameters.facilitiesDict.items():

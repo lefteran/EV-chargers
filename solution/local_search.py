@@ -75,31 +75,36 @@ def closeFacilities(newS, openfacilityIds):
 	for facilityId in openfacilityIds:
 		newS.closeFacility(facilityId)
 
-def subtractLandCostsOfOldFacilities(parameters, closedFacilityIds):
-	landSubtractedCost = 0
+def getLandCostsOfOldFacilities(parameters, closedFacilityIds):
+	landCostToSubtract = 0
 	for facilityId in closedFacilityIds:
-		landSubtractedCost += parameters.facilitiesDict[facilityId].cost
-	return landSubtractedCost
+		landCostToSubtract += parameters.facilitiesDict[facilityId].cost
+	return landCostToSubtract
 
 
-def addLandCostsOfNewFacilities(parameters, newlyOpenedFacilityIds):
-	landAddedCost = 0
+def getLandCostsOfNewFacilities(parameters, newlyOpenedFacilityIds):
+	landCostToAdd = 0
 	for facilityId in newlyOpenedFacilityIds:
-		landAddedCost += parameters.facilitiesDict[facilityId].cost
-	return landAddedCost
-	
+		landCostToAdd += parameters.facilitiesDict[facilityId].cost
+	return landCostToAdd
 
-def swapFacilities(S, parameters, openFacilityIds, closedFacilityIds):
-	newS = pickle.loads(pickle.dumps(S, -1))
-	standard, rapid = getFacilityCPs(S, openFacilityIds)
-	newlyOpenedFacilityIds = openNewFacilities(newS, parameters, closedFacilityIds, standard, rapid)
-	landAddedCost = addLandCostsOfNewFacilities(parameters, newlyOpenedFacilityIds)
+def getNewConnectivityCost(S, parameters, openFacilityIds):
 	connectivityNewCost = 0
 	for openFacilityId in openFacilityIds:
 		connectivityNewCost += S.connectVehiclesToNewFacility(parameters, openFacilityId)
+	return connectivityNewCost
+
+def swapFacilities(S, parameters, openFacilityIds, closedFacilityIds, lambdaVal):
+	newS = pickle.loads(pickle.dumps(S, -1))
+	standard, rapid = getFacilityCPs(S, openFacilityIds)
+
+	newlyOpenedFacilityIds = openNewFacilities(newS, parameters, closedFacilityIds, standard, rapid)
+	landAddedCost = getLandCostsOfNewFacilities(parameters, newlyOpenedFacilityIds)
+	connectivityNewCost = getNewConnectivityCost(newS, parameters, openFacilityIds)
 	closeFacilities(newS, openFacilityIds)
-	landSubtractedCost = subtractLandCostsOfOldFacilities(parameters, openFacilityIds)
-	changeInCost = landAddedCost + connectivityNewCost - landSubtractedCost
+	landSubtractedCost = getLandCostsOfOldFacilities(parameters, openFacilityIds)
+
+	changeInCost = connectivityNewCost + lambdaVal * (landAddedCost - landSubtractedCost)
 	return newS, changeInCost
 
 # RETURNS THE NUMBER OF STANDARD/RAPID CPs FOR THE GIVEN FACILITY IDS 
@@ -141,47 +146,49 @@ def getZoneNewSolution(S, parameters, zoneId, lambdaVal):
 	openFacilityCombinations = getCombinationsOfExactSwaps(openFacilities, parameters.swaps)
 	closedFacilityCombinations = getCombinationsOfExactSwaps(closedFacilities, parameters.swaps)
 	allSwaps = list(itertools.product(openFacilityCombinations, closedFacilityCombinations))
-	if allSwaps:
-		a=2								##### DELETE
 	# oldCost = S.getLagrangianCost(parameters, lambdaVal)
-	newS = S
+	newS = None
 	count = 0
 	swapsLen = len(allSwaps)
 	for swap in allSwaps:
-		count+=1
+		count += 1
 		openFacilityIds = swap[0]
 		closedFacilityIds = swap[1]
 		if isSwapFeasible(S, parameters, openFacilityIds, closedFacilityIds):
 			if isCostFinite(parameters, closedFacilityIds):
-				isCostFinite(parameters, closedFacilityIds)
-				newS, changeInCost = swapFacilities(S, parameters, openFacilityIds, closedFacilityIds)
+				# isCostFinite(parameters, closedFacilityIds)
+				newS, changeInCost = swapFacilities(S, parameters, openFacilityIds, closedFacilityIds, lambdaVal)
 				# newCost = newS.getLagrangianCost(parameters, lambdaVal)
-				print("Swap %d of %d is feasible. Oldcost is %f and the change in cost is %f" %(count, swapsLen, oldCost, changeInCost))
-				if changeInCost > 0:
+				print("\tSwap %d of %d is feasible. The change in cost is %f" %(count, swapsLen, changeInCost))
+				if changeInCost < 0:
 					foundBetterSolution = True
 					break
 			else:
-				print("Cost of swap %d of %d is not finite" %(count, swapsLen))
+				print("\tCost of swap %d of %d is not finite" %(count, swapsLen))
 		else:
-			print("Swap %d of %d is not feasible" %(count, swapsLen))
+			print("\tSwap %d of %d is not feasible" %(count, swapsLen))
 	return newS, foundBetterSolution
 
 
 def localSearch(S, parameters, lambdaVal):
+	print("Running local search ...")
 	zonesLen = len(parameters.zonesDict.items())
-	count=0
+	count = 0
+	newS = None
 	for zoneKey, _ in parameters.zonesDict.items():
 		count += 1
-		print("Checking zone %d (of total %d zones) which has %d facilities."\
-		%(count, zonesLen, len(parameters.zonesDict[zoneKey].facilities)))
-		if len(parameters.zonesDict[zoneKey].facilities) >= 100:
-			a=2
+		numberOfZoneFacilities = len(parameters.zonesDict[zoneKey].facilities)
+		print(f"Checking zone {count} (of total {zonesLen} zones) which has {numberOfZoneFacilities} facilities")
+		# if len(parameters.zonesDict[zoneKey].facilities) >= 100:
+		# 	a=2
 		# print("Current solution cost is %f" %(S.getLagrangianCost(parameters, lambdaVal)))
 		flag = True
 		while flag:
 			newS, foundBetterSolution = getZoneNewSolution(S, parameters, zoneKey, lambdaVal)
-			if not foundBetterSolution:
-				flag = False
-			else:
+			if foundBetterSolution:
+				print("\t\tFound better solution")
 				S = newS
-	return newS
+				newCost = S.getCost(parameters)
+			else:
+				flag = False
+	return S

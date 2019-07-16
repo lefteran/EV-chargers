@@ -48,7 +48,12 @@ Each facility will keep a value of the key of the zone it belongs to
 - [ ] different demand scenarios
 - [ ] what happens if the number of EVs changes significantly
 - [ ] compare values of lagrangian and opt
-
+- [ ] Unbudgeted:
+    - Exact swaps: 2,3,4,5...
+    - Up to swaps: 2,3,4,5,... 
+- [ ] Budgeted:
+    - Exact swaps: 2,3,4,5...
+    - Up to swaps: 2,3,4,5,... 
 
 ################################ LOCAL SEARCH #####################################
 Instead of swapping do the following:
@@ -102,3 +107,4 @@ time cost https://docs.python.org/3/library/unittest.html
 ############################## VARIOUS ##################################
 - [ ] change the name of class dataClass to Parameters 
 - [ ] split parameters into new classes: solutionParameters, flags, networkParameters (facilities, zones etc.) and randomParameters(vehicles and times)
+- [ ] make parameters global object so that they are not passed as argument in many methods

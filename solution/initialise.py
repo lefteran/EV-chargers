@@ -1,7 +1,7 @@
 import solution.solution as sl
 import solution.local_search as ls
 import copy
-# import sys
+import serialization
 import _pickle as pickle
 
 # CALL THE METHOD getClosestFacilityToVehicle() FROM THE SOLUTION CLASS INSTEAD OF THE CODE BELOW
@@ -74,8 +74,10 @@ def getLocalSolutionsDict(parameters, initSol):
 
 
 def initialiseSolution(parameters):
+	print("Getting an initial solution ...")
 	if parameters.importSolution:
-		initSol = importSolutionObject('Chicago/initialSolutionFiniteCost.pkl')
+		# initSol = importSolutionObject('Chicago/initialSolutionFiniteCost.pkl')
+		initSol = serialization.importAndDeserialize('Chicago/initialSolution.json')
 	else:
 		initSol = naiveSolution(parameters)
 		initSol.closeRedundantFacilities(parameters)
@@ -87,5 +89,6 @@ def initialiseSolution(parameters):
 			print("solution is feasible without budget")
 		else:
 			print("not feasible")
-		initSol.exportSolutionObject('Chicago/solutionObject.pkl')
+		# initSol.exportSolutionObject('Chicago/solutionObject.pkl')
+		serialization.serializeAndExport(initSol, 'Chicago/initialSolution.json')
 	return initSol
