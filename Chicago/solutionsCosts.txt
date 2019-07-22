@@ -1,3 +1,0 @@
-Initial cost: 7542.650577559505. Local search cost: 7542.650577559505. Number of swaps: 1
-Initial cost: 7542.650577559505. Local search cost: 7542.650577559505. Number of swaps: 1
-Initial cost: 7542.650577559505. Local search cost: 6609.757577559503. Number of swaps: 1

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ad8b8412-5801-48ee-9663-310cb002def9" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/BFL.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/dictionaries/eanastas.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.vscode/.ropeproject/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.vscode/.ropeproject/objectdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../BFL.code-workspace" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/BoundaryNodes.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ChicagoEdges.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ChicagoEdgesShort.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ChicagoNodes.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ChicagoNodesShort.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ChicagoZoning.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ChicagoZoningShort.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/FacilityData.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/VehicleData.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/ZoneData.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/adjacencies.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/initialSolution.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/initialSolutionFiniteCost.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/localSearchSolution2Swaps.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/nodeInBoundary.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/parametersObject.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/parametersObject.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/solutionObject.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/solutionObjectAfterReduceCPs.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/solutionsCosts.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/timesDict.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/unbudgetedLocalSearchSolution1Swaps.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/vehicleFacilityTimes.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Chicago/vehiclesDict.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../GraphToolNetwork.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Parameters.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/Sioux-Falls-Network-Flow.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/Sioux-Falls-Network.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/Sioux-Falls-OD Demand.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/SiouxFallsCoordinates.geojson" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/SiouxFallsMap_AAA1998.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/SiouxFalls_flow.tntp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/SiouxFalls_net.tntp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/SiouxFalls_node.tntp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/SiouxFalls_trips.tntp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../SiouxFalls/create_network.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Visualisation/plot.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../distMatrix.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/MPI.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/emulation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/graph_tool_ex.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/locks.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/locks1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/locks2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/multiprocessing_ex.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../examples/nxToGt_ex.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../exportCosts.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../facility.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../importData.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../importDataGt.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../jsonpickle_ex1.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../jsonpickle_ex2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../optimal/CFP-pyomo.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../optimal/convertToAMPL.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../optimal/optimal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/BFL_data.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/CFP_data.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/adjacent_zones.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/amplData.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/basemapExample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/belonging.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/belongingNode_Boundary.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/belongingNode_Boundary1_1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/boundary-Nodes.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/boundaryAdjacencies(initial).txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/boundaryAdjacencies.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/create_ODmatrix.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/facilitiy_data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/generalFuncs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/greedy.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/network.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/parameters.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/pseudocode.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/read_coords.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/read_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/vehicle_data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../other/zone_data.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../preprocessing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../serialization.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/initialise.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/lagrangian.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/local_search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/parallelisation/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/parallelisation/combinePartsIntoSolution.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/parallelisation/localSearchPrl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/parallelisation/solutionParts.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/parallelisation/solutionPrl.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/parallelisation/splitSolutionToParts.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/redistribute.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/solution.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solution/unbudgeted.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../solutionJsonPickleTest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../todo.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tripTimes.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../unitTests/test_Times.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../vehicle.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../zone.py" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="160">
+              <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="80">
+              <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="451">
+              <caret line="38" column="19" lean-forward="true" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/flags.py" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/network.iml" />
+        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/.idea/misc.xml" />
+        <option value="$PROJECT_DIR$/.idea/modules.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1440" />
+    <option name="height" value="780" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="network" type="b2602c69:ProjectViewProjectNode" />
+              <item name="network" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="network" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="network" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ad8b8412-5801-48ee-9663-310cb002def9" name="Default Changelist" comment="" />
+      <created>1563744485764</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1563744485764</updated>
+      <workItem from="1563744490820" duration="1246000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1246000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.18390192" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" order="0" />
+      <window_info anchor="bottom" id="Terminal" order="1" />
+      <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="3" />
+      <window_info anchor="bottom" id="Python Console" order="4" />
+      <window_info anchor="bottom" id="Docker" order="5" />
+      <window_info anchor="bottom" id="Message" order="6" />
+      <window_info anchor="bottom" id="Find" order="7" />
+      <window_info active="true" anchor="bottom" id="Run" order="8" visible="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="Debug" order="9" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="12" />
+      <window_info anchor="right" id="Database" order="0" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="SciView" order="2" />
+      <window_info anchor="right" id="Ant Build" order="3" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="4" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/network$main.coverage" NAME="main Coverage Results" MODIFIED="1563745138090" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/flags.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="38" column="19" lean-forward="true" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
