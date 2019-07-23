@@ -23,14 +23,14 @@ class Parameters:
 class Flags:
 	def __init__(self):
 		self.doPreprocessing = False
-		self.importSolution = True
-		self.importTimes = True
-		self.useGraphTool = True
-		self.parallelComputationOfTimes = True
-		self.exportParametersFlag = True
-		self.importParametersFlag = False
-		self.importVehiclesDict = True
-		self.parallelLocalSearch = True
+		# self.importSolution = True
+		# self.importTimes = True
+		# self.useGraphTool = True
+		# self.parallelComputationOfTimes = True
+		# self.exportParametersFlag = True
+		# self.importParametersFlag = False
+		# self.importVehiclesDict = True
+		# self.parallelLocalSearch = True
 
 def init():
 	global parameters

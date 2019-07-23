@@ -2,122 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6c2161e-bf85-4f0b-bcef-2009e86ac85a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../FLP/network/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/BFL.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/dictionaries/eanastas.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/.ropeproject/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/.ropeproject/objectdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/settings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BFL.code-workspace" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/BoundaryNodes.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ChicagoEdges.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ChicagoEdgesShort.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ChicagoNodes.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ChicagoNodesShort.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ChicagoZoning.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ChicagoZoningShort.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/FacilityData.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/VehicleData.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/ZoneData.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/adjacencies.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/initialSolution.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/initialSolutionFiniteCost.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/localSearchSolution2Swaps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/nodeInBoundary.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/parametersObject.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/parametersObject.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/solutionObject.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/solutionObjectAfterReduceCPs.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/solutionsCosts.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/timesDict.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/unbudgetedLocalSearchSolution1Swaps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/vehicleFacilityTimes.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Chicago/vehiclesDict.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GraphToolNetwork.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Parameters.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/Sioux-Falls-Network-Flow.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/Sioux-Falls-Network.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/Sioux-Falls-OD Demand.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/SiouxFallsCoordinates.geojson" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/SiouxFallsMap_AAA1998.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/SiouxFalls_flow.tntp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/SiouxFalls_net.tntp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/SiouxFalls_node.tntp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/SiouxFalls_trips.tntp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SiouxFalls/create_network.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Visualisation/plot.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../distMatrix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/MPI.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/emulation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/graph_tool_ex.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/locks.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/locks1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/locks2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/multiprocessing_ex.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../examples/nxToGt_ex.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../exportCosts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../facility.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../importData.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../importDataGt.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../jsonpickle_ex1.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../jsonpickle_ex2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../optimal/CFP-pyomo.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../optimal/convertToAMPL.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../optimal/optimal.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/BFL_data.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/CFP_data.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/adjacent_zones.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/amplData.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/basemapExample.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/belonging.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/belongingNode_Boundary.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/belongingNode_Boundary1_1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/boundary-Nodes.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/boundaryAdjacencies(initial).txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/boundaryAdjacencies.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/create_ODmatrix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/facilitiy_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/generalFuncs.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/greedy.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/network.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/parameters.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/pseudocode.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/read_coords.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/read_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/vehicle_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../other/zone_data.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../preprocessing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../serialization.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/initialise.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/lagrangian.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/local_search.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/parallelisation/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/parallelisation/combinePartsIntoSolution.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/parallelisation/localSearchPrl.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/parallelisation/solutionParts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/parallelisation/solutionPrl.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/parallelisation/splitSolutionToParts.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/redistribute.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/solution.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solution/unbudgeted.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../solutionJsonPickleTest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../todo.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tripTimes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../unitTests/test_Times.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../vehicle.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../zone.py" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/scenarios/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/network/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/network/flags.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/network/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/network/test.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -141,14 +32,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="800">
-              <caret line="40" column="41" selection-start-line="40" selection-start-column="41" selection-end-line="40" selection-end-column="41" />
+            <state relative-caret-position="320">
+              <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GraphToolNetwork.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -198,11 +98,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tripTimes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
+            <state relative-caret-position="480">
+              <caret line="132" column="14" lean-forward="true" selection-start-line="126" selection-end-line="132" selection-end-column="14" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -275,8 +175,10 @@
       <find>facility.id</find>
       <find>manager</find>
       <find>write</find>
-      <find>pickle</find>
       <find>Found</find>
+      <find>line</find>
+      <find>pickle</find>
+      <find>jsonpickle</find>
     </findStrings>
     <replaceStrings>
       <replace>facilityId</replace>
@@ -350,11 +252,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1440" />
-    <option name="height" value="780" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-1928" />
+    <option name="y" value="-144" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -381,7 +283,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FLP/network" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FLP/scenarios" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -606,12 +508,12 @@
       <workItem from="1562257868602" duration="60998000" />
       <workItem from="1562705454531" duration="129796000" />
       <workItem from="1563725205810" duration="940000" />
-      <workItem from="1563744782340" duration="599000" />
+      <workItem from="1563744782340" duration="4958000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="294998000" />
+    <option name="totallyTimeSpent" value="299357000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -623,8 +525,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-1928" y="-144" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.16364606" />
       <window_info id="Structure" order="1" sideWeight="0.50080776" side_tool="true" weight="0.16044776" />
@@ -945,9 +846,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GraphToolNetwork.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/unitTests/test_Times.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -1065,16 +963,6 @@
     <entry file="file://$PROJECT_DIR$/facility.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="40" column="41" selection-start-line="40" selection-start-column="41" selection-end-line="40" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/serialization.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -1112,16 +1000,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tripTimes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSearchPrl.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3300">
@@ -1143,6 +1021,33 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="6" column="30" selection-start-line="6" selection-start-column="30" selection-end-line="6" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GraphToolNetwork.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tripTimes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="132" column="14" lean-forward="true" selection-start-line="126" selection-end-line="132" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
