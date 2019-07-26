@@ -2,13 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6c2161e-bf85-4f0b-bcef-2009e86ac85a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../FLP/scenarios/test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/examples/progressBar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/examples/progressBarTqdm.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/fwdGreedy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/revGreedy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/solution.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/network/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/network/flags.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/network/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/network/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/network/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/importData.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/importData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/serializationIO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/serializationIO.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,23 +37,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/solution/local_search.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
+            <state relative-caret-position="-140">
+              <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
               <folding>
-                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#0#16#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/GraphToolNetwork.py">
+        <entry file="file://$PROJECT_DIR$/jsonpickle_ex2.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="440">
-              <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+              <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,7 +64,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serialization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
+            <state relative-caret-position="120">
               <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
@@ -89,7 +97,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/solution/unbudgeted.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
+            <state relative-caret-position="100">
               <caret line="8" column="53" selection-start-line="8" selection-start-column="53" selection-end-line="8" selection-end-column="53" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
@@ -98,11 +106,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tripTimes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="132" column="14" lean-forward="true" selection-start-line="126" selection-end-line="132" selection-end-column="14" />
+            <state relative-caret-position="2540">
+              <caret line="131" column="84" selection-start-line="131" selection-start-column="84" selection-end-line="131" selection-end-column="84" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -113,7 +121,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSearchPrl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3300">
+            <state relative-caret-position="3160">
               <caret line="165" column="4" selection-start-line="165" selection-start-column="4" selection-end-line="165" selection-end-column="4" />
               <folding>
                 <element signature="e#0#68#0" expanded="true" />
@@ -252,7 +260,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-1928" />
     <option name="y" value="-144" />
     <option name="width" value="1936" />
@@ -266,7 +274,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -274,16 +281,22 @@
               <item name="BFL" type="b2602c69:ProjectViewProjectNode" />
               <item name="BFL" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="BFL" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BFL" type="462c0819:PsiDirectoryNode" />
+              <item name="solution" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FLP/scenarios" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../FLP/algorithms" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -508,12 +521,17 @@
       <workItem from="1562257868602" duration="60998000" />
       <workItem from="1562705454531" duration="129796000" />
       <workItem from="1563725205810" duration="940000" />
-      <workItem from="1563744782340" duration="4958000" />
+      <workItem from="1563744782340" duration="5726000" />
+      <workItem from="1563888439223" duration="553000" />
+      <workItem from="1563889009861" duration="1213000" />
+      <workItem from="1564047084299" duration="1526000" />
+      <workItem from="1564057824858" duration="625000" />
+      <workItem from="1564135861148" duration="617000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="299357000" />
+    <option name="totallyTimeSpent" value="304659000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -525,9 +543,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-144" width="1936" height="1056" extended-state="6" />
+    <frame x="-1928" y="-144" width="1936" height="1056" extended-state="7" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.16364606" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.1716418" />
       <window_info id="Structure" order="1" sideWeight="0.50080776" side_tool="true" weight="0.16044776" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.32936078" />
@@ -803,16 +822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jsonpickle_ex2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSolutionPart.py" />
     <entry file="file://$PROJECT_DIR$/solution/parallelisation/globalSolutionPart.py" />
     <entry file="file://$PROJECT_DIR$/other/pseudocode.py">
@@ -936,16 +945,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/solution/local_search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="606">
-          <caret line="178" column="18" selection-start-line="178" selection-start-column="18" selection-end-line="178" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/solution/parallelisation/combinePartsIntoSolution.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
@@ -963,9 +962,26 @@
     <entry file="file://$PROJECT_DIR$/facility.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/GraphToolNetwork.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1520">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/serialization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
+        <state relative-caret-position="120">
           <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
@@ -992,7 +1008,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/solution/unbudgeted.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
+        <state relative-caret-position="100">
           <caret line="8" column="53" selection-start-line="8" selection-start-column="53" selection-end-line="8" selection-end-column="53" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
@@ -1000,9 +1016,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tripTimes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2540">
+          <caret line="131" column="84" selection-start-line="131" selection-start-column="84" selection-end-line="131" selection-end-column="84" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSearchPrl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3300">
+        <state relative-caret-position="3160">
           <caret line="165" column="4" selection-start-line="165" selection-start-column="4" selection-end-line="165" selection-end-column="4" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
@@ -1024,29 +1050,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/GraphToolNetwork.py">
+    <entry file="file://$PROJECT_DIR$/jsonpickle_ex2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
-          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
+          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
           <folding>
-            <element signature="e#0#26#0" expanded="true" />
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tripTimes.py">
+    <entry file="file://$PROJECT_DIR$/solution/local_search.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="132" column="14" lean-forward="true" selection-start-line="126" selection-end-line="132" selection-end-column="14" />
+        <state relative-caret-position="-140">
+          <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="true" />
           </folding>
         </state>
       </provider>

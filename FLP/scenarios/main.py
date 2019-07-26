@@ -6,9 +6,7 @@ import serializationIO
 
 if __name__ == "__main__":
 	start_time = time.time()
-	print("#########################################################\n#########################################################")
 	settings.init()
-	# print(f"setting value is {settings.parameters.gamma}")
 
 	Gnx = impdt.importNetwork()
 	if settings.flags.importTimes:
@@ -22,7 +20,7 @@ if __name__ == "__main__":
 	impdt.getTimes(Gnx, GtNetwork)
 
 	vehiclesFile = "scenario1/vehiclesDict.json"
-	timesFile = "scenario1/timesdict.json"
+	timesFile = "scenario1/timesDict.csv"
 	serializationIO.serializeAndExport(settings.parameters.vehiclesDict, vehiclesFile)
 	serializationIO.exportDeterministicTripTimes(settings.parameters.timesDict, timesFile)
 

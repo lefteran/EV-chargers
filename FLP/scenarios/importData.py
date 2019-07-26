@@ -181,6 +181,7 @@ def getVehicles(Gnx):
 	if settings.flags.importVehiclesDict:
 		vehiclesDict = serializationIO.importAndDeserialize('Chicago/vehiclesDict.json')
 	else:	# INSTEAD OF IMPORTING DATA FROM THE FILE VehicleData.csv BELOW, GENERATE RANDOM INSTANCES
+		# TODO: Create a method to randomly generate the locations of the vehicles instead of reading them from a file
 		vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
 		vehiclesDict = {}
 		for vehicleId, vehicleDataList in vehicleDataDict.items():
