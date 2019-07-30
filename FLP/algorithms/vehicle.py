@@ -10,9 +10,10 @@ class Vehicle:
 
 	def getClosestFacilities_TimesTuples(self):
 		closestFacilities = []
-		for facilityKey, _ in settings.parameters.facilitiesDict.items():
-			timeToFacility = settings.parameters.timesDict[self.id][facilityKey]
-			closestFacilities.append((facilityKey, timeToFacility))
+		# for facilityKey, _ in settings.parameters.facilitiesDict.items():
+		for facilityId in settings.parameters.candidateLocations:
+			timeToFacility = settings.parameters.timesDict[self.id][facilityId]
+			closestFacilities.append((facilityId, timeToFacility))
 		closestFacilities.sort(key=lambda tup: tup[1])
 		return closestFacilities
 

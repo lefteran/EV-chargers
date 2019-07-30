@@ -2,18 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6c2161e-bf85-4f0b-bcef-2009e86ac85a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/examples/progressBar.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/examples/progressBarTqdm.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/fwdGreedy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/revGreedy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/solution.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/.idea/jsonSchemas.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/clustering.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/examples/myProgressBar.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/randomLocalSearch.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/visualisation/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/visualisation/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/visualisation/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/visualisation/.idea/visualisation.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLP/visualisation/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/fwdGreedy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/fwdGreedy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/localSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/cluster.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/revGreedy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/backGreedy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/serializationIO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/serializationIO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/solutions/fwdGreedy.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLP/network/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLP/scenarios/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLP/scenarios/importData.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/importData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/serializationIO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/serializationIO.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,11 +47,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/solution/local_search.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-140">
-              <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
+            <state relative-caret-position="320">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="e#0#16#0" expanded="true" />
               </folding>
@@ -49,13 +59,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jsonpickle_ex2.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/distMatrix.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+            <state relative-caret-position="457">
+              <caret line="23" column="35" lean-forward="true" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
               <folding>
-                <element signature="e#0#23#0" expanded="true" />
+                <element signature="e#0#24#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -187,6 +197,8 @@
       <find>line</find>
       <find>pickle</find>
       <find>jsonpickle</find>
+      <find>distance</find>
+      <find>pos</find>
     </findStrings>
     <replaceStrings>
       <replace>facilityId</replace>
@@ -261,8 +273,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-1928" />
-    <option name="y" value="-144" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -527,11 +539,13 @@
       <workItem from="1564047084299" duration="1526000" />
       <workItem from="1564057824858" duration="625000" />
       <workItem from="1564135861148" duration="617000" />
+      <workItem from="1564162183281" duration="645000" />
+      <workItem from="1564340663997" duration="715000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="304659000" />
+    <option name="totallyTimeSpent" value="306019000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -543,10 +557,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-144" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.1716418" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.1748401" />
       <window_info id="Structure" order="1" sideWeight="0.50080776" side_tool="true" weight="0.16044776" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.32936078" />
@@ -563,6 +576,7 @@
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50159913" side_tool="true" weight="0.3997833" />
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.32936078" />
       <window_info anchor="bottom" id="Python Console" order="13" weight="0.32936078" />
+      <window_info anchor="right" id="Json Parser" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -691,7 +705,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/todo.txt" />
     <entry file="file://$PROJECT_DIR$/SiouxFalls/create_network.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
@@ -979,6 +992,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/jsonpickle_ex2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solution/local_search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="e#0#16#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/serialization.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1050,22 +1083,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jsonpickle_ex2.py">
+    <entry file="file://$PROJECT_DIR$/distMatrix.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+        <state relative-caret-position="457">
+          <caret line="23" column="35" lean-forward="true" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/solution/local_search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-140">
-          <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#0#24#0" expanded="true" />
           </folding>
         </state>
       </provider>

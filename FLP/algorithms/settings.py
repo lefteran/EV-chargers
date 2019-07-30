@@ -7,12 +7,16 @@ class Parameters:
 		self.adjacencyDict = {}
 		self.vehiclesClosestTuples = {}
 		self.removedFacilityIds = []
+		self.candidateLocations = []
 
 		self.vehiclesDict = {}
 		self.timesDict = {}
 
-		self.k = 10
+		self.k = 50				# NUMBER OF FACILITIES TO BE OPENED
 		self.C = 1000
+		self.r = 100
+		self.p = 2
+		self.radius = 0.1
 
 
 class Flags:

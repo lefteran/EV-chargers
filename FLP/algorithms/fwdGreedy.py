@@ -32,11 +32,13 @@ def forwardGreedy():
     for iteration in tqdm(range(settings.parameters.k)):
         totalTime = float("inf")
         minTimeFacility = None
-        for facilityKey, _ in settings.parameters.facilitiesDict.items():
-            timeWithNewFacility = getTimeWithNewFacility(S, facilityKey)
-            if timeWithNewFacility < totalTime:
-                totalTime = timeWithNewFacility
-                minTimeFacility = facilityKey
+        # for facilityKey, _ in settings.parameters.facilitiesDict.items():
+        for facilityId in settings.parameters.candidateLocations:
+            if facilityId not in S:
+                timeWithNewFacility = getTimeWithNewFacility(S, facilityId)
+                if timeWithNewFacility < totalTime:
+                    totalTime = timeWithNewFacility
+                    minTimeFacility = facilityId
         S.append(minTimeFacility)
     return S,totalTime
 

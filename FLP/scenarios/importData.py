@@ -6,8 +6,8 @@ import zone as zn
 import vehicle as vh
 import json
 import tripTimes
-import serializationIO
 import settings
+import serializationIO
 
 
 def importNodes(filename):
@@ -182,6 +182,8 @@ def getVehicles(Gnx):
 		vehiclesDict = serializationIO.importAndDeserialize('Chicago/vehiclesDict.json')
 	else:	# INSTEAD OF IMPORTING DATA FROM THE FILE VehicleData.csv BELOW, GENERATE RANDOM INSTANCES
 		# TODO: Create a method to randomly generate the locations of the vehicles instead of reading them from a file
+		# TODO: Split the method above into two: 1) Generate vehicles locations, 2) Write their locations into a file
+		# TODO: After the above TODOs clean up this method
 		vehicleDataDict = importVehicleData('Chicago/VehicleData.csv')
 		vehiclesDict = {}
 		for vehicleId, vehicleDataList in vehicleDataDict.items():
@@ -191,6 +193,7 @@ def getVehicles(Gnx):
 				vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
 	# serialization.serializeAndExport(parameters.vehiclesDict, 'Chicago/vehiclesDict.json')
 	settings.parameters.vehiclesDict = vehiclesDict
+
 
 def getTimes(Gnx, GtNetwork):
 	if settings.flags.importTimes:

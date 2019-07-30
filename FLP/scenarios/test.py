@@ -1,3 +1,1 @@
-import serializationIO
-
-serializationIO.printProgress(0.1654)
+a = [1,2,3,5,6]

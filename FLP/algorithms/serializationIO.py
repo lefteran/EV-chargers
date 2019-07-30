@@ -4,7 +4,7 @@ import os
 from math import floor
 
 def serializeAndExport(obj, filename):
-    print(f"Serializing and exporting to {filename} ...")
+    print(f"\nSerializing and exporting to {filename} ...")
     serializedObj = jsonpickle.encode(obj)
     with open(filename, 'w') as f:
         f.write(serializedObj)

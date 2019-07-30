@@ -81,7 +81,7 @@ def parallelUpdateVehiclesTimesDict(GtNetwork, timesDict, vehicleKeysList):
         countVeh += 1
         # print(f"Checking vehicle {countVeh} from total {numberOfVehicles} at process {proc_id}")
         vehicleObject = settings.parameters.vehiclesDict[vehicleKey]
-        numberOfFacilities = len(settings.parameters.facilitiesDict.items())
+        # numberOfFacilities = len(settings.parameters.facilitiesDict.items())
         beta = [1]
         timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
         countFac = 0
@@ -90,17 +90,18 @@ def parallelUpdateVehiclesTimesDict(GtNetwork, timesDict, vehicleKeysList):
         nxEndNode = vehicleObject.endNode
         gtEdgeId = GtNetwork.nxToGtEdgesDict[(nxStartNode, nxEndNode)]
         edgeWeight = GtNetwork.gtEdgeWeights[gtEdgeId]
-        for facilityKey, _ in settings.parameters.facilitiesDict.items():
+        # for facilityKey, _ in settings.parameters.facilitiesDict.items():
+        for facilityId in settings.parameters.candidateLocations:
             countFac += 1
             # print("\tChecking facility %d out of %d at process %d" % (countFac, numberOfFacilities, proc_id))
             distance1 = gt.shortest_distance(GtNetwork.Ggt, source=GtNetwork.nxToGtNodesDict[nxStartNode],
-                                             target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
+                                             target=GtNetwork.nxToGtNodesDict[facilityId], weights=GtNetwork.gtEdgeWeights)
             time1 = edgeWeight * vehicleObject.pointInEdge + distance1 / beta[timeOfDay]
             distance2 = gt.shortest_distance(GtNetwork.Ggt, source=GtNetwork.nxToGtNodesDict[nxEndNode],
-                                             target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
+                                             target=GtNetwork.nxToGtNodesDict[facilityId], weights=GtNetwork.gtEdgeWeights)
             time2 = edgeWeight * vehicleObject.pointInEdge + distance2 / beta[timeOfDay]
             tripTime = min(time1, time2)
-            vehicleTimesDict[facilityKey] = tripTime
+            vehicleTimesDict[facilityId] = tripTime
         percentage = float(countVeh) / float(numberOfVehicles)
         printProgress(percentage)
         timesDict[vehicleKey] = vehicleTimesDict
