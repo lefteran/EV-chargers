@@ -1,7 +1,8 @@
-import settings
-from tqdm import tqdm
-import serializationIO
+# LIBRARIES
 from random import choice
+# FILES
+import settings
+import i_o.serializationIO as serializationIO
 
 
 def computeTime(S):
@@ -13,6 +14,7 @@ def computeTime(S):
 
 
 def randomLocalSearch():
+    # TODO: The algorithm to be renamed to Random
     solObject = serializationIO.importAndDeserialize("solutions/fwdGreedy_" + str(settings.parameters.k) + ".json")
     S = solObject.solutionList
     bestTime = solObject.cost

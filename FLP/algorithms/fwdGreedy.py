@@ -1,7 +1,5 @@
 import settings
 import _pickle as pickle
-import time
-import sys
 from tqdm import tqdm
 
 
