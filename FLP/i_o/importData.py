@@ -164,10 +164,10 @@ def importNetwork():
 			nonBelongingZoneDictIds.append(zoneId)
 	cleanZoneIds(adjacencyDict, nonBelongingZoneDictIds)
 
-	settings.parameters.adjacencyDict = adjacencyDict
-	settings.parameters.belongingDict = belongingDict
-	settings.parameters.facilitiesDict = facilitiesDict
-	settings.parameters.zonesDict = zonesDict
+	settings.adjacencyDict = adjacencyDict
+	settings.belongingDict = belongingDict
+	settings.facilitiesDict = facilitiesDict
+	settings.zonesDict = zonesDict
 
 	return Gnx
 
@@ -178,7 +178,7 @@ def importParameters(filename):
 
 
 # def getVehicles(Gnx):
-# 	if settings.flags.importVehiclesDict:
+# 	if settings.importVehiclesDict:
 # 		vehiclesDict = serializationIO.importAndDeserialize('Chicago/vehiclesDict.json')
 # 	else:	# INSTEAD OF IMPORTING DATA FROM THE FILE VehicleData.csv BELOW, GENERATE RANDOM INSTANCES
 # 		# TODO: Create a method to randomly generate the locations of the vehicles instead of reading them from a file
@@ -191,22 +191,22 @@ def importParameters(filename):
 # 			endNode = vehicleDataList[1]
 # 			if Gnx.has_edge(startNode, endNode):
 # 				vehiclesDict[vehicleId] = vh.Vehicle(vehicleId, startNode, endNode, float(vehicleDataList[2]))
-# 	# serialization.serializeAndExport(parameters.vehiclesDict, 'Chicago/vehiclesDict.json')
-# 	settings.parameters.vehiclesDict = vehiclesDict
+# 	# serialization.serializeAndExport(vehiclesDict, 'Chicago/vehiclesDict.json')
+# 	settings.vehiclesDict = vehiclesDict
 
 #
 # def getTimes(Gnx, GtNetwork):
-# 	if settings.flags.importTimes:
+# 	if settings.importTimes:
 # 		timesDict = importDeterministicTripTimes('Chicago/vehicleFacilityTimes.csv')
 # 	else:
-# 		if not settings.flags.useGraphTool:
+# 		if not settings.useGraphTool:
 # 			timesDict = tripTimes.getTimeDictNx(Gnx)
 # 		else:
-# 			if settings.flags.parallelComputationOfTimes:
+# 			if settings.parallelComputationOfTimes:
 # 				timesDict = tripTimes.getTimeDictGtParallel(GtNetwork)
 # 			else:
 # 				timesDict = tripTimes.getTimeDictGt(GtNetwork)
-# 	settings.parameters.timesDict = timesDict
+# 	settings.timesDict = timesDict
 
 def createDictOfVehicleObjects(vehiclesDict):
 	vehicleObjectsDict = {}
@@ -216,9 +216,9 @@ def createDictOfVehicleObjects(vehiclesDict):
 	return vehicleObjectsDict
 
 def getVehicles():
-	vehiclesDict = serializationIO.importAndDeserialize(settings.filePaths.vehiclesDictFile)
-	settings.parameters.vehiclesDict = createDictOfVehicleObjects(vehiclesDict)
+	vehiclesDict = serializationIO.importAndDeserialize(settings.vehiclesDictFile)
+	settings.vehiclesDict = createDictOfVehicleObjects(vehiclesDict)
 
 def getTimes():
-	timesDict = importDeterministicTripTimes(settings.filePaths.timesDictFile)
-	settings.parameters.timesDict = timesDict
+	timesDict = importDeterministicTripTimes(settings.timesDictFile)
+	settings.timesDict = timesDict

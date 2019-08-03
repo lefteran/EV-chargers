@@ -63,7 +63,7 @@ def visualiseEdges(G, edgesDict):
 def visualiseNetwork(networkName, filename, place):
     ox.config(log_console=True, use_cache=True)
 
-    if not settings.flags.saveNetwork:
+    if not settings.saveNetwork:
         G = saveLoadNetwork.loadNetwork(filename)
     else:
         G = ox.graph_from_place(networkName, network_type='drive')

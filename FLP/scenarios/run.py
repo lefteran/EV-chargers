@@ -2,13 +2,14 @@
 import time
 import GraphToolNetwork as gtn
 import sys
+import os
 # FILES
 import settings
-import importData as impdt
-import serializationIO
-import clustering
-import cluster
-import generateData
+import i_o.importData as impdt
+import i_o.serializationIO as serializationIO
+import scenarios.clustering as clustering
+import scenarios.cluster as cluster
+import scenarios.generateData as generateData
 
 def run():
 	start_time = time.time()
@@ -20,27 +21,29 @@ def run():
 	GtNetwork.createGraphToolNetworkFromGnx(Gnx)
 
 	print("Clustering nodes ...")
-	settings.parameters.candidateLocations = clustering.nodeClustering(Gnx)
-	theCluster = cluster.Cluster(settings.parameters.candidateLocations, (time.time() - start_time), settings.parameters.radius)
-	if theCluster.hasDuplicates():
-		sys.stderr.write("There are duplicates in the candidate locations list")
-		sys.exit()
-	serializationIO.serializeAndExport(theCluster, settings.filePaths.clustersFile)
+	if not os.path.isdir(settings.scenarioDirectory):
+		os.mkdir(settings.scenarioDirectory)
+	if os.path.isfile(settings.clustersFile):
+		cluster = serializationIO.importAndDeserialize(settings.clustersFile)
+		settings.candidateLocations = cluster.candidateLocations
+	else:
+		settings.candidateLocations = clustering.nodeClustering(Gnx)
+		theCluster = cluster.Cluster(settings.candidateLocations, (time.time() - start_time), settings.radius)
+		if theCluster.hasDuplicates():
+			sys.stderr.write("There are duplicates in the candidate locations list")
+			sys.exit()
+		serializationIO.serializeAndExport(theCluster, settings.clustersFile)
 
-	# cluster = serializationIO.importAndDeserialize(clustersFile)
-	# settings.parameters.candidateLocations = cluster.candidateLocations
 
 
 	print("Generating vehicles' locations ...")
-	# impdt.getVehicles(Gnx)
 	generateData.generateVehicles(Gnx)
-	vehiclesFile = 'scenariosData/vehiclesDict_' + str(settings.parameters.numberOfVehicles) + '.json'
-	serializationIO.serializeAndExport(settings.parameters.vehiclesDict, vehiclesFile)
+	serializationIO.serializeAndExport(settings.vehiclesDict, settings.vehiclesDictFile)
 
 	print("Computing vehicle-facility times ...")
 	generateData.getTimes(Gnx, GtNetwork)
-	timesFile = 'scenariosData/timesDict_' + str(settings.parameters.numberOfVehicles) + '_' + str(settings.parameters.radius) + '.csv'
-	serializationIO.exportDeterministicTripTimes(settings.parameters.timesDict, timesFile)
+	timesFile = 'scenariosData/timesDict_' + str(settings.numberOfVehicles) + '_' + str(settings.radius) + '.csv'
+	serializationIO.exportDeterministicTripTimes(settings.timesDict, timesFile)
 
 	print("--- %s seconds ---" % (time.time() - start_time))
 

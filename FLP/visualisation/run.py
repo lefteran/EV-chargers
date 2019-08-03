@@ -16,7 +16,7 @@ if __name__ == "__main__":
 	filename = place + '.graphml'
 
 	G = visualisation.visualiseNetwork(networkName, filename, place)
-	if settings.flags.saveNetwork:
+	if settings.saveNetwork:
 		saveLoadNetwork.saveNetwork(G, filename)
 
 	print("--- %s seconds ---" % (time.time() - start_time))

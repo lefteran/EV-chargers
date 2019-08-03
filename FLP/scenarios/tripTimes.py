@@ -1,10 +1,12 @@
+# LIBRARIES
 import networkx as nx
 import graph_tool.all as gt
 from math import floor
 from multiprocessing import Process, Manager
 from os import getpid, cpu_count
+# FILES
 import settings
-from serializationIO import printProgress
+from i_o.serializationIO import printProgress
 
 
 def getTimeDictNx(Gnx):
@@ -12,10 +14,10 @@ def getTimeDictNx(Gnx):
     timesDict = {}
     beta = [1]
     timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
-    numberOfVehicles = len(settings.parameters.vehiclesDict.items())
-    numberOfFacilities = len(settings.parameters.facilitiesDict.items())
+    numberOfVehicles = len(settings.vehiclesDict.items())
+    numberOfFacilities = len(settings.facilitiesDict.items())
     countVeh = 0
-    for vehicleKey, vehicleObject in settings.parameters.vehiclesDict.items():
+    for vehicleKey, vehicleObject in settings.vehiclesDict.items():
         countVeh += 1
         countFac = 0
         print("Checking vehicle %d out of %d" %(countVeh, numberOfVehicles))
@@ -23,7 +25,7 @@ def getTimeDictNx(Gnx):
         startNode = vehicleObject.startNode
         endNode = vehicleObject.endNode
         edgeWeight = float(Gnx[startNode][endNode]['weight'])
-        for facilityKey,_ in settings.parameters.facilitiesDict.items():
+        for facilityKey,_ in settings.facilitiesDict.items():
             countFac += 1
             print("\tChecking facility %d out of %d" % (countFac, numberOfFacilities))
             # if nx.has_path(G, startNode, facilityKey):
@@ -47,10 +49,10 @@ def getTimeDictGt(GtNetwork):
     timesDict = {}
     beta = [1]
     timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
-    numberOfVehicles = len(settings.parameters.vehiclesDict.items())
-    numberOfFacilities = len(settings.parameters.facilitiesDict.items())
+    numberOfVehicles = len(settings.vehiclesDict.items())
+    numberOfFacilities = len(settings.facilitiesDict.items())
     countVeh = 0
-    for vehicleKey, vehicleObject in settings.parameters.vehiclesDict.items():
+    for vehicleKey, vehicleObject in settings.vehiclesDict.items():
         countVeh += 1
         countFac = 0
         print("Checking vehicle %d out of %d" %(countVeh, numberOfVehicles))
@@ -60,7 +62,7 @@ def getTimeDictGt(GtNetwork):
         gtEdgeId = GtNetwork.nxToGtEdgesDict[(nxStartNode, nxEndNode)]
         edgeWeight = GtNetwork.gtEdgeWeights[gtEdgeId]
         # edgeWeight = float(G[startNode][endNode]['weight'])
-        for facilityKey,_ in settings.parameters.facilitiesDict.items():
+        for facilityKey,_ in settings.facilitiesDict.items():
             countFac += 1
             print("\tChecking facility %d out of %d" % (countFac, numberOfFacilities))
             distance1 = gt.shortest_distance(GtNetwork.Ggt, source = GtNetwork.nxToGtNodesDict[nxStartNode], target=GtNetwork.nxToGtNodesDict[facilityKey], weights=GtNetwork.gtEdgeWeights)
@@ -80,8 +82,8 @@ def parallelUpdateVehiclesTimesDict(GtNetwork, timesDict, vehicleKeysList):
     for vehicleKey in vehicleKeysList:
         countVeh += 1
         # print(f"Checking vehicle {countVeh} from total {numberOfVehicles} at process {proc_id}")
-        vehicleObject = settings.parameters.vehiclesDict[vehicleKey]
-        # numberOfFacilities = len(settings.parameters.facilitiesDict.items())
+        vehicleObject = settings.vehiclesDict[vehicleKey]
+        # numberOfFacilities = len(settings.facilitiesDict.items())
         beta = [1]
         timeOfDay = 0            # time of a day (24*60 entries) counted in minutes starting from 0:00 and ending in 23:59
         countFac = 0
@@ -90,8 +92,8 @@ def parallelUpdateVehiclesTimesDict(GtNetwork, timesDict, vehicleKeysList):
         nxEndNode = vehicleObject.endNode
         gtEdgeId = GtNetwork.nxToGtEdgesDict[(nxStartNode, nxEndNode)]
         edgeWeight = GtNetwork.gtEdgeWeights[gtEdgeId]
-        # for facilityKey, _ in settings.parameters.facilitiesDict.items():
-        for facilityId in settings.parameters.candidateLocations:
+        # for facilityKey, _ in settings.facilitiesDict.items():
+        for facilityId in settings.candidateLocations:
             countFac += 1
             # print("\tChecking facility %d out of %d at process %d" % (countFac, numberOfFacilities, proc_id))
             distance1 = gt.shortest_distance(GtNetwork.Ggt, source=GtNetwork.nxToGtNodesDict[nxStartNode],
@@ -110,10 +112,10 @@ def parallelUpdateVehiclesTimesDict(GtNetwork, timesDict, vehicleKeysList):
 def getTimeDictGtParallel(GtNetwork):
     print("Calculating parallel Gt trip times ...")
     processes = []
-    numberOfVehicles = len(settings.parameters.vehiclesDict.items())
+    numberOfVehicles = len(settings.vehiclesDict.items())
     numberOfProcesses = cpu_count()
     vehiclesPerProcess = floor(numberOfVehicles / numberOfProcesses)
-    vehiclesKeys = list(settings.parameters.vehiclesDict.keys())
+    vehiclesKeys = list(settings.vehiclesDict.keys())
     manager = Manager()
     timesDict = manager.dict()
     for i in range(numberOfProcesses):

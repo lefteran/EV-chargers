@@ -1,6 +1,7 @@
 # LIBRARIES
 import time
 from sys import stderr, exit
+import os
 # FILES
 import settings
 import i_o.importData as impdt
@@ -14,30 +15,44 @@ import algorithms.randomLocalSearch as randomLocalSearch
 def run():
 	start_time = time.time()
 	Gnx = impdt.importNetwork()
+	# numberOfVehiclesList = [30, 60, 100, 200, 500, 1000]
+	numberOfVehiclesList = [30]
 
-	print("Getting vehicles and vehicle-facility times ...")
-	impdt.getVehicles()
-	impdt.getTimes()
-	cluster = serializationIO.importAndDeserialize(settings.filePaths.clusterFilename)
-	settings.parameters.candidateLocations = cluster['candidateLocations']
+	for numberOfVehicles in numberOfVehiclesList:
+		settings.numberOfVehicles = numberOfVehicles
+		settings.resetFilePaths()
 
+		print("Getting vehicles and vehicle-facility times ...")
+		impdt.getVehicles()
+		impdt.getTimes()
+		cluster = serializationIO.importAndDeserialize(settings.clusterFilename)
+		settings.candidateLocations = cluster['candidateLocations']
 
-	S, totalCost, filename = None, None, None
-	if settings.parameters.algorithm == 1:
-		S, totalCost = fwdGreedy.forwardGreedy()
-		filename = settings.filePaths.fwdGreedyFile
-	elif settings.parameters.algorithm == 2:
-		S, totalCost = backGreedy.backwardGreedy()
-		filename = settings.filePaths.backGreedyFile
-	elif settings.parameters.algorithm == 3:
-		S, totalCost = randomLocalSearch.randomLocalSearch()
-		filename = settings.filePaths.randomLocalSearchFile
-	else:
-		stderr.write("Unknown algorithm")
-		exit()
+		S, totalCost, filename = None, None, None
+		if settings.algorithm == 1:
+			S, totalCost = fwdGreedy.forwardGreedy()
+			if not os.path.isdir(settings.fwdGreedykDir):
+				os.mkdir(settings.fwdGreedykDir)
+			filename = settings.fwdGreedyFile
 
-	solObject = solution.Solution(S, totalCost, settings.parameters.algorithm, (time.time() - start_time))
-	serializationIO.serializeAndExport(solObject, filename)
+		elif settings.algorithm == 2:
+			S, totalCost = backGreedy.backwardGreedy()
+			if not os.path.isdir(settings.backGreedykDir):
+				os.mkdir(settings.backGreedykDir)
+			filename = settings.backGreedyFile
+
+		elif settings.algorithm == 3:
+			S, totalCost = randomLocalSearch.randomLocalSearch()
+			if not os.path.isdir(settings.randomLocalSearchkDir):
+				os.mkdir(settings.randomLocalSearchkDir)
+			filename = settings.randomLocalSearchFile
+
+		else:
+			stderr.write("Unknown algorithm")
+			exit()
+
+		solObject = solution.Solution(S, totalCost, settings.algorithm, (time.time() - start_time))
+		serializationIO.serializeAndExport(solObject, filename)
 
 	# print(f"\nS is {S} with cost = {totalCost}")
 

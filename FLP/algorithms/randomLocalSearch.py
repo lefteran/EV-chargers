@@ -1,5 +1,6 @@
 # LIBRARIES
 from random import choice
+from tqdm import tqdm
 # FILES
 import settings
 import i_o.serializationIO as serializationIO
@@ -7,26 +8,26 @@ import i_o.serializationIO as serializationIO
 
 def computeTime(S):
     totalTime = 0
-    for _, vehicleObj in settings.parameters.vehiclesDict.items():
-        vehicleToFacilityTime = vehicleObj.getNearestFacilityTime(S)
+    for _, vehicleObj in settings.vehiclesDict.items():
+        vehicleToFacilityTime = vehicleObj.getTimeToNearestFacility(S)
         totalTime += vehicleToFacilityTime
     return totalTime
 
 
 def randomLocalSearch():
-    # TODO: The algorithm to be renamed to Random
-    solObject = serializationIO.importAndDeserialize("solutions/fwdGreedy_" + str(settings.parameters.k) + ".json")
+    print(f"Running random local search with {settings.numberOfVehicles} vehicles and {settings.radius} radius ...")
+    solObject = serializationIO.importAndDeserialize(settings.fwdGreedyFile)
     S = solObject.solutionList
     bestTime = solObject.cost
-    Closed = list(set(settings.parameters.facilitiesDict.keys()).difference(set(S)))
+    Closed = list(set(settings.candidateLocations).difference(set(S)))
 
-    for randomIteration in range(settings.parameters.r):
-        P1 = []
-        P2 = []
-        for i in range(settings.parameters.p):
+    for randomIteration in tqdm(range(settings.r)):
+        P1 = []         # SET OF FACILITIES TO CLOSE
+        P2 = []         # SET OF FACILITIES TO OPEN
+        for i in range(settings.p):
             randomOpen = choice(S)
             P1.append(randomOpen)
-        for i in range(settings.parameters.p):
+        for i in range(settings.p):
             randomClosed = choice(Closed)
             P2.append(randomClosed)
         setS = set(S)
@@ -34,7 +35,7 @@ def randomLocalSearch():
         setP2 = set(P2)
         candidateSol =  list((setS.difference(setP1)).union(setP2))
         newTime = computeTime(candidateSol)
-        if newTime< bestTime:
+        if newTime < bestTime:
             S = candidateSol
             bestTime = newTime
     return S, bestTime

@@ -1,9 +1,12 @@
-import settings
+# LIBRARIES
 from math import sin, cos, sqrt, atan2, radians
 import _pickle as pickle
 from random import choice
 import sys
 import time
+# FILES
+import settings
+
 
 def distanceInKm(latitude1, longitude1, latitude2, longitude2):
     # approximate radius of earth in km
@@ -31,8 +34,8 @@ def nodeClustering(Gnx):
     sys.stdout.write("\b" * (toolbar_width + 1))  # return to start of line, after '['
 
     candidateLocations = []
-    N = pickle.loads(pickle.dumps(list(settings.parameters.facilitiesDict.keys()), -1))
-    allNodesLength = len(settings.parameters.facilitiesDict.keys())
+    N = pickle.loads(pickle.dumps(list(settings.facilitiesDict.keys()), -1))
+    allNodesLength = len(settings.facilitiesDict.keys())
     while N:
         randomNode = choice(N)
         randomNodeLatitude = Gnx.nodes[randomNode]['pos'][0]
@@ -43,7 +46,7 @@ def nodeClustering(Gnx):
         for node in N:
             nodeLatitude = Gnx.nodes[node]['pos'][0]
             nodeLongitude = Gnx.nodes[node]['pos'][1]
-            if distanceInKm(randomNodeLatitude, randomNodeLongitude, nodeLatitude, nodeLongitude) < settings.parameters.radius:
+            if distanceInKm(randomNodeLatitude, randomNodeLongitude, nodeLatitude, nodeLongitude) < settings.radius:
                 closeNodesToRemove.append(node)
         for closeNode in closeNodesToRemove:
             N.remove(closeNode)

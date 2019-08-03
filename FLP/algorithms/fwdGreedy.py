@@ -1,7 +1,8 @@
-import settings
+# LIBRARIES
 import _pickle as pickle
 from tqdm import tqdm
-
+# FILES
+import settings
 
 def invertDict(originalDict):
     invertedDict = {}
@@ -14,30 +15,34 @@ def invertDict(originalDict):
 
 def getTimeWithNewFacility(S, facilityId):
     totalTime = 0
-    for _,vehicleObj in settings.parameters.vehiclesDict.items():
-        facilities = pickle.loads(pickle.dumps(S, -1))
-        facilities.append(facilityId)
-        totalTime += vehicleObj.getNearestFacilityTime(facilities)
+    facilities = pickle.loads(pickle.dumps(S, -1))
+    facilities.append(facilityId)
+    for _,vehicleObj in settings.vehiclesDict.items():
+        totalTime += vehicleObj.getTimeToNearestFacility(facilities)
     return totalTime
 
 
+def addMostImportantFacility(S, previousTotalTime):
+    totalTime = previousTotalTime
+    minTimeFacility = None
+    for facilityId in settings.candidateLocations:
+        if facilityId not in S:
+            timeWithNewFacility = getTimeWithNewFacility(S, facilityId)
+            if timeWithNewFacility < totalTime:
+                totalTime = timeWithNewFacility
+                minTimeFacility = facilityId
+    if minTimeFacility is not None:
+        S.append(minTimeFacility)
+    return totalTime
+
 
 def forwardGreedy():
-    print("Running forward greedy ...")
+    print(f"Running forward greedy with {settings.numberOfVehicles} vehicles and {settings.radius} radius ...")
     S = []
     totalTime = float("inf")
-    # while len(S) < settings.parameters.k:
-    for iteration in tqdm(range(settings.parameters.k)):
-        totalTime = float("inf")
-        minTimeFacility = None
-        # for facilityKey, _ in settings.parameters.facilitiesDict.items():
-        for facilityId in settings.parameters.candidateLocations:
-            if facilityId not in S:
-                timeWithNewFacility = getTimeWithNewFacility(S, facilityId)
-                if timeWithNewFacility < totalTime:
-                    totalTime = timeWithNewFacility
-                    minTimeFacility = facilityId
-        S.append(minTimeFacility)
+    for _ in tqdm(range(settings.k)):
+        previousTotalTime = totalTime
+        totalTime = addMostImportantFacility(S, previousTotalTime)
     return S,totalTime
 
 

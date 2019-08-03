@@ -1,4 +1,5 @@
-import collections
+# LIBRARIES
+from collections import Counter
 
 class Cluster:
 	def __init__(self, candidateLocations, time, radius):
@@ -8,7 +9,7 @@ class Cluster:
 
 
 	def hasDuplicates(self):
-		if len([item for item, count in collections.Counter(self.candidateLocations).items() if count > 1]) > 0:
+		if len([item for item, count in Counter(self.candidateLocations).items() if count > 1]) > 0:
 			return True
 		else:
 			return False

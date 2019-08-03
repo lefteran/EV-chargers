@@ -6,4 +6,4 @@ class Solution:
 		self.cost = cost
 		self.algorithm = algorithm
 		self.time = time
-		self.k = settings.parameters.k
+		self.k = settings.k
