@@ -2,46 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6c2161e-bf85-4f0b-bcef-2009e86ac85a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../FLP/algorithms/optimal.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/scenarios/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLP/test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLP/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/agents/vehicle.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/agents/vehicle.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/backGreedy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/backGreedy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/fwdGreedy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/fwdGreedy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/randomLocalSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/randomLocalSearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/algorithms/solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/algorithms/solution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/clusters/clustering_0.01.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/clusters/clustering_0.05.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/clusters/clustering_0.1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/scenario1/timesDict.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/scenario1/vehiclesDict.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/scenario2/timesDict_30_0.1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/scenariosData/scenario2/vehiclesDict_30.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/backGreedy/backGreedy_50_0.1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_10.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_100.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_100_0.1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_200.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_50.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_50_0.01.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_50_0.05.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/fwdGreedy/fwdGreedy_50_0.1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/data/solutions/randomLocalSearch/rndLocalSearch_10.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/i_o/importData.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/i_o/importData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/i_o/serializationIO.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/i_o/serializationIO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/network/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/network/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/cluster.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/cluster.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/clustering.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/clustering.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/generateData.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/generateData.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/scenarios/tripTimes.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/scenarios/tripTimes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/visualisation/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/visualisation/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLP/visualisation/visualisation.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLP/visualisation/visualisation.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -68,7 +30,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/distMatrix.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
+            <state relative-caret-position="420">
               <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
@@ -80,7 +42,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/serialization.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
+            <state relative-caret-position="120">
               <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
@@ -113,7 +75,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/solution/unbudgeted.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
+            <state relative-caret-position="100">
               <caret line="8" column="53" selection-start-line="8" selection-start-column="53" selection-end-line="8" selection-end-column="53" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
@@ -125,7 +87,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tripTimes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2620">
+            <state relative-caret-position="2540">
               <caret line="131" column="84" selection-start-line="131" selection-start-column="84" selection-end-line="131" selection-end-column="84" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
@@ -137,8 +99,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSearchPrl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="212" lean-forward="true" selection-start-line="212" selection-end-line="212" />
+            <state relative-caret-position="4100">
+              <caret line="212" selection-start-line="212" selection-end-line="212" />
               <folding>
                 <element signature="e#0#68#0" expanded="true" />
               </folding>
@@ -149,8 +111,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/optimal/CFP-pyomo.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
+            <state relative-caret-position="1820">
+              <caret line="91" selection-start-line="91" selection-end-line="91" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -290,9 +252,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="-1928" />
-    <option name="y" value="-144" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -572,11 +534,12 @@
       <workItem from="1564340663997" duration="715000" />
       <workItem from="1564753405039" duration="4187000" />
       <workItem from="1564765732548" duration="748000" />
+      <workItem from="1564871007688" duration="48000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="310954000" />
+    <option name="totallyTimeSpent" value="311002000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -588,10 +551,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-144" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.17803837" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49919224" visible="true" weight="0.17963752" />
       <window_info id="Structure" order="1" sideWeight="0.50080776" side_tool="true" weight="0.16044776" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="0" weight="0.32936078" />
@@ -1037,7 +1000,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/distMatrix.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
+        <state relative-caret-position="420">
           <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
@@ -1047,7 +1010,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/serialization.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
+        <state relative-caret-position="120">
           <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
           <folding>
             <element signature="e#0#17#0" expanded="true" />
@@ -1074,7 +1037,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/solution/unbudgeted.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
+        <state relative-caret-position="100">
           <caret line="8" column="53" selection-start-line="8" selection-start-column="53" selection-end-line="8" selection-end-column="53" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
@@ -1084,10 +1047,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tripTimes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2620">
+        <state relative-caret-position="2540">
           <caret line="131" column="84" selection-start-line="131" selection-start-column="84" selection-end-line="131" selection-end-column="84" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSearchPrl.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4100">
+          <caret line="212" selection-start-line="212" selection-end-line="212" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1106,20 +1079,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/solution/parallelisation/localSearchPrl.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="212" lean-forward="true" selection-start-line="212" selection-end-line="212" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/optimal/CFP-pyomo.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
+        <state relative-caret-position="1820">
+          <caret line="91" selection-start-line="91" selection-end-line="91" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
