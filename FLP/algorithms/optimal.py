@@ -24,7 +24,7 @@ def optimalModel():
 
 	# ### PARAMETERS ###
 	# Travelling time from vehicle i to facility j
-	model.t = Param(model.V, model.F, within=PositiveReals, default=infinity)
+	model.t = Param(model.V, model.F, within=PositiveReals, default=100000000)
 	# Maximum number of facilities to open
 	model.k = Param(within=PositiveIntegers)
 

@@ -34,7 +34,7 @@ def convertCsvToDat():
     fpo.write('set V := ')
     vehiclesNumber = len(vehiclesList)
     for i in range(vehiclesNumber):
-        fpo.write(f'{i};') if i == vehiclesNumber - 1 else fpo.write(f'{i} ')
+        fpo.write(f'{i+1};') if i == vehiclesNumber - 1 else fpo.write(f'{i+1} ')
     fpo.write('\n\n')
 
     fpo.write('set F := ')

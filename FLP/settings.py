@@ -28,13 +28,14 @@ removedFacilityIds = []
 k = 50				# NUMBER OF FACILITIES TO BE OPENED
 C = 1000
 r = 10000			# NUMBER OF ITERATIONS FOR THE RANDOM LOCAL SEARCH
-p = 3				# NUMBER OF FACILITIES TO SWAP (IN RANDOM LOCAL SEARCH)
+p = 1				# NUMBER OF FACILITIES TO SWAP (IN LS AND RANDOM LS)
 
 algorithm = -1
 algorithmDict = {0: "Optimal",
 				 1: "Forward Greedy",
 				 2: "Backward Greedy",
-				 3: "Random Local Search"}
+				 3: "Random Local Search",
+				 4: "Local search"}
 
 places = {'london': 'Greater London, England, United Kingdom',
 		'piedmont': 'Piedmont, California',
@@ -61,7 +62,7 @@ timesDictFile = ''
 
 
 optimalDir = ''
-# optimalDataFile = 'data/timesDict.dat'
+# optimalDataFile = 'data/timesDictTest.dat'
 optimalDataFile = ''
 # optimalMapping = 'data/scenariosData/' + str(radius) + '/optimalMapping_' + str(numberOfVehicles) + '_' + str(radius) + '.json'
 optimalMapping = ''
@@ -75,6 +76,9 @@ backGreedyFile = ''
 
 randomLocalSearchkDir = ''
 randomLocalSearchFile = ''
+
+localSearchkDir = ''
+localSearchFile = ''
 
 
 
@@ -106,7 +110,7 @@ def resetFilePaths():
 	global fwdGreedykDir
 	fwdGreedykDir = 'data/solutions/fwdGreedy/k_' + str(k)
 	global fwdGreedyFile
-	fwdGreedyFile = 'data/solutions/fwdGreedy/k_' + str(k) + '/fwdGreedy_' + str(numberOfVehicles) + '_' + str(
+	fwdGreedyFile = 'data/solutions/fwdGreedy/k_' + str(k) + '/' + str(radius) + '/fwdGreedy_' + str(numberOfVehicles) + '_' + str(
 		radius) + '.json'
 
 	global backGreedykDir
@@ -120,6 +124,13 @@ def resetFilePaths():
 	global randomLocalSearchFile
 	randomLocalSearchFile = 'data/solutions/randomLocalSearch/k_' + str(k) + '/rndLocalSearch_' + str(
 		numberOfVehicles) + '_' + str(radius) + '.json'
+
+	global localSearchkDir
+	localSearchkDir = 'data/solutions/localSearch/k_' + str(k)
+	global localSearchFile
+	localSearchFile = 'data/solutions/localSearch/k_' + str(k) + '/localSearch_' + str(
+		numberOfVehicles) + '_' + str(radius) + '.json'
+
 
 
 def setNumberOfVehicles(number):

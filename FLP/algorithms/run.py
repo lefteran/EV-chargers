@@ -11,14 +11,15 @@ import algorithms.backGreedy as backGreedy
 import algorithms.solution as solution
 import algorithms.randomLocalSearch as randomLocalSearch
 import algorithms.optimal as optimal
+import algorithms.localSearch as localSearch
 
 
 def run():
 	start_time = time.time()
 	Gnx = impdt.importNetwork()
-	numberOfVehiclesList = [30, 50, 100, 200, 500, 1000]
-	# numberOfVehiclesList = [50]
-	algorithms = [3]
+	# numberOfVehiclesList = [30, 50, 100, 200, 500, 1000]
+	numberOfVehiclesList = [100]
+	algorithms = [4]
 
 	for algorithmNumber in algorithms:
 		settings.setAlgorithm(algorithmNumber)
@@ -56,6 +57,12 @@ def run():
 				if not os.path.isdir(settings.randomLocalSearchkDir):
 					os.mkdir(settings.randomLocalSearchkDir)
 				filename = settings.randomLocalSearchFile
+
+			elif settings.algorithm == 4:
+				S, totalCost = localSearch.localSearch()
+				if not os.path.isdir(settings.localSearchkDir):
+					os.mkdir(settings.localSearchkDir)
+				filename = settings.localSearchFile
 
 			else:
 				stderr.write("Unknown algorithm")
