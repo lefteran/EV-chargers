@@ -1,5 +1,5 @@
 # LIBRARIES
-from random import choice
+from random import choice, sample
 from tqdm import tqdm
 # FILES
 import settings
@@ -21,15 +21,17 @@ def randomLocalSearch():
     bestTime = solObject.cost
     Closed = list(set(settings.candidateLocations).difference(set(S)))
 
-    for randomIteration in tqdm(range(settings.r)):
-        P1 = []         # SET OF FACILITIES TO CLOSE
-        P2 = []         # SET OF FACILITIES TO OPEN
-        for i in range(settings.p):
-            randomOpen = choice(S)
-            P1.append(randomOpen)
-        for i in range(settings.p):
-            randomClosed = choice(Closed)
-            P2.append(randomClosed)
+    for randomIteration in range(settings.r):
+        # P1 = []
+        # P2 = []
+        # for i in range(settings.p):
+        #     randomOpen = choice(S)
+        #     P1.append(randomOpen)
+        P1 = sample(set(S), settings.p)             # SET OF FACILITIES TO CLOSE
+        P2 = sample(set(Closed), settings.p)        # SET OF FACILITIES TO OPEN
+        # for i in range(settings.p):
+        #     randomClosed = choice(Closed)
+        #     P2.append(randomClosed)
         setS = set(S)
         setP1 = set(P1)
         setP2 = set(P2)
