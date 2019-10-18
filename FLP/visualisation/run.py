@@ -1,13 +1,13 @@
 import time
 import settings
-import visualisation
-import importData as impdt
-import saveLoadNetwork
+import visualisation.visualisation as visualisation
+import i_o.importData as impdt
+import i_o.serializationIO as saveLoadNetwork
 
 
-if __name__ == "__main__":
+def run():
 	start_time = time.time()
-	settings.init()
+	# settings.init()
 
 	Gnx = impdt.importNetwork()
 
@@ -15,6 +15,7 @@ if __name__ == "__main__":
 	networkName = settings.places[place]
 	filename = place + '.graphml'
 
+	settings.resetFilePaths()
 	G = visualisation.visualiseNetwork(networkName, filename, place)
 	if settings.saveNetwork:
 		saveLoadNetwork.saveNetwork(G, filename)

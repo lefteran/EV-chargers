@@ -4,8 +4,8 @@ import networkx as nx
 import settings
 import osmnx as ox
 import pandas as pd
-import saveLoadNetwork
-import serializationIO
+import i_o.saveLoadNetwork as saveLoadNetwork
+import i_o.serializationIO as serializationIO
 from random import uniform
 # %matplotlib inline
 
@@ -24,25 +24,41 @@ def visualiseNodes(G, nodesDict, place):
     # df = df.reindex(G.nodes())
     # nc = df['colors'].tolist()
 
-    clusterFilename = 'clustering_0.1.json'
-    cluster = serializationIO.importAndDeserialize(clusterFilename)
+    # clusterFilename = 'clustering_0.1.json'
+    cluster = serializationIO.importAndDeserialize(settings.clusterFilename)
     candidateLocations = cluster['candidateLocations']
 
-    solObject = serializationIO.importAndDeserialize("fwdGreedy_50_0.1.json")
-    solutionList = solObject['solutionList']
+    # solObject = serializationIO.importAndDeserialize("fwdGreedy_50_0.1.json")
+    solObject = serializationIO.importAndDeserialize(settings.localSearchFile)
+    solutionList = solObject.solutionList
 
     nc = []
-    for node, _ in nodesDict.items():
-        if node in solutionList:
-            nc.append('r')
-        elif node in candidateLocations:
+    ns = []
+    # candidatesCoordinates = []
+    # solutionCoordinates = []
+    for node, data in G.nodes(data=True):
+        if str(node) in solutionList:
+            nc.append('#F1E443')
+            ns.append(10)
+            # solutionCoordinates.append((G.nodes[node]['lat'], G.nodes[node]['lon']))
+        elif str(node) in candidateLocations:
             nc.append('b')
+            ns.append(2.5)
+            # candidatesCoordinates.append((G.nodes[node]['lat'], G.nodes[node]['lon']))
         else:
-            nc.append(None)
+            # nc.append('b')
+            # nc.append('#00ffff')
+            nc.append('None')
+            # ns.append(0.7)
+            ns.append(0)
 
-    fig, ax = ox.plot_graph(G, bgcolor='k', node_size=30, node_color=nc, node_edgecolor='none', node_zorder=2,
+    # serializationIO.serializeAndExport(solutionCoordinates, 'data/solutionCoordinates.json')
+    # serializationIO.serializeAndExport(candidatesCoordinates, 'data/candidatesCoordinates.json')
+
+    fig, ax = ox.plot_graph(G, bgcolor='#CFCCCB', node_size=ns, node_color=nc, node_edgecolor='none', node_zorder=2,
                             edge_color='#555555', edge_linewidth=0.3, edge_alpha=1, dpi=500)
-    fig.savefig(place + '.png', dpi=500, bgcolor='k')
+    fig.savefig('figures/' + place + 'qiming.png', #facecolor=fig.get_facecolor(),
+    dpi=300)
 
 def visualiseEdges(G, edgesDict):
     # edge_centrality = nx.closeness_centrality(nx.line_graph(G))
@@ -64,7 +80,7 @@ def visualiseNetwork(networkName, filename, place):
     ox.config(log_console=True, use_cache=True)
 
     if not settings.saveNetwork:
-        G = saveLoadNetwork.loadNetwork(filename)
+        G = saveLoadNetwork.loadNetwork('osmFiles/' + filename)
     else:
         G = ox.graph_from_place(networkName, network_type='drive')
         G = ox.project_graph(G)

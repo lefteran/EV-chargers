@@ -3,18 +3,18 @@ import json
 from os import listdir
 
 
-def exportResultsFromJsonToCsv():
+def exportResultsFromJsonToCsv(thePath):
     runs = 1
     for i in range(runs):
         runNo = 'run_' + str(i+1)
         tuplesList = []
-        radius = 0.2
+        radius = 0.25
         # algorithm = 'rndLocalSearch_'
         # algorithm = 'fwdGreedy_'
-        # algorithm = 'optimal_'
-        algorithm = 'localSearch_'
-        # directoryPath = 'D:\Github\EV-chargers\FLP\data\solutions\\randomLocalSearch\k_50\p_3\\r_10000\\' + runNo
-        directoryPath = 'D:\Github\EV-chargers\FLP\data\solutions\localSearch\k_50\\0.2\p_1\\'
+        algorithm = 'optimal_'
+        # algorithm = 'localSearch_'
+        # directoryPath = thePath + '\\' + runNo
+        directoryPath = thePath
         fpCsv = open(directoryPath + '\\results-' + runNo + '.csv', 'w')
         filenamesList = listdir(directoryPath)
         for filename in filenamesList:
@@ -33,5 +33,23 @@ def exportResultsFromJsonToCsv():
         fpCsv.close()
 
 
+def combineCsvFilesIntoOneCsv(thePath):
+    runs = 10
+    directoryPath = thePath
+    fpCombined = open(directoryPath + '\\allRunsResults.csv', 'w')
+    for i in range(runs):
+        runNo = 'run_' + str(i + 1)
+        filePath = thePath + '\\' + runNo
+        fpCsv = open(filePath + '\\results-' + runNo + '.csv', 'r')
+        for line in fpCsv:
+            fpCombined.write(f'{line}')
+        fpCombined.write('\n')
+        fpCsv.close()
+    fpCombined.close()
 
-exportResultsFromJsonToCsv()
+
+
+# thePath = 'D:\Github\EV-chargers\FLP\data\solutions\\randomLocalSearch\k_50\\0.25\p_1\\r_10000'
+thePath = 'D:\Github\EV-chargers\FLP\data\solutions\optimal\k_50\\0.25'
+exportResultsFromJsonToCsv(thePath)
+# combineCsvFilesIntoOneCsv(thePath)

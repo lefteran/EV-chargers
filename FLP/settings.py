@@ -10,16 +10,16 @@ vehiclesDict = {}
 timesDict = {}
 
 candidateLocations = []
-numberOfVehicles = -1
-radius = 0.2
+numberOfVehicles = 1000
+radius = 0.1
 iterations = -1
 
 vehiclesClosestTuples = {}
 removedFacilityIds = []
-k = 50				# NUMBER OF FACILITIES TO BE OPENED
-C = 1000
+k = 250			# NUMBER OF FACILITIES TO BE OPENED
+# C = 1000
 r = 10000			# NUMBER OF ITERATIONS FOR THE RANDOM LOCAL SEARCH
-p = 1				# NUMBER OF FACILITIES TO SWAP (IN LS AND RANDOM LS)
+p = 1			# NUMBER OF FACILITIES TO SWAP (IN LS AND RANDOM LS)
 
 algorithm = -1
 algorithmDict = {0: "Optimal",
@@ -113,13 +113,13 @@ def resetFilePaths():
 	global randomLocalSearchkDir
 	randomLocalSearchkDir = 'data/solutions/randomLocalSearch/k_' + str(k) + '/' + str(radius) + '/p_' + str(p) + '/r_' + str(r) + '/run_'
 	global randomLocalSearchFile
-	randomLocalSearchFile = 'data/solutions/randomLocalSearch/k_' + str(k) + '/' + str(radius) + '/p_' + str(p) + '/r_' + str(r) + '/run_' \
+	randomLocalSearchFile = 'data/solutions/randomLocalSearch/k_' + str(k) + '/' + str(radius) + '/p_' + str(p) + '/r_' + str(r) + '/run_1' \
 		+ '/rndLocalSearch_' + str(numberOfVehicles) + '_' + str(radius) + '.json'
 
 	global localSearchkDir
 	localSearchkDir = 'data/solutions/localSearch/k_' + str(k)
 	global localSearchFile
-	localSearchFile = 'data/solutions/localSearch/k_' + str(k) + '/localSearch_' + str(
+	localSearchFile = 'data/solutions/localSearch/k_' + str(k) + '/' + str(radius) + '/p_' + str(p) + '/localSearch_' + str(
 		numberOfVehicles) + '_' + str(radius) + '.json'
 
 
