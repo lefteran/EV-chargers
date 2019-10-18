@@ -17,9 +17,9 @@ import algorithms.localSearch as localSearch
 
 def run():
 	Gnx = impdt.importNetwork()
-	numberOfVehiclesList = [30, 50, 100, 200, 500, 1000]
-	# numberOfVehiclesList = [30,50,100]
-	algorithms = [3]
+	# numberOfVehiclesList = [30, 50, 100, 200, 500, 1000, 1500]
+	numberOfVehiclesList = [1000]
+	algorithms = [0]
 
 	for algorithmNumber in algorithms:
 		settings.setAlgorithm(algorithmNumber)
