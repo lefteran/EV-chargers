@@ -1465,3 +1465,9 @@ FLP/data/solutions/randomLocalSearch/k_50/0.2/p_1/r_10000/run_8/rndLocalSearch_5
 FLP/data/solutions/randomLocalSearch/k_50/0.2/p_1/r_10000/run_9/rndLocalSearch_30_0.2.json
 FLP/data/solutions/randomLocalSearch/k_50/0.2/p_1/r_10000/run_9/rndLocalSearch_50_0.2.json
 FLP/data/solutions/randomLocalSearch/k_50/0.2/p_1/r_10000/run_9/rndLocalSearch_100_0.2.json
+*.json
+*.csv
+*.dat
+*.pyc
+*.pyc
+*.xml
