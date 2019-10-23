@@ -4,7 +4,7 @@ from random import uniform
 import json
 from sys import stderr, exit
 from datetime import datetime
-
+import os
 
 ########## ASSUMPTIONS ##########
 # 1. Vehicle range is 300 km
@@ -99,8 +99,10 @@ def find_charging_spots(vehicles):
 
 
 
-filename = 'data/vehiclePaths.json'
-vehPathsDict = read_json_file(filename)
+# filename = 'data/vehiclePaths.json'
+number_of_vehicles = str(1000)
+input_filename = os.path.abspath('D:\\Github\\Delos\data\\av-chicago\\chicago_vehicle_paths\\' + number_of_vehicles + 'vehiclePaths.json')
+vehPathsDict = read_json_file(input_filename)
 vehicles = list()
 for vehicleKey, vehicleValue in vehPathsDict.items():
 	vehicle = Vehicle(vehicleValue['timeStampList'], vehicleValue['locationList'], vehicleKey.split(' ')[1])
@@ -109,7 +111,8 @@ for vehicleKey, vehicleValue in vehPathsDict.items():
 		exit()
 	vehicles.append(vehicle)
 charging_spots_per_hour_dict = find_charging_spots(vehicles)
-save_dict(charging_spots_per_hour_dict, 'data/candidate_locations_100_vehicles.json')
+output_filename = 'data/' + number_of_vehicles + '_vehicles_locations_per_hour.json'
+save_dict(charging_spots_per_hour_dict, output_filename)
 
 
 

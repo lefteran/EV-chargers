@@ -1,7 +1,8 @@
 # LIBRARIES
 import time
 # FILES
-import algorithms.run as algorithms
+import network.run as network
+# import algorithms.run as algorithms
 # import visualisation.run as visualisation
 # import scripts.createDataForOptimal as createDataForOptimal
 
@@ -9,12 +10,15 @@ import algorithms.run as algorithms
 if __name__ == "__main__":
     start_time = time.time()
 
+    # NETWORK
+    network.run()
+
 
     # SCRIPTS
     # createDataForOptimal.convertCsvToDat()
 
     # ALGORITHMS
-    algorithms.run()
+    # algorithms.run()
 
     # VISUALISATION
     # visualisation.run()

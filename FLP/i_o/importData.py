@@ -172,6 +172,7 @@ def importNetwork():
 	return Gnx
 
 
+
 def importParameters(filename):
 	with open(filename, 'rb') as parametersInput:
 		return pickle.load(parametersInput)
