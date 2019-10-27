@@ -29,7 +29,7 @@ def get_centroid_key_of_closest_cluster(graph_nodes, vehicle_latitude, vehicle_l
 	distance = float("inf")
 	centroid_key = None
 	for centroid in cluster_centroids:
-		current_distance = distanceInKm(graph_nodes[centroid]['y'], graph_nodes[centroid]['x'], vehicle_latitude, vehicle_longitude)
+		current_distance = distanceInKm(graph_nodes[int(centroid)]['y'], graph_nodes[int(centroid)]['x'], vehicle_latitude, vehicle_longitude)
 		if current_distance < distance:
 			distance = current_distance
 			centroid_key = centroid
@@ -65,3 +65,16 @@ def get_vehicles_network_locations_per_hour_dict(clusters, graph_nodes):
 
 
 
+def save_vehicles_network_locations_per_hour_dict(dict_to_be_saved):
+	filename = settings.vehicles_network_locations_per_hour
+	json_file = json.dumps(dict_to_be_saved)
+	f = open(filename, 'w')
+	f.write(json_file)
+	f.close()
+
+
+def load_vehicles_network_locations_per_hour_dict():
+	filename = settings.vehicles_network_locations_per_hour
+	with open(filename, 'r') as json_file:
+		json_dict = json.load(json_file)
+	return  json_dict

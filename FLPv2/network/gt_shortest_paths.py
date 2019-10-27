@@ -27,31 +27,27 @@ class GraphToolNetwork:
 			self.gt_edge_travel_times[gt_edge_id] = graph_nx[nxEdgeSource][nxEdgeTarget]["traveltime"]
 
 
-	def get_vehicles_candidates_distances_dict(self, candidate_nodes, vehicles_nodes):
-		vehicles_candidates_distances_dict = dict()
+	def get_vehicles_distances_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
+		vehicles_distances_to_candidates_dict = dict()
 		for source_node in vehicles_nodes:
 			for target_node in candidate_nodes:
 				distance = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
-												target=self.nx_to_gt_nodes_dict[target_node], weights=self.gt_edge_lengths)
-				vehicles_candidates_distances_dict[str(source_node)+ '-' + str(target_node)] = distance
-		return vehicles_candidates_distances_dict
+												target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_lengths)
+				vehicles_distances_to_candidates_dict[str(source_node)+ '-' + str(target_node)] = distance
+		return vehicles_distances_to_candidates_dict
 
-	def get_vehicles_candidates_travel_times_dict(self, candidate_nodes, vehicles_nodes):
-		vehicles_candidates_travel_times_dict = dict()
+	def get_vehicles_travel_times_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
+		# from tqdm import tqdm
+		vehicles_travel_times_to_candidates_dict = dict()
 		for source_node in vehicles_nodes:
 			for target_node in candidate_nodes:
 				travel_time = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
-												target=self.nx_to_gt_nodes_dict[target_node], weights=self.gt_edge_travel_times)
-				vehicles_candidates_travel_times_dict[str(source_node)+ '-' + str(target_node)] = travel_time
-		return vehicles_candidates_travel_times_dict
+												target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_travel_times)
+				vehicles_travel_times_to_candidates_dict[str(source_node)+ '-' + str(target_node)] = travel_time
+		return vehicles_travel_times_to_candidates_dict
 
 
-	# def save_all_pairs_distances_dict(self, dict_to_be_saved):
-	# 	filename = 'all_pairs_distances.json'
-	# 	json_file = json.dumps(dict_to_be_saved)
-	# 	f = open(filename, 'w')
-	# 	f.write(json_file)
-	# 	f.close()
+
 
 
 

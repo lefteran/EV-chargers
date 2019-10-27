@@ -3,12 +3,13 @@ import time
 # FILES
 import network.run as network
 # import algorithms.run as algorithms
+import settings
 # import visualisation.run as visualisation
 # import scripts.createDataForOptimal as createDataForOptimal
 
 
 if __name__ == "__main__":
-    start_time = time.time()
+    settings.start_time = time.time()
 
     # NETWORK
     network.run()
@@ -23,5 +24,5 @@ if __name__ == "__main__":
     # VISUALISATION
     # visualisation.run()
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds ---" % (time.time() - settings.start_time))
 
