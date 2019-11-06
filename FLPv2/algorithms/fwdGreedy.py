@@ -1,6 +1,5 @@
 # LIBRARIES
 import _pickle as pickle
-from tqdm import tqdm
 # FILES
 import settings
 
@@ -53,6 +52,7 @@ def add_most_important_location(solution, previous_total_time):
 
 
 def forward_greedy():
+    from tqdm import tqdm
     print(f"Running forward greedy with {settings.fleet_size} vehicles and {settings.centroids} clusters ...")
     solution = []
     total_driving_time = float("inf")

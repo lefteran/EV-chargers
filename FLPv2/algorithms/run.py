@@ -11,8 +11,10 @@ import network.shortest_paths as shortest_paths
 import algorithms.fwdGreedy as fwdGreedy
 # import algorithms.backGreedy as backGreedy
 # import algorithms.randomLocalSearch as randomLocalSearch
-# import algorithms.optimal as optimal
+import algorithms.integer_optimal as integer_optimal
+import algorithms.fractional_optimal as fractional_optimal
 import algorithms.localSearch as localSearch
+import algorithms.young_greedy as young_greedy
 
 
 def run():
@@ -26,11 +28,18 @@ def run():
 	solution_list = list()
 	total_driving_time = -1
 
-	if settings.algorithm == 1:
+	if settings.algorithm == 0:
+		solution_list, total_driving_time = integer_optimal.integer_optimal()
+	elif settings.algorithm == 1:
 		solution_list, total_driving_time = fwdGreedy.forward_greedy()
 	elif settings.algorithm == 4:
 		initial_solution_dict = load_solution()
 		solution_list, total_driving_time = localSearch.local_search(initial_solution_dict['solution_list'])
+	elif settings.algorithm == 5:
+		solution_list, total_driving_time = fractional_optimal.fractional_optimal()
+	elif settings.algorithm == 6:
+		young_greedy.young_greedy()
+
 
 
 	solution_dict = create_solution_dict(solution_list, settings.algorithm_dict[settings.algorithm], total_driving_time)

@@ -30,12 +30,6 @@ def save_vehicles_distances_to_candidates_dict(dict_to_be_saved):
 	f.write(json_file)
 	f.close()
 
-def save_vehicles_travel_times_to_candidates_dict(dict_to_be_saved):
-	filename = settings.vehicles_travel_times_to_candidates
-	json_file = json.dumps(dict_to_be_saved)
-	f = open(filename, 'w')
-	f.write(json_file)
-	f.close()
 
 def load_vehicles_travel_times_to_candidates_dict():
 	filename = settings.vehicles_travel_times_to_candidates

@@ -5,15 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99d511a5-456a-4399-b127-412ab1a75448" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../FLPv2/network/shortest_paths.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../FLPv2/scripts/tests/copy_list.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLPv2/algorithms/fractional_optimal.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLPv2/algorithms/young_greedy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLPv2/network/filter_trips.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLPv2/network/travel_times.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../FLPv2/scripts/create_dat_for_optimal.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/.idea/FLPv2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/.idea/FLPv2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLPv2/algorithms/fwdGreedy.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/algorithms/fwdGreedy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLPv2/algorithms/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/algorithms/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLPv2/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/network/all_pairs_shortest_paths.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/gt_shortest_paths.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/network/clustering.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/clustering.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLPv2/network/create_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/nx_graph.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLPv2/network/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLPv2/network/shortest_paths.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/shortest_paths.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLPv2/network/vehicles_per_hour.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/vehicles_per_hour.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FLPv2/scripts/vehiclesPathsFromDelos.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/scripts/import_vehicles_paths_from_delos.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLPv2/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,8 +46,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/algorithms/run.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="45" column="53" selection-start-line="45" selection-start-column="53" selection-end-line="45" selection-end-column="53" />
+            <state relative-caret-position="480">
+              <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
               <folding>
                 <element signature="e#12#23#0" expanded="true" />
               </folding>
@@ -51,91 +56,60 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/algorithms/fwdGreedy.py">
+        <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_30_0.1.dat">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="38" column="4" selection-start-line="38" selection-start-column="4" selection-end-line="38" selection-end-column="4" />
+            <state relative-caret-position="120">
+              <caret line="6" selection-end-line="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1820">
+              <caret line="91" column="33" selection-start-line="91" selection-start-column="33" selection-end-line="91" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/scripts/createDataForOptimal.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="560">
+              <caret line="31" column="24" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="24" />
               <folding>
-                <element signature="e#12#36#0" expanded="true" />
+                <element signature="e#12#21#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_50_0.1.dat">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/algorithms/optimal.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="215">
+              <caret line="66" column="50" selection-start-line="66" selection-start-column="50" selection-end-line="66" selection-end-column="50" />
+              <folding>
+                <element signature="e#12#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/agents/vehicle.py">
+        <entry file="file://$PROJECT_DIR$/examples/progressBar.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-28">
-              <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/algorithms/localSearch.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
+            <state relative-caret-position="100">
+              <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
               <folding>
-                <element signature="e#12#36#0" expanded="true" />
+                <element signature="e#0#11#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scenarios/tripTimes.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="32" column="66" selection-start-line="32" selection-start-column="66" selection-end-line="32" selection-end-column="66" />
-              <folding>
-                <element signature="e#12#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/i_o/serializationIO.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scenarios/GraphToolNetwork.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="7" column="65" selection-start-line="7" selection-start-column="65" selection-end-line="7" selection-end-column="65" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/algorithms/solution.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="40">
-              <caret line="2" column="9" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/vehiclesPathsFromDelos.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/i_o/saveLoadNetwork.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -144,7 +118,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>removedFacilityIds</find>
       <find>self.</find>
       <find>parameters.</find>
       <find>filePaths.</find>
@@ -174,6 +147,7 @@
       <find>items</find>
       <find>distance</find>
       <find>tqdm</find>
+      <find>progress</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -235,6 +209,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -245,17 +220,25 @@
             <path>
               <item name="FLP" type="b2602c69:ProjectViewProjectNode" />
               <item name="FLP" type="462c0819:PsiDirectoryNode" />
-              <item name="algorithms" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="FLP" type="b2602c69:ProjectViewProjectNode" />
               <item name="FLP" type="462c0819:PsiDirectoryNode" />
-              <item name="i_o" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="scenariosData" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="FLP" type="b2602c69:ProjectViewProjectNode" />
               <item name="FLP" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="scenariosData" type="462c0819:PsiDirectoryNode" />
+              <item name="0.1" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="FLP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FLP" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="FLP" type="b2602c69:ProjectViewProjectNode" />
@@ -266,7 +249,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -635,22 +617,23 @@
       <workItem from="1569937146917" duration="1633000" />
       <workItem from="1569947867395" duration="1252000" />
       <workItem from="1570187085960" duration="12035000" />
-      <workItem from="1571220994208" duration="37395000" />
+      <workItem from="1571220994208" duration="44468000" />
+      <workItem from="1572450727745" duration="1368000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="337939000" />
+    <option name="totallyTimeSpent" value="346380000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1652452" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16684435" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.25785482" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.25785482" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" weight="0.35102925" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.37486458" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -830,23 +813,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/scenarios/clustering.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda3/envs/BFL1/Lib/site-packages/pyomo/core/base/misc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="83" selection-start-line="83" selection-end-line="83" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/clustering_0.1.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_30_0.1.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -931,13 +897,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_30_0.1.dat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="13" selection-start-column="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_500_0.1.dat">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="60">
@@ -998,16 +957,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../general-scripts/convertDemandForDelos.py" />
-    <entry file="file://$PROJECT_DIR$/scripts/createDataForOptimal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-          <folding>
-            <element signature="e#12#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scripts/jsonCoordinatesToCsv.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1035,26 +984,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/optimal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1180">
-          <caret line="64" selection-start-line="64" selection-end-line="64" />
-          <folding>
-            <element signature="e#12#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/data/vehiclesPathsFromDelos.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="40" column="40" lean-forward="true" selection-start-line="40" selection-start-column="40" selection-end-line="40" selection-end-column="40" />
-          <folding>
-            <element signature="e#12#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/data/vehiclesPathsFromDelos.py" />
     <entry file="file://C:/Anaconda3/envs/BFL1/Lib/tokenize.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
@@ -1062,20 +992,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network/create_graph.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="6" column="20" lean-forward="true" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/network/create_graph.py" />
     <entry file="file://$PROJECT_DIR$/network/preprocessing.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="929">
@@ -1171,26 +1088,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="45" column="53" selection-start-line="45" selection-start-column="53" selection-end-line="45" selection-end-column="53" />
-          <folding>
-            <element signature="e#12#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/algorithms/fwdGreedy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="38" column="4" selection-start-line="38" selection-start-column="4" selection-end-line="38" selection-end-column="4" />
-          <folding>
-            <element signature="e#12#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/algorithms/localSearch.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
@@ -1205,6 +1102,80 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-28">
           <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/fwdGreedy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="38" column="4" selection-start-line="38" selection-start-column="4" selection-end-line="38" selection-end-column="4" />
+          <folding>
+            <element signature="e#12#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_1500_0.1.dat">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="180">
+          <caret line="9" column="24" lean-forward="true" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/run.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
+          <folding>
+            <element signature="e#12#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_30_0.1.dat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1820">
+          <caret line="91" column="33" selection-start-line="91" selection-start-column="33" selection-end-line="91" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/createDataForOptimal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="560">
+          <caret line="31" column="24" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="24" />
+          <folding>
+            <element signature="e#12#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/scenariosData/0.1/timesDict_50_0.1.dat">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/algorithms/optimal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="66" column="50" selection-start-line="66" selection-start-column="50" selection-end-line="66" selection-end-column="50" />
+          <folding>
+            <element signature="e#12#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/progressBar.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
