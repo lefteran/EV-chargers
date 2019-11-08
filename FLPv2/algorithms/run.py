@@ -41,7 +41,7 @@ def run():
 	elif settings.algorithm == 6:
 		young_greedy.young_greedy()
 	elif settings.algorithm == 7:
-		solution_list = jain_vazirani.jv_algorithm()
+		solution_list, total_driving_time = jain_vazirani.jv_algorithm()
 
 
 

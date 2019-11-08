@@ -1,5 +1,5 @@
 # LIBRARIES
-from math import floor
+from math import floor, ceil
 import networkx as nx
 from tqdm import tqdm
 from itertools import combinations
@@ -42,6 +42,58 @@ def phase1_unweighted():
 
 
 
+def get_conflicts_dict(beta):
+    conflicts = dict()
+    for vehicle_key in settings.vehicles_locations_over_day:
+        for facility_key, vehicles_list in beta.items():
+            if beta[facility_key][str(vehicle_key)] > 0:
+                if str(vehicle_key) not in conflicts:
+                    conflicts[str(vehicle_key)] = [facility_key]
+                else:
+                    conflicts[str(vehicle_key)].append(facility_key)
+    return conflicts
+
+
+def phase1_weighted(cost, precision, max_alg_time):
+    # TODO Check the right value for max_alg_time
+    # precision = 1000000
+    temporarily_open = list()
+    tight_edges = list()
+    costs = {facility_key: cost for facility_key in list(settings.clusters.keys())}
+    beta = {facility_key: {str(vehicle_key): 0 for vehicle_key in settings.vehicles_locations_over_day} for facility_key in list(settings.clusters.keys())}
+    sorted_times = sorted(settings.travel_times_over_day.items(), key=lambda kv: kv[1])
+    sorted_times = [(key, floor(travel_time * precision)) for (key, travel_time) in sorted_times if travel_time != 0]
+    unconnected_vehicles = settings.vehicles_locations_over_day[:]
+
+    for alg_time in tqdm(range(max_alg_time)):
+        edge_key = sorted_times[0][0]
+        edge_travel_time = sorted_times[0][1]
+
+        # Get tight edges
+        while alg_time == edge_travel_time:
+            if edge_key not in tight_edges:
+                tight_edges.append(edge_key)
+            del sorted_times[0]
+            edge_key = sorted_times[0][0]
+            edge_travel_time = sorted_times[0][1]
+
+        # Raise betas
+        for tight_edge_key in tight_edges:
+            vehicle_key = tight_edge_key.split('-')[0]
+            candidate_key = tight_edge_key.split('-')[1]
+            beta[candidate_key][vehicle_key] += 1
+            if sum(beta[candidate_key].values()) >= costs[candidate_key]:
+                temporarily_open.append(candidate_key)
+                tight_edges.remove(tight_edge_key)
+                for vehicle_key in settings.vehicles_locations_over_day:
+                    if beta[candidate_key][str(vehicle_key)] > 0 and int(vehicle_key) in unconnected_vehicles:
+                        unconnected_vehicles.remove(int(vehicle_key))
+                    if not unconnected_vehicles:
+                        conflicts = get_conflicts_dict(beta)
+                        return temporarily_open, conflicts
+
+
+
 def phase2(temporarily_open, conflicts):
     print('Phase 2 ...')
     graph = nx.Graph()
@@ -56,15 +108,46 @@ def phase2(temporarily_open, conflicts):
     return independent_set
 
 
-def phase3(opened_facilities):
-    a=2
-    # TODO lagrangian relaxation
-    #  do binary search in the interval of costs [0, n*c_max],
-    #  where c_max is the length of longest edge check JV p.285
+
+def get_opened_facilities_list(cost, precision, max_alg_time):
+    temporarily_open, conflicts = phase1_weighted(cost, precision, max_alg_time)
+    opened_facilities = phase2(temporarily_open, conflicts)
+    return opened_facilities
+
+def get_vehicle_time_to_nearest_location(vehicle_location, locations):
+    time_to_nearest_location = float("inf")
+    for candidate_location in locations:
+        travel_time = settings.travel_times_over_day[str(vehicle_location) + '-' + str(candidate_location)]
+        if travel_time < time_to_nearest_location:
+            time_to_nearest_location = travel_time
+    return time_to_nearest_location
+
+
+def get_solution_time(opened_facilities):
+    total_time = 0
+    for vehicle_location in settings.vehicles_locations_over_day:
+        total_time += get_vehicle_time_to_nearest_location(vehicle_location, opened_facilities)
+    return total_time
 
 
 def jv_algorithm():
-    temporarily_open, conflicts = phase1_unweighted()
-    opened_facilities = phase2(temporarily_open,conflicts)
-    phase3(opened_facilities)
-    return temporarily_open
+    # TODO lagrangian relaxation
+    #  do binary search in the interval of costs [0, n*c_max],
+    #  where c_max is the length of longest edge check JV p.285
+    precision = 1000000
+    max_alg_time = ceil(max(settings.travel_times_over_day.values()) * precision)
+    min_value = 0
+    max_value = max_alg_time
+    med_value = (max_value + min_value) / 2.0
+    opened_facilities = list()
+    print(f'max_value - min_value is: {max_value - min_value}')
+    while max_value - min_value > settings.jv_epsilon and len(opened_facilities) <= settings.k:
+        opened_facilities = get_opened_facilities_list(med_value, precision, max_alg_time)
+        if len(opened_facilities) < settings.k:
+            min_value = med_value
+            med_value = (max_value + min_value) / 2.0
+        elif len(opened_facilities) > settings.k:
+            max_value = med_value
+            med_value = (max_value + min_value) / 2.0
+    total_travel_time = get_solution_time(opened_facilities)
+    return opened_facilities, total_travel_time
