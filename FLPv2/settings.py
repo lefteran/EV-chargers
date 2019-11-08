@@ -20,14 +20,15 @@ import os
 # r = 10000			# NUMBER OF ITERATIONS FOR THE RANDOM LOCAL SEARCH
 # p = 1			# NUMBER OF FACILITIES TO SWAP (IN LS AND RANDOM LS)
 
-algorithm = 0
+algorithm = 7
 algorithm_dict = {0: "integer_optimal",
 				  1: "forward_greedy",
 				  2: "Backward Greedy",
 				  3: "Random Local Search",
 				  4: "local_search",
 				  5: "fractional_optimal",
-				  6: "young_greedy"}
+				  6: "young_greedy",
+				  7: "jain_vazirani"}
 
 # places = {'london': 'Greater London, England, United Kingdom',
 # 		'piedmont': 'Piedmont, California',
@@ -37,7 +38,7 @@ algorithm_dict = {0: "integer_optimal",
 start_time = None
 k = 50
 centroids = 1000
-fleet_size = 3000
+fleet_size = 700
 epsilon = 0.1
 clusters = None
 vehicles_network_locations_per_hour_dict = None
@@ -60,6 +61,7 @@ vehicles_travel_times_to_candidates = 'data/travel_times/' + str(fleet_size) + '
 statistics = 'data/chicago_vehicle_locations/statistics.json'
 
 initial_solution_path = 'data/solutions/forward_greedy/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
+initial_fractional_solution_path = 'data/solutions/fractional_optimal/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 solution_path = 'data/solutions/' + algorithm_dict[algorithm] + '/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 optimal_dat_file = 'data/travel_times/optimal_data_' + str(k) + '_facilities_' + str(fleet_size) + '_vehicles_and_' + str(centroids) + '_candidates.dat'
 mapping_for_optimal = 'data/travel_times/optimal_mapping' + str(fleet_size) + '_vehicles_and_' + str(centroids) + '_candidates_mapping.json'

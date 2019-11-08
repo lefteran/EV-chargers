@@ -15,6 +15,7 @@ import algorithms.integer_optimal as integer_optimal
 import algorithms.fractional_optimal as fractional_optimal
 import algorithms.localSearch as localSearch
 import algorithms.young_greedy as young_greedy
+import algorithms.jain_vazirani as jain_vazirani
 
 
 def run():
@@ -23,7 +24,7 @@ def run():
 	settings.travel_times = shortest_paths.load_vehicles_travel_times_to_candidates_dict()
 
 	settings.vehicles_locations_over_day = get_list_of_all_vehicles_locations_over_day()
-	settings.travel_times_over_day = get_list_of_all_travel_times_over_day()
+	settings.travel_times_over_day = get_list_of_all_travel_times_over_day()			# vehicle-candidate travel times
 
 	solution_list = list()
 	total_driving_time = -1
@@ -39,6 +40,8 @@ def run():
 		solution_list, total_driving_time = fractional_optimal.fractional_optimal()
 	elif settings.algorithm == 6:
 		young_greedy.young_greedy()
+	elif settings.algorithm == 7:
+		solution_list = jain_vazirani.jv_algorithm()
 
 
 
@@ -51,7 +54,7 @@ def get_list_of_all_vehicles_locations_over_day():
 	vehicles_locations = list()
 	for _, vehicles_per_hour_list in settings.vehicles_network_locations_per_hour_dict.items():
 		vehicles_locations.extend(vehicles_per_hour_list)
-	return vehicles_locations
+	return list(set(vehicles_locations))
 
 
 def get_list_of_all_travel_times_over_day():
