@@ -37,7 +37,7 @@ def local_search(solution):
     while flag:
         print(f'number of iterations: {iterations_count}')
         better_solution = False
-        for open_facility in tqdm(solution):
+        for open_facility in solution:
             for closed_facility in closed:
                 if {open_facility, closed_facility} not in combinations_used:
                     candidate_solution = solution[:]

@@ -6,6 +6,7 @@ import network.clustering as clustering
 import network.filter_trips as filtering
 import network.travel_times as travel_times
 
+
 def run():
 	graph = nx_graph.create_graph()
 	clusters = clustering.load_clusters()
@@ -14,4 +15,6 @@ def run():
 
 	# vehicles_per_hour.get_and_save_vehicles_network_locations(graph.nodes(), clusters)
 
-	travel_times.compute_travel_times(graph, clusters)
+	# travel_times.compute_travel_times(graph, clusters)
+
+	travel_times.convert_travel_times_to_seconds()
