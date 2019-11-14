@@ -56,7 +56,6 @@ def get_conflicts_dict(beta):
 
 
 def phase1_weighted(cost, max_alg_time):
-    # TODO Check the right value for max_alg_time
     print('\nPhase 1 ...')
     temporarily_open = list()
     tight_edges = list()
@@ -66,7 +65,6 @@ def phase1_weighted(cost, max_alg_time):
     sorted_times = [(key, travel_time) for (key, travel_time) in sorted_times if travel_time != 0]
     unconnected_vehicles = settings.vehicles_locations_over_day[:]
 
-    # print('Before tqdm')
     for alg_time in range(max_alg_time):
         edge_key = sorted_times[0][0]
         edge_travel_time = sorted_times[0][1]
@@ -95,6 +93,27 @@ def phase1_weighted(cost, max_alg_time):
                         return temporarily_open, conflicts
 
 
+def remove_duplicates(temporarily_open):
+    set_of_temporarily_open = list()
+    for temporarily_open_facility in temporarily_open:
+        if temporarily_open_facility not in set_of_temporarily_open:
+            set_of_temporarily_open.append(temporarily_open_facility)
+    return set_of_temporarily_open
+
+
+def get_independent_set(graph, temporarily_open):
+    open_facilities = list()
+    temporarily_open = remove_duplicates(temporarily_open)
+    for temporarily_open_facility in temporarily_open:
+        edges_connected = False
+        for open_facility in open_facilities:
+            if graph.has_edge(temporarily_open_facility, open_facility):
+                edges_connected = True
+                break
+        if not edges_connected:
+            open_facilities.append(temporarily_open_facility)
+    return open_facilities
+
 
 def phase2(temporarily_open, conflicts):
     print('\nPhase 2 ...')
@@ -106,7 +125,8 @@ def phase2(temporarily_open, conflicts):
         combinations_of_conflicts = combinations(list_of_conflicts, 2)
         for combination in combinations_of_conflicts:
             graph.add_edge(combination[0], combination[1])
-    independent_set = nx.maximal_independent_set(graph)
+    # independent_set = nx.maximal_independent_set(graph)
+    independent_set = get_independent_set(graph, temporarily_open)
     return independent_set
 
 
@@ -138,7 +158,6 @@ def jv_algorithm():
     below_k_solution = []
     max_value = max_alg_time
     med_value = (max_value + min_value) / 2.0
-    opened_facilities = list()
     while max_value - min_value > settings.jv_epsilon:
         print(f'Checking value {med_value} in interval [{min_value}, {max_value}]')
         print(f'max_value - min_value is: {max_value - min_value}')

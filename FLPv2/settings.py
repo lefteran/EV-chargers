@@ -20,7 +20,7 @@ import os
 # r = 10000			# NUMBER OF ITERATIONS FOR THE RANDOM LOCAL SEARCH
 # p = 1			# NUMBER OF FACILITIES TO SWAP (IN LS AND RANDOM LS)
 
-algorithm = 4
+algorithm = 0
 algorithm_dict = {0: "integer_optimal",
 				  1: "forward_greedy",
 				  2: "Backward Greedy",
@@ -36,9 +36,9 @@ algorithm_dict = {0: "integer_optimal",
 
 
 start_time = None
-k = 50
+k = 100
 centroids = 1000
-fleet_size = 1000
+fleet_size = 2000
 jv_epsilon = 0.1
 clusters = None
 vehicles_network_locations_per_hour_dict = None

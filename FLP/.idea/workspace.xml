@@ -5,12 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99d511a5-456a-4399-b127-412ab1a75448" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/progressBar.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/progressBar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/algorithms/jain_vazirani.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/algorithms/jain_vazirani.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/algorithms/localSearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/algorithms/localSearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/network/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FLPv2/network/travel_times.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/network/travel_times.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../FLPv2/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../FLPv2/settings.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
