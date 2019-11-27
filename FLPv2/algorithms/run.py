@@ -43,8 +43,6 @@ def run():
 	elif settings.algorithm == 7:
 		solution_list, total_driving_time = jain_vazirani.jv_algorithm()
 
-
-
 	solution_dict = create_solution_dict(solution_list, settings.algorithm_dict[settings.algorithm], total_driving_time)
 	save_solution(solution_dict)
 

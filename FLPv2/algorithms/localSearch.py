@@ -32,7 +32,6 @@ def local_search(solution):
     # previous_solution_accepted = False
     combinations_used = []
 
-
     iterations_count = 0
     while flag:
         print(f'number of iterations: {iterations_count}')
@@ -57,11 +56,6 @@ def local_search(solution):
         if not better_solution:
             return solution, best_time
         iterations_count += 1
-
-
-
-
-
 
     return solution, best_time
 

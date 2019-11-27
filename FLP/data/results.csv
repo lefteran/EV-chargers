@@ -1,7 +1,0 @@
-Algorithm,k (max facilities to open),radius,number of vehicles,Objective,r (iterations of random LS),p (elements to swap in random LS),Run time
-backGreedy,50,0.1,30,67378,-,-,3653
-backGreedy,50,0.1,50,,-,-,
-backGreedy,50,0.1,100,,-,-,
-backGreedy,50,0.1,200,,-,-,
-backGreedy,50,0.1,500,,-,-,
-backGreedy,50,0.1,1000,,-,-,

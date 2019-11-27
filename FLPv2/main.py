@@ -1,10 +1,13 @@
 # LIBRARIES
 import time
 # FILES
-# import network.run as network
-import scripts.create_dat_for_optimal as create_dat_for_optimal
-import algorithms.run as algorithms
 import settings
+# sys.path.append('project folder path')
+# import network.run as network
+import scripts.data_export_for_visualisation as data_export_for_visualisation
+import scripts.create_dat_for_optimal as create_dat_for_optimal
+import scripts.get_charging_points as charging_points
+# import algorithms.run as algorithms
 # import visualisation.run as visualisation
 import scripts.import_vehicles_paths_from_delos as import_vehicles_paths_from_delos
 
@@ -19,10 +22,14 @@ if __name__ == "__main__":
     # SCRIPTS
     # create_dat_for_optimal.create_dat_file()
     # import_vehicles_paths_from_delos.export_charging_spots_per_hour_dict_and_statistics()
-
+    data_export_for_visualisation.export_solution_locations_coordinates()
 
     # ALGORITHMS
-    algorithms.run()
+    # algorithms.run()
+
+
+    # POST OPTIMIZATION
+    # charging_points.get_number_of_charging_points_per_station()
 
     # VISUALISATION
     # visualisation.run()

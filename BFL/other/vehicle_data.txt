@@ -1,4 +1,0 @@
-id	location(scen1)	location(scen2)	location(scen3)
-0	6	8	15
-1	14	2	1
-2	5	20	19
