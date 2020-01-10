@@ -1,7 +1,7 @@
 # import os
 
 # ############################# Parameters #############################
-algorithm = 0
+algorithm = 1
 algorithm_dict = {0: "integer_optimal",
 				  1: "forward_greedy",
 				  2: "Backward Greedy",
@@ -17,15 +17,16 @@ algorithm_dict = {0: "integer_optimal",
 
 
 start_time = None
-k = 75
+k = 200
 centroids = 1000
-fleet_size = 1000
+fleet_size = 2000
 jv_epsilon = 0.1
 clusters = None
 vehicles_network_locations_per_hour_dict = None
 travel_times = None
 vehicles_locations_over_day = None
 travel_times_over_day = None
+ev_percentage = 0.25
 
 # ############################# FilePaths #############################
 chicago_json_network = 'data/Chicago/Chicago_network.json'
@@ -42,6 +43,13 @@ vehicles_distances_to_candidates = 'data/distances/' + str(fleet_size) + '_vehic
 vehicles_travel_times_to_candidates = 'data/travel_times/' + str(fleet_size) + '_vehicles_travel_times_to_' + str(centroids) + '_candidates_per_hour.json'
 statistics = 'data/chicago_vehicle_locations/statistics.json'
 data_for_visualisation = 'data/data_for_visualisation/' +  algorithm_dict[algorithm] + '_solution_coordinates.json'
+existing_stations_coordinates_json = 'data/existing_stations/chicago-charging-stations.json'
+existing_stations_coordinates_csv = 'data/existing_stations/chicago-existing-stations.csv'
+existing_stations_closest_nodes = 'data/existing_stations/existing-stations-closest-nodes.json'
+public_stations_json = 'data/existing_stations/public_stations.json'
+public_stations_closest_nodes = 'data/existing_stations/public-stations-closest-nodes.json'
+traffic_counts = 'data/traffic_counts/traffic_counts_avg.csv'
+public_charging_demand = 'data/charging_demand/public_charging_demand.json'
 
 initial_solution_path = 'data/solutions/forward_greedy/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 initial_fractional_solution_path = 'data/solutions/fractional_optimal/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'

@@ -1,11 +1,11 @@
 # LIBRARIES
-import pandas as pd
 import json
 # FILES
 import settings
 
 
 def get_clusters(nodes):
+	import pandas as pd
 	from sklearn.cluster import KMeans
 	from sklearn.metrics import pairwise_distances_argmin_min
 
