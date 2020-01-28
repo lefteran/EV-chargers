@@ -27,12 +27,12 @@ def read_json_file(filename):
 		json_dict = json.load(json_file)
 	return json_dict
 
-def compute_demand():
+def compute_traffic_demand():
 	traffic_dict = import_traffic()
 	public_stations_dict = read_json_file(settings.public_stations_json)
 	public_stations_closest_node_mapping = read_json_file(settings.public_stations_closest_nodes)
 
-	charging_demand = dict()
+	traffic_demand = dict()
 	for traffic_key, traffic_info in traffic_dict.items():
 		nearest_station_id = None
 		distance_to_nearest_station = float('inf')
@@ -45,15 +45,15 @@ def compute_demand():
 			if distance < distance_to_nearest_station:
 				distance_to_nearest_station = distance
 				nearest_station_id = public_station_key
-		if nearest_station_id not in charging_demand:
-			charging_demand[public_stations_closest_node_mapping[nearest_station_id]] = traffic_info['volume']
+		if nearest_station_id not in traffic_demand:
+			traffic_demand[public_stations_closest_node_mapping[nearest_station_id]] = traffic_info['volume']
 		else:
-			charging_demand[public_stations_closest_node_mapping[nearest_station_id]] += traffic_info['volume']
-	save_charging_demand(charging_demand)
+			traffic_demand[public_stations_closest_node_mapping[nearest_station_id]] += traffic_info['volume']
+	save_traffic_demand(traffic_demand)
 
 
-def save_charging_demand(dict_to_be_saved):
-	filename = settings.public_charging_demand
+def save_traffic_demand(dict_to_be_saved):
+	filename = settings.traffic_charging_demand
 	json_file = json.dumps(dict_to_be_saved)
 	f = open(filename, 'w')
 	f.write(json_file)

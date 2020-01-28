@@ -28,6 +28,11 @@ vehicles_locations_over_day = None
 travel_times_over_day = None
 ev_percentage = 0.25
 
+time_to_money = 1
+N_ON = 1
+N_OFF = 1
+
+
 # ############################# FilePaths #############################
 chicago_json_network = 'data/Chicago/Chicago_network.json'
 chicago_graphml_network = 'Chicago/chicago.graphml'
@@ -49,10 +54,11 @@ existing_stations_closest_nodes = 'data/existing_stations/existing-stations-clos
 public_stations_json = 'data/existing_stations/public_stations.json'
 public_stations_closest_nodes = 'data/existing_stations/public-stations-closest-nodes.json'
 traffic_counts = 'data/traffic_counts/traffic_counts_avg.csv'
-public_charging_demand = 'data/charging_demand/public_charging_demand.json'
+traffic_charging_demand = 'data/traffic_charging_demand/traffic_charging_demand.json'
 
 initial_solution_path = 'data/solutions/forward_greedy/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 initial_fractional_solution_path = 'data/solutions/fractional_optimal/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 solution_path = 'data/solutions/' + algorithm_dict[algorithm] + '/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 optimal_dat_file = 'data/travel_times/optimal_data_' + str(k) + '_facilities_' + str(fleet_size) + '_vehicles_and_' + str(centroids) + '_candidates.dat'
+optimal_dat_file2020 = 'data/optimal_dat/optimal_data.dat'
 mapping_for_optimal = 'data/travel_times/optimal_mapping' + str(fleet_size) + '_vehicles_and_' + str(centroids) + '_candidates_mapping.json'
