@@ -3,23 +3,18 @@ import time
 # FILES
 import settings
 # sys.path.append('project folder path')
-import network.run as network
-import scripts.data_export_for_visualisation as data_export_for_visualisation
-import scripts.create_dat_for_optimal as create_dat_for_optimal
-import scripts.get_charging_points as charging_points
-import scripts.remove_timestamps as rm_timestamps
-import scripts.existing_stations_csv_to_json as existing_stations_csv_to_json
-import scripts.traffic_demand as charging_demand
-# import algorithms.run as algorithms
+# import network.run as network
 # import visualisation.run as visualisation
-import scripts.import_vehicles_paths_from_delos as import_vehicles_paths_from_delos
+import network.slice_paths_from_delos as slice_paths
+# import scripts.compute_rho_list as rho_list
+import algorithms.run as algorithms
 
 
 if __name__ == "__main__":
     settings.start_time = time.time()
 
     # NETWORK
-    network.run()
+    # network.run()
 
 
     # SCRIPTS
@@ -28,10 +23,12 @@ if __name__ == "__main__":
     # data_export_for_visualisation.export_solution_locations_coordinates()
     # rm_timestamps.remove_timestamps()
     # existing_stations_csv_to_json.export_csv_to_json()
-    charging_demand.compute_traffic_demand()
+    # charging_demand.compute_traffic_demand()
+    # analytics.get_analytics()
+    # rho_list.compute_rho_list()
 
     # ALGORITHMS
-    # algorithms.run()
+    algorithms.run()
 
 
     # POST OPTIMIZATION

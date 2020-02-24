@@ -8,7 +8,7 @@ import network.nx_graph as nx_graph
 import pandas as pd
 # FILES
 import settings
-import network.vehicles_per_hour as vehicles_per_hour
+import network.recharging_nodes as vehicles_per_hour
 
 
 def plotGraph(graph):
@@ -49,7 +49,7 @@ def load_graphml_network():
 
 
 def get_list_of_all_vehicles_locations_over_day():
-	settings.vehicles_network_locations_per_hour_dict = vehicles_per_hour.load_vehicles_network_locations_per_hour_dict()
+	settings.vehicles_network_locations_per_hour_dict = vehicles_per_hour.load_recharging_nodes_per_hour_dict()
 	vehicles_locations = list()
 	for _, vehicles_per_hour_list in settings.vehicles_network_locations_per_hour_dict.items():
 		vehicles_locations.extend(vehicles_per_hour_list)

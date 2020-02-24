@@ -32,7 +32,7 @@ def save_vehicles_distances_to_candidates_dict(dict_to_be_saved):
 
 
 def load_vehicles_travel_times_to_candidates_dict():
-	filename = settings.vehicles_travel_times_to_candidates
+	filename = settings.travel_times_per_hour
 	with open(filename, 'r') as json_file:
 		json_dict = json.load(json_file)
 	return  json_dict

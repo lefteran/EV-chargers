@@ -8,7 +8,9 @@ def get_clusters(nodes):
 	import pandas as pd
 	from sklearn.cluster import KMeans
 	from sklearn.metrics import pairwise_distances_argmin_min
+	from sklearn.metrics import silhouette_score
 
+	print('Clustering...')
 	nodes_coordinates_list = list()
 	nodes_ids = list()
 	cluster_labeling = dict()
@@ -18,6 +20,9 @@ def get_clusters(nodes):
 		nodes_ids.append(node_value['id'])
 	df = pd.DataFrame(nodes_coordinates_list, columns=['y', 'x'])
 	kmeans = KMeans(n_clusters=settings.centroids).fit(df)
+	preds = kmeans.fit_predict(df)
+	score = silhouette_score(df, preds)
+	print(f"For n_clusters = {settings.centroids}, silhouette score is {score})")
 	node_clustering_labels = kmeans.labels_
 	centroids = kmeans.cluster_centers_
 	closest_node_list_indices_to_centroids, _ = pairwise_distances_argmin_min(centroids, nodes_coordinates_list)
@@ -31,15 +36,15 @@ def get_clusters(nodes):
 
 
 def save_clusters(dict_to_be_saved):
-	filename = settings.cluster
+	filename = settings.candidates
 	json_file = json.dumps(dict_to_be_saved)
 	f = open(filename, 'w')
 	f.write(json_file)
 	f.close()
 
 
-def load_clusters():
-	filename = settings.cluster
+def load_candidates():
+	filename = settings.candidates
 	with open(filename, 'r') as json_file:
 		json_dict = json.load(json_file)
 	return  json_dict

@@ -48,37 +48,32 @@ def find_closest_network_node_to_vehicle_within_cluster(graph_nodes, vehicle_lat
 	return closest_node_id
 
 
-
-
-def get_vehicles_network_locations_per_hour_dict(graph_nodes, clusters):
-	vehicles_per_hour_dict = dict()
-	with open(settings.vehicles_locations_per_hour) as json_file:
-		vehicles_locations_per_hour_dict = json.load(json_file)
-	for hour_key, hour_value in vehicles_locations_per_hour_dict.items():
-		vehicles_per_hour_dict[hour_key] = list()
-		for vehicle in hour_value:
-			vehicle_coordinates = vehicle[1]
-			centroid_key = get_centroid_key_of_closest_cluster(graph_nodes, vehicle_coordinates[0], vehicle_coordinates[1], list(clusters.keys()))
-			node_id = find_closest_network_node_to_vehicle_within_cluster(graph_nodes, vehicle_coordinates[0], vehicle_coordinates[1], clusters, centroid_key)
-			vehicles_per_hour_dict[hour_key].append(node_id)
-	return vehicles_per_hour_dict
-
-
-
-def save_vehicles_network_locations_per_hour_dict(dict_to_be_saved):
-	filename = settings.vehicles_network_locations_per_hour
+def save_recharging_nodes(dict_to_be_saved):
+	filename = settings.recharging_nodes_per_hour
 	json_file = json.dumps(dict_to_be_saved)
 	f = open(filename, 'w')
 	f.write(json_file)
 	f.close()
 
 
-def get_and_save_vehicles_network_locations(graph_nodes, clusters):
-	vehicles_network_locations_per_hour_dict = get_vehicles_network_locations_per_hour_dict(graph_nodes, clusters)
-	save_vehicles_network_locations_per_hour_dict(vehicles_network_locations_per_hour_dict)
-
-def load_vehicles_network_locations_per_hour_dict():
-	filename = settings.vehicles_network_locations_per_hour
+def load_recharging_nodes_per_hour_dict():
+	filename = settings.recharging_nodes_per_hour
 	with open(filename, 'r') as json_file:
 		json_dict = json.load(json_file)
 	return  json_dict
+
+
+def find_recharging_nodes_per_hour_dict(graph_nodes, clusters):
+	recharging_nodes_per_hour_dict = dict()
+	with open(settings.recharging_coordinates_per_hour) as json_file:
+		vehicles_locations_per_hour_dict = json.load(json_file)
+	for hour_key, hour_value in vehicles_locations_per_hour_dict.items():
+		recharging_nodes_per_hour_dict[hour_key] = list()
+		for vehicle in hour_value:
+			vehicle_coordinates = vehicle[1]
+			centroid_key = get_centroid_key_of_closest_cluster(graph_nodes, vehicle_coordinates[0], vehicle_coordinates[1], list(clusters.keys()))
+			node_id = find_closest_network_node_to_vehicle_within_cluster(graph_nodes, vehicle_coordinates[0], vehicle_coordinates[1], clusters, centroid_key)
+			recharging_nodes_per_hour_dict[hour_key].append(node_id)
+	save_recharging_nodes(recharging_nodes_per_hour_dict)
+
+

@@ -18,7 +18,7 @@ def create_dat_file():
 	centroid_mapping_dict = dict()
 	vehicle_count = 1
 	candidate_count = 1
-	with open(settings.vehicles_travel_times_to_candidates, 'r') as json_file, open(settings.optimal_dat_file2020, "w") as dat_file:
+	with open(settings.travel_times_per_hour, 'r') as json_file, open(settings.optimal_dat_file2020, "w") as dat_file:
 		json_dict = json.load(json_file)
 		dat_file.write(f'param time_to_money := {settings.time_to_money};\n\n')
 		dat_file.write(f'param N_ON := {settings.N_ON};\n\n')

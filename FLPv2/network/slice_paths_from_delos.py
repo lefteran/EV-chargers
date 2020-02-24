@@ -9,7 +9,7 @@ import os
 import settings
 
 ########## ASSUMPTIONS ##########
-# 1. Vehicle range is 300 km
+# 1. Vehicle range is 180 km
 # 2. The battery discharges uniformly
 # 3. Battery SOC after charge and arrival to customer's pick-up location is at 90% level
 # 4. The threshold of the battery below which the vehicle needs recharging is 20%
@@ -74,9 +74,9 @@ def lists_lengths_are_equal(vehicle):
 	return len(vehicle.locationList) == len(vehicle.timeStampList)
 
 
-def find_charging_spots_and_total_distances_per_vehicle(vehicles):
+def find_charging_points_and_total_distances_per_vehicle(vehicles):
 	charging_spots_per_hour_dict = {key:list() for key in range(24)}
-	vehicle_range_km = 300
+	vehicle_range_km = 180
 	threshold_to_charge = 0.2
 	distance_travelled_per_vehicle_dict = dict()
 	for vehicle in vehicles:
@@ -88,8 +88,6 @@ def find_charging_spots_and_total_distances_per_vehicle(vehicles):
 			trip_distance = distance_in_km(vehicle.locationList[i][0], vehicle.locationList[i][1],
 										   vehicle.locationList[i + 1][0], vehicle.locationList[i + 1][1])
 			total_distance_travelled += trip_distance
-			# if trip_distance != 0:
-			# 	a=2
 			if distance_travelled + trip_distance > current_range:
 				charging_spots_per_hour_dict[vehicle.timeStampList[i].hour].append(
 					(vehicle.vehicleKey, vehicle.locationList[i]))
@@ -119,41 +117,6 @@ def get_number_of_vehicles_to_charge_per_day(charging_spots_per_hour_dict):
 	return number_of_vehicles
 
 
-def export_charging_spots_per_hour_dict_and_statistics():
-	# filename = 'data/vehiclePaths.json'
-	number_of_vehicles = str(3000)
-	fleet_statistics_dict = dict()
-	input_filename = os.path.abspath('D:\\Github\\Delos\\data\\av-chicago\\chicago_vehicle_paths\\' + number_of_vehicles + 'vehicle-paths.json')
-	vehPathsDict = read_json_file(input_filename)
-	vehicles = list()
-	# count = 0
-	for vehicleKey, vehicleValue in vehPathsDict.items():
-		vehicle = Vehicle(vehicleValue['timeStampList'], vehicleValue['locationList'], vehicleKey.split(' ')[1])
-		# if count == 10:
-		# 	break
-		if not lists_lengths_are_equal(vehicle):
-			stderr.write("Lists' lengths are not equal")
-			exit()
-		vehicles.append(vehicle)
-		# count += 1
-	charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict = find_charging_spots_and_total_distances_per_vehicle(vehicles)
-	average_distance_per_vehicle = get_average_distance_travelled_per_vehicle(distance_travelled_per_vehicle_dict)
-	number_of_vehicles_to_charge_per_day = get_number_of_vehicles_to_charge_per_day(charging_spots_per_hour_dict)
-
-	fleet_statistics_dict['average_distance_per_vehicle_km'] = average_distance_per_vehicle
-	fleet_statistics_dict['number_of_times_vehicles_need_recharging_per_day'] = number_of_vehicles_to_charge_per_day
-	if os.path.exists('D:\\Github\\EV-chargers\\FLPv2\\data\\chicago_vehicle_locations\\statistics.json'):
-		statistics_dict = load_statistics()
-	else:
-		statistics_dict = dict()
-	statistics_dict[number_of_vehicles] = fleet_statistics_dict
-	save_statistics(statistics_dict)
-	print(f'Average distance per vehicle is: {average_distance_per_vehicle} km')
-	print(f'Number of vehicles that need charging per day: {number_of_vehicles_to_charge_per_day}')
-	output_filename = os.path.abspath('D:\\Github\\EV-chargers\\FLPv2\\data\\chicago_vehicle_locations\\' + number_of_vehicles + '_vehicles_locations_per_hour.json')
-	save_dict(charging_spots_per_hour_dict, output_filename)
-
-
 def save_statistics(dict_to_be_saved):
 	filename = settings.statistics
 	json_file = json.dumps(dict_to_be_saved)
@@ -169,3 +132,40 @@ def load_statistics():
 	return  json_dict
 
 
+def get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict):
+	fleet_statistics_dict = dict()
+	average_distance_per_vehicle = get_average_distance_travelled_per_vehicle(distance_travelled_per_vehicle_dict)
+	number_of_vehicles_to_charge_per_day = get_number_of_vehicles_to_charge_per_day(charging_spots_per_hour_dict)
+	fleet_statistics_dict['average_distance_per_vehicle_km'] = average_distance_per_vehicle
+	fleet_statistics_dict['number_of_times_vehicles_need_recharging_per_day'] = number_of_vehicles_to_charge_per_day
+	if os.path.exists(statistics_filename):
+		statistics_dict = load_statistics()
+	else:
+		statistics_dict = dict()
+	statistics_dict[n_vehicles] = fleet_statistics_dict
+	save_statistics(statistics_dict)
+
+
+def export_charging_coordinates_per_hour_dict_and_statistics(n_vehicles, input_filename, statistics_filename, output_filename):
+	vehPathsDict = read_json_file(input_filename)
+	vehicles = list()
+	for vehicleKey, vehicleValue in vehPathsDict.items():
+		vehicle = Vehicle(vehicleValue['timeStampList'], vehicleValue['locationList'], vehicleKey.split(' ')[1])
+		if not lists_lengths_are_equal(vehicle):
+			stderr.write("Lists' lengths are not equal")
+			exit()
+		vehicles.append(vehicle)
+	charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict = find_charging_points_and_total_distances_per_vehicle(vehicles)
+	# get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict)
+	# print(f'Average distance per vehicle is: {average_distance_per_vehicle} km')
+	# print(f'Number of vehicles that need charging per day: {number_of_vehicles_to_charge_per_day}')
+	save_dict(charging_spots_per_hour_dict, output_filename)
+
+
+
+
+def slice_paths():
+	input_filename = os.path.abspath('D:\Github\delos3\outputs\Chicago\\' + settings.date_of_trips + '\VehiclePaths.json')
+	statistics_filename = 'D:\\Github\\EV-chargers\\FLPv2\\data\\chicago_vehicle_locations\\statistics.json'
+	output_filename = os.path.abspath('D:\\Github\\EV-chargers\\FLPv2\\data\\recharging_coordinates\\' + 'recharging_coordinates_per_hour_' + settings.date_of_trips + '.json')
+	export_charging_coordinates_per_hour_dict_and_statistics(str(settings.fleet_size), input_filename, statistics_filename, output_filename)

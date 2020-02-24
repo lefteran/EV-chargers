@@ -36,19 +36,28 @@ class GraphToolNetwork:
 				vehicles_distances_to_candidates_dict[str(source_node)+ '-' + str(target_node)] = distance
 		return vehicles_distances_to_candidates_dict
 
+	# def get_vehicles_travel_times_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
+	# 	# from tqdm import tqdm
+	# 	vehicles_travel_times_to_candidates_dict = dict()
+	# 	for source_node in vehicles_nodes:
+	# 		for target_node in candidate_nodes:
+	# 			travel_time = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
+	# 											target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_travel_times)
+	# 			vehicles_travel_times_to_candidates_dict[str(source_node)+ '-' + str(target_node)] = travel_time
+	# 	return vehicles_travel_times_to_candidates_dict
+
+
+
 	def get_vehicles_travel_times_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
-		# from tqdm import tqdm
 		vehicles_travel_times_to_candidates_dict = dict()
 		for source_node in vehicles_nodes:
 			for target_node in candidate_nodes:
 				travel_time = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
 												target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_travel_times)
-				vehicles_travel_times_to_candidates_dict[str(source_node)+ '-' + str(target_node)] = travel_time
+				if source_node not in vehicles_travel_times_to_candidates_dict:
+					vehicles_travel_times_to_candidates_dict[source_node] = dict()
+				vehicles_travel_times_to_candidates_dict[source_node][int(target_node)] = travel_time
 		return vehicles_travel_times_to_candidates_dict
-
-
-
-
 
 
 

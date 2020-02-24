@@ -3,6 +3,7 @@ import json
 # FILES
 import settings
 import network.closesest_node_to_coordinates as closest_nodes_file
+import network.clustering as clustering
 
 
 def read_json_file(filename):
@@ -54,3 +55,27 @@ def save_closest_nodes_to_existing_stations_dict(dict_to_be_saved):
 	f = open(filename, 'w')
 	f.write(json_file)
 	f.close()
+
+
+def load_existing():
+	filename = settings.existing_stations_closest_nodes
+	with open(filename, 'r') as json_file:
+		json_dict = json.load(json_file)
+	return  json_dict
+
+
+def save_candidates_and_existing():
+	candidates = clustering.load_candidates()
+	candidates_list = list(candidates.keys())
+	existing = load_existing()
+	existing_list = [str(i) for i in list(existing.values())]
+	json_file = json.dumps(list(set(candidates_list + existing_list)))
+	f = open(settings.candidates_and_existing, 'w')
+	f.write(json_file)
+	f.close()
+
+def load_candidates_and_existing():
+	filename = settings.candidates_and_existing
+	with open(filename, 'r') as json_file:
+		json_dict = json.load(json_file)
+	return  json_dict
