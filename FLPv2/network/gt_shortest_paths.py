@@ -48,9 +48,13 @@ class GraphToolNetwork:
 
 
 
-	def get_vehicles_travel_times_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
+	def get_travel_times_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
+		n_vehicle_nodes = len(vehicles_nodes)
+		count = 0
 		vehicles_travel_times_to_candidates_dict = dict()
 		for source_node in vehicles_nodes:
+			count += 1
+			print(f'Iteration ({count} / {n_vehicle_nodes})')
 			for target_node in candidate_nodes:
 				travel_time = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
 												target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_travel_times)

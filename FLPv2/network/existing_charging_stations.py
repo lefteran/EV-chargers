@@ -1,81 +1,89 @@
+# STATIONS' PARAMETERS
+# https://developer.nrel.gov/docs/transportation/alt-fuel-stations-v1/all/#json-output-format
 # LIBRARIES
 import json
+import csv
+from math import sin, cos, sqrt, atan2, radians
 # FILES
 import settings
-import network.closesest_node_to_coordinates as closest_nodes_file
 import network.clustering as clustering
 
 
-def read_json_file(filename):
+def distanceInKm(latitude1, longitude1, latitude2, longitude2):
+	# approximate radius of earth in km
+	R = 6373.0
+
+	lat1 = radians(latitude1)
+	lon1 = radians(longitude1)
+	lat2 = radians(latitude2)
+	lon2 = radians(longitude2)
+
+	dlon = lon2 - lon1
+	dlat = lat2 - lat1
+
+	a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+	c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+	distance = R * c
+	return distance
+
+
+def get_closest_node_to_coordinates(graph_nodes, latitude, longitude):
+	distance = float("inf")
+	closest_node = None
+	for node_key, node_data in graph_nodes(data=True):
+		current_distance = distanceInKm(node_data['y'], node_data['x'], float(latitude), float(longitude))
+		if current_distance < distance:
+			distance = current_distance
+			closest_node = node_key
+	return closest_node
+
+
+
+def load_json(filename):
 	with open(filename) as json_file:
 		json_dict = json.load(json_file)
 	return json_dict
 
 
-def import_existing_stations(graph_nodes):
-	existing_stations_dict = read_json_file(settings.existing_stations_coordinates_json)
-	closest_nodes_to_existing_stations_dict = dict()
-	closest_nodes_to_public_stations_dict = dict()
-
-	for existing_station_key, existing_station_info in existing_stations_dict.items():
-		closest_node = closest_nodes_file.get_closest_node_to_coordinates(graph_nodes, existing_station_info['latitude'], existing_station_info['longitude'])
-		closest_nodes_to_existing_stations_dict[existing_station_key] = closest_node
-		if existing_station_info['type'] == 'Public':
-			closest_nodes_to_public_stations_dict[existing_station_key] = closest_node
-	save_closest_nodes_to_existing_stations_dict(closest_nodes_to_existing_stations_dict)
-	save_closest_nodes_to_public_stations_dict(closest_nodes_to_public_stations_dict)
-
-
-def find_public_stations():
-	public_stations_dict = dict()
-	existing_stations_dict = read_json_file(settings.existing_stations_coordinates_json)
-	for existing_station_key, existing_station_info in existing_stations_dict.items():
-		if existing_station_info['type'] == 'Public':
-			public_stations_dict[existing_station_key] = existing_station_info
-			save_public_stations_dict(public_stations_dict)
-
-
-def save_public_stations_dict(dict_to_be_saved):
-	filename = settings.public_stations_json
-	json_file = json.dumps(dict_to_be_saved)
-	f = open(filename, 'w')
-	f.write(json_file)
-	f.close()
-
-def save_closest_nodes_to_public_stations_dict(dict_to_be_saved):
-	filename = settings.public_stations_closest_nodes
-	json_file = json.dumps(dict_to_be_saved)
-	f = open(filename, 'w')
-	f.write(json_file)
-	f.close()
-
-def save_closest_nodes_to_existing_stations_dict(dict_to_be_saved):
-	filename = settings.existing_stations_closest_nodes
+def save_json(dict_to_be_saved, filename):
 	json_file = json.dumps(dict_to_be_saved)
 	f = open(filename, 'w')
 	f.write(json_file)
 	f.close()
 
 
-def load_existing():
-	filename = settings.existing_stations_closest_nodes
-	with open(filename, 'r') as json_file:
-		json_dict = json.load(json_file)
-	return  json_dict
+def get_candidates_and_existing():
+	candidates_and_existing_dict = dict()
+	candidates = load_json(settings.candidates)
+	existing = load_json(settings.existing_stations)
+	for candidate in candidates.keys():
+		candidates_and_existing_dict[candidate] = 0
+	for existing_station in existing:
+		candidates_and_existing_dict[existing[existing_station]['closest_node_id']] = existing[existing_station]['chargers']
+	save_json(candidates_and_existing_dict, settings.candidates_and_existing)
 
 
-def save_candidates_and_existing():
-	candidates = clustering.load_candidates()
-	candidates_list = list(candidates.keys())
-	existing = load_existing()
-	existing_list = [str(i) for i in list(existing.values())]
-	json_file = json.dumps(list(set(candidates_list + existing_list)))
-	f = open(settings.candidates_and_existing, 'w')
-	f.write(json_file)
-	f.close()
-
-def load_candidates_and_existing():
-	filename = settings.candidates_and_existing
-	with open(filename, 'r') as json_file:
-		json_dict = json.load(json_file)
-	return  json_dict
+def get_existing_stations(graph_nodes):
+	existing_stations_dict = dict()
+	with open(settings.existing_stations_csv) as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=',')
+		next(csv_reader, None)
+		for row in csv_reader:
+			existing_station_id = row[0]
+			existing_station_type = row[12]
+			level_1_chargers = int(row[18]) if row[18] else 0
+			level_2_chargers = int(row[19]) if row[19] else 0
+			dc_chargers = int(row[20]) if row[20] else 0
+			total_chargers = level_1_chargers + level_2_chargers + dc_chargers
+			latitude = row[25]
+			longitude = row[26]
+			if 'Public' in existing_station_type and total_chargers != 0:
+				if existing_station_id not in existing_stations_dict:
+					existing_stations_dict[existing_station_id] = dict()
+				existing_stations_dict[existing_station_id]['latitude'] = latitude
+				existing_stations_dict[existing_station_id]['longitude'] = longitude
+				existing_stations_dict[existing_station_id]['chargers'] = total_chargers
+				existing_stations_dict[existing_station_id]['closest_node_id'] = get_closest_node_to_coordinates(graph_nodes, latitude, longitude)
+	save_json(existing_stations_dict, settings.existing_stations)
+	get_candidates_and_existing()
