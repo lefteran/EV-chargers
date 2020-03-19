@@ -64,6 +64,7 @@ zones = 'data/Chicago/zones.json'
 candidates_and_existing = 'data/candidates_and_existing/candidates_and_existing.json'
 continuous_solution = 'data/solutions/continuous_solution.json'
 integer_solution = 'data/solutions/integer_solution.json'
+ga_solution = 'data/solutions/ga_solution.json'
 
 initial_solution_path = 'data/solutions/forward_greedy/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
 initial_fractional_solution_path = 'data/solutions/fractional_optimal/' + str(k) + 'facilities_' + str(fleet_size) + 'vehicles_' + str(centroids) + 'candidates.json'
