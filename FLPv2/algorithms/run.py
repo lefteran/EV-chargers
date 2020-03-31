@@ -11,16 +11,18 @@ import network.shortest_paths as shortest_paths
 import algorithms.fwdGreedy as fwdGreedy
 # import algorithms.backGreedy as backGreedy
 # import algorithms.randomLocalSearch as randomLocalSearch
-import algorithms.integer_optimal as integer_optimal
-import algorithms.fractional_optimal as fractional_optimal
+# import algorithms.integer_optimal as integer_optimal
+# import algorithms.fractional_optimal as fractional_optimal
 import algorithms.localSearch as localSearch
 import algorithms.young_greedy as young_greedy
 import algorithms.jain_vazirani as jain_vazirani
-import algorithms.optimal_pulp as optimal_pulp
+# import algorithms.optimal_pulp as optimal_pulp
+import algorithms.genetic_algorithm as genetic_algorithm
 
 
 def run():
-	optimal_pulp.solve_optimal()
+	genetic_algorithm.run_genetic()
+	# optimal_pulp.solve_optimal()
 	# settings.clusters = clustering.load_clusters()
 	# settings.vehicles_network_locations_per_hour_dict = vehicles_per_hour.load_vehicles_network_locations_per_hour_dict()
 	# settings.travel_times = shortest_paths.load_vehicles_travel_times_to_candidates_dict()

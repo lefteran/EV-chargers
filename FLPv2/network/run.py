@@ -26,8 +26,8 @@ def run():
 
 	# recharging_nodes.find_recharging_nodes_per_hour_dict(graph.nodes(), new_candidates)	# for each size 700,1k,2k,3k
 
-	travel_times.compute_travel_times(graph, list(candidates_and_existing.keys()))										# for each size 700,1k,2k,3k
+	# travel_times.compute_travel_times(graph, list(candidates_and_existing.keys()))										# for each size 700,1k,2k,3k
 
-	# zoning.get_zoning(graph, list(candidates_and_existing.keys()))
+	zoning.get_zoning(graph, list(candidates_and_existing.keys()))
 
 	# traffic_demand.compute_traffic_demand(graph)
