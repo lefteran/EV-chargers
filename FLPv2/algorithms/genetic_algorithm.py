@@ -1,6 +1,6 @@
 # LIBRARIES
 import json
-from random import randint, sample, randrange, random
+from random import randint, sample, randrange, random, seed
 from math import floor
 from deap import base, creator, tools
 # FILES
@@ -93,10 +93,18 @@ def save_json(dict_to_be_saved, filename):
 
 
 def reduce_input_size(list_to_be_reduced):
-	reduced_list = list()
-	for i in range(20):
-		reduced_list.append(list_to_be_reduced[i])
-	return reduced_list
+	reduce_sizes = True
+	reduced_size = 28
+	original_size = len(list_to_be_reduced)
+	size_to_iterate = min(reduced_size, original_size)
+
+	if reduce_sizes:
+		reduced_list = list()
+		for i in range(size_to_iterate):
+			reduced_list.append(list_to_be_reduced[i])
+		return reduced_list
+	else:
+		return list_to_be_reduced
 
 
 def load_parameters():
@@ -167,8 +175,7 @@ def load_parameters():
 
 
 def feasible_solution_exists(parameters):
-	if sum(parameters['traffic_intensity'].values()) > sum(parameters['existing_capacities']):
-			# + parameters['max_chargers'] * sum(parameters['zone_upper_bound']):
+	if sum(parameters['traffic_intensity'].values()) > sum(parameters['existing_capacities']) + parameters['max_chargers'] * sum(parameters['zone_bound']):
 		return False
 	if len(parameters['recharging_nodes']) + sum(parameters['traffic_intensity'].values()) > sum(
 			parameters['existing_capacities']) + parameters['max_chargers'] * len(parameters['candidates']):
@@ -176,9 +183,10 @@ def feasible_solution_exists(parameters):
 	return True
 
 
-def get_chromosome_list(variables):
+def get_chromosome_list(variables, parameters):
 	chromosome_list = list()
 
+	# ################## x ########################
 	for fleet_node in variables.fleet_node_order:
 		for candidate_node in variables.candidate_node_order:
 			chromosome_list.append(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node])
@@ -190,29 +198,33 @@ def get_chromosome_list(variables):
 		for existing_node in variables.existing_node_order:
 			chromosome_list.append(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node])
 
+	# ################## y ########################
 	for candidate_node in variables.candidate_node_order:
 		chromosome_list.append(variables.y_dict['candidates'][candidate_node])
 	for existing_node in variables.existing_node_order:
 		chromosome_list.append(variables.y_dict['existing'][existing_node])
 
+	# ################## omega ########################
 	for candidate_node in variables.candidate_node_order:
 		chromosome_list.append(variables.omega_dict['candidates'][candidate_node])
 	for existing_node in variables.existing_node_order:
 		chromosome_list.append(variables.omega_dict['existing'][existing_node])
 
+	# ################## z ########################
 	for candidate_node in variables.candidate_node_order:
-		for charger in variables.z_dict['candidates'][candidate_node]['chargers'].keys():
+		for charger in range(parameters['max_chargers']):
 			chromosome_list.append(variables.z_dict['candidates'][candidate_node]['chargers'][charger])
 	for existing_node in variables.existing_node_order:
-		for charger in variables.z_dict['existing'][existing_node]['chargers'].keys():
+		for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']):
 			chromosome_list.append(variables.z_dict['existing'][existing_node]['chargers'][charger])
-
+	# print(f'from dict to list: {chromosome_list}')
 	return chromosome_list
 
 
 def get_variable_dict(parameters, chromosome):
 	variables = Variables(parameters)
 	current_index = 0
+	# ################## x ########################
 	for fleet_node in variables.fleet_node_order:
 		for candidate_node in variables.candidate_node_order:
 			variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] = chromosome[current_index]
@@ -228,6 +240,7 @@ def get_variable_dict(parameters, chromosome):
 			variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] = chromosome[current_index]
 			current_index += 1
 
+	# ################## y ########################
 	for candidate_node in variables.candidate_node_order:
 		variables.y_dict['candidates'][candidate_node] = chromosome[current_index]
 		current_index += 1
@@ -235,6 +248,7 @@ def get_variable_dict(parameters, chromosome):
 		variables.y_dict['existing'][existing_node] = chromosome[current_index]
 		current_index += 1
 
+	# ################## omega ########################
 	for candidate_node in variables.candidate_node_order:
 		variables.omega_dict['candidates'][candidate_node] = chromosome[current_index]
 		current_index += 1
@@ -242,19 +256,20 @@ def get_variable_dict(parameters, chromosome):
 		variables.omega_dict['existing'][existing_node] = chromosome[current_index]
 		current_index += 1
 
+	# ################## z ########################
 	for candidate_node in variables.candidate_node_order:
-		for charger in variables.z_dict['candidates'][candidate_node]['chargers'].keys():
+		for charger in range(parameters['max_chargers']):
 			variables.z_dict['candidates'][candidate_node]['chargers'][charger] = chromosome[current_index]
 			current_index += 1
 	for existing_node in variables.existing_node_order:
-		for charger in variables.z_dict['existing'][existing_node]['chargers'].keys():
+		for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']):
 			variables.z_dict['existing'][existing_node]['chargers'][charger] = chromosome[current_index]
 			current_index += 1
-
+	# print(f'from list to dict: {chromosome}')
 	return variables
 
 
-def generate_initial_chromosome(parameters, variables):
+def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_assigned):
 	shuffled_existing_list = sample(variables.existing_node_order, len(variables.existing_node_order))
 	shuffled_candidates_list = sample(variables.candidate_node_order, len(variables.candidate_node_order))
 
@@ -264,30 +279,40 @@ def generate_initial_chromosome(parameters, variables):
 		existing_availability_dict[existing]['available'] = parameters['existing_dict'][str(existing)]['chargers']
 		existing_availability_dict[existing]['capacity'] = parameters['existing_dict'][str(existing)]['chargers']
 
-	# ################## x ########################
-	traffic_assigned = list()
-	for existing in shuffled_existing_list:
-		if existing_availability_dict[existing]['available'] > 0:
-			for traffic_node in variables.traffic_node_order:
-				if traffic_node not in traffic_assigned and existing_availability_dict[existing]['available'] > 0:
-					variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing] = 1
-					traffic_assigned.append(traffic_node)
-					existing_availability_dict[existing]['available'] -= 1
-
 	candidate_availability_dict = dict()
 	for candidate_id in parameters['candidates']:
 		candidate_availability_dict[candidate_id] = dict()
 		candidate_availability_dict[candidate_id]['available'] = parameters['max_chargers']
 		candidate_availability_dict[candidate_id]['capacity'] = parameters['max_chargers']
 
-	fleet_assigned = list()
-	for candidate in shuffled_candidates_list:
-		if candidate_availability_dict[candidate]['available'] > 0:
-			for fleet_node in variables.fleet_node_order:
-				if fleet_node not in fleet_assigned and candidate_availability_dict[candidate]['available'] > 0:
+	# ################## x ########################
+	for existing in shuffled_existing_list:
+		if existing_availability_dict[existing]['available'] > 0:
+			for traffic_node in variables.traffic_node_order:
+				if traffic_node not in traffic_assigned:
+					variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing] = 1
+					traffic_assigned.append(traffic_node)
+					existing_availability_dict[existing]['available'] -= 1
+
+	for fleet_node in variables.fleet_node_order:
+		if random() <= 0.8:
+			for candidate in shuffled_candidates_list:
+				if candidate_availability_dict[candidate]['available'] > 0 and fleet_node not in fleet_assigned:
 					variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate] = 1
 					fleet_assigned.append(fleet_node)
 					candidate_availability_dict[candidate]['available'] -= 1
+		else:
+			for existing in shuffled_existing_list:
+				if existing_availability_dict[existing]['available'] > 0 and fleet_node not in fleet_assigned:
+					variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing] = 1
+					fleet_assigned.append(fleet_node)
+					existing_availability_dict[existing]['available'] -= 1
+			if fleet_node not in fleet_assigned:
+				for candidate in shuffled_candidates_list:
+					if candidate_availability_dict[candidate]['available'] > 0:
+						variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate] = 1
+						fleet_assigned.append(fleet_node)
+						candidate_availability_dict[candidate]['available'] -= 1
 
 	# ################## y ########################
 	for candidate in variables.candidate_node_order:
@@ -300,6 +325,18 @@ def generate_initial_chromosome(parameters, variables):
 	# ################## omega ########################
 	omega_availability = dict(parameters['zone_bound'])
 
+	for existing in variables.existing_node_order:
+		zone_id = parameters['contained'][str(existing)]
+		assigned_traffic = sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing] for traffic_node in variables.traffic_node_order)
+		if assigned_traffic > 0:
+			variables.omega_dict['existing'][existing] = 0
+			omega_availability[zone_id] -= 1
+		else:
+			variables.omega_dict['existing'][existing] = 1
+		if omega_availability[zone_id] < 0:
+			print(f'Not enough on-street CSs available in zone {zone_id}')
+			exit()
+
 	for candidate in variables.candidate_node_order:
 		zone_id = parameters['contained'][str(candidate)]
 		if omega_availability[zone_id] > 0:
@@ -307,33 +344,38 @@ def generate_initial_chromosome(parameters, variables):
 			omega_availability[zone_id] -= 1
 		else:
 			variables.omega_dict['candidates'][candidate] = 1
-	for existing in variables.existing_node_order:
-		zone_id = parameters['contained'][str(existing)]
-		if omega_availability[zone_id] > 0:
-			variables.omega_dict['existing'][existing] = 0
-			omega_availability[zone_id] -= 1
-		else:
-			variables.omega_dict['existing'][existing] = 1
 
 	# ################## z ########################
 	for candidate in variables.candidate_node_order:
-		for charger in range(parameters['max_chargers']):
-			if charger < candidate_availability_dict[candidate]['available']:
+		n_chargers = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate] for fleet_node in variables.fleet_node_order)
+		if n_chargers > 0:
+			for charger in range(n_chargers):
 				variables.z_dict['candidates'][candidate]['chargers'][charger] = 1
 	for existing in variables.existing_node_order:
-		for charger in range(parameters['existing_dict'][str(existing)]['chargers']):
-			if charger < existing_availability_dict[existing]['available']:
-				variables.z_dict['existing'][existing]['chargers'][charger] = 1
-
-	return get_chromosome_list(variables)
+		n_chargers = sum(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing] for fleet_node in variables.fleet_node_order)
+		for charger in range(n_chargers):
+			variables.z_dict['existing'][existing]['chargers'][charger] = 1
+	return get_chromosome_list(variables, parameters), fleet_assigned, traffic_assigned
 
 
 def generate_initial_population(parameters, variables, population_size):
 	population = list()
+	fleet_assigned = list()
+	traffic_assigned = list()
 	for _ in range(population_size):
-		chromosome = generate_initial_chromosome(parameters, variables)
+		chromosome, fleet_assigned, traffic_assigned = generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_assigned)
+		chromosome_value = evaluate_chromosome(parameters, chromosome)
+		if chromosome_value == parameters['high_value']:
+			print('invalid initial chromosome')
 		population.append(chromosome)
+	print('==========================')
 	return population
+
+
+def debugging_print(n_constraint):
+	print_flag = False
+	if print_flag:
+		print(f'constraint {n_constraint}')
 
 
 def evaluate_chromosome(parameters, chromosome):
@@ -376,64 +418,68 @@ def evaluate_chromosome(parameters, chromosome):
 				  variables.omega_dict['candidates'][candidate_node] for candidate_node in variables.candidate_node_order) + \
 			  sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] - variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] *
 			variables.omega_dict['existing'][existing_node] for existing_node in variables.existing_node_order)
-		if lhs < 1:
+		if lhs != 1:
+			debugging_print('10')
 			return parameters['high_value'],
 
 	# constraints (11)
 	for fleet_node in variables.fleet_node_order:
 		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] for candidate_node in variables.candidate_node_order) + \
 			  sum(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] for existing_node in variables.existing_node_order)
-		if lhs < 1:
+		if lhs != 1:
+			debugging_print('11')
 			return parameters['high_value'],
 
 	# constraints (12)
 	for fleet_node in variables.fleet_node_order:
 		for candidate_node in variables.candidate_node_order:
 			if variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] > variables.y_dict['candidates'][candidate_node]:
+				debugging_print('12a')
 				return parameters['high_value'],
 		for existing_node in variables.existing_node_order:
 			if variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] > variables.y_dict['existing'][existing_node]:
+				debugging_print('12b')
 				return parameters['high_value'],
 
 	for traffic_node in variables.traffic_node_order:
 		for candidate_node in variables.candidate_node_order:
 			if variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] > variables.y_dict['candidates'][candidate_node]:
+				debugging_print('12c')
 				return parameters['high_value'],
 		for existing_node in variables.existing_node_order:
 			if variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] > variables.y_dict['existing'][existing_node]:
+				debugging_print('12c')
 				return parameters['high_value'],
 
 	# constraints (13)
-	for fleet_node in variables.fleet_node_order:
-		for candidate_node in variables.candidate_node_order:
-			for charger in range(parameters['max_chargers']):
-				if variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] > variables.z_dict['candidates'][candidate_node]['chargers'][charger]:
-					return parameters['high_value'],
-		for existing_node in variables.existing_node_order:
-			for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']):
-				if variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] > variables.z_dict['existing'][existing_node]['chargers'][charger]:
-					return parameters['high_value'],
+	for candidate_node in variables.candidate_node_order:
+		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] for fleet_node in variables.fleet_node_order)
+		rhs = sum(variables.z_dict['candidates'][candidate]['chargers'][charger] for candidate in variables.candidate_node_order for charger in range(parameters['max_chargers']))
+		if lhs > rhs:
+			debugging_print('13a')
+			return parameters['high_value'],
 
-	for traffic_node in variables.traffic_node_order:
-		for candidate_node in variables.candidate_node_order:
-			for charger in range(parameters['max_chargers']):
-				if variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] > variables.z_dict['candidates'][candidate_node]['chargers'][charger]:
-					return parameters['high_value'],
-		for existing_node in variables.existing_node_order:
-			for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']):
-				if variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] > variables.z_dict['existing'][existing_node]['chargers'][charger]:
-					return parameters['high_value'],
+	for existing_node in variables.existing_node_order:
+		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] for fleet_node in variables.fleet_node_order)
+		lhs += sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] for traffic_node in variables.traffic_node_order)
+		rhs = sum(variables.z_dict['candidates'][candidate]['chargers'][charger] for candidate in variables.candidate_node_order for charger in range(parameters['max_chargers']))
+		rhs += sum(variables.z_dict['existing'][existing]['chargers'][charger] for existing in variables.existing_node_order for charger in range(parameters['existing_dict'][str(existing)]['chargers']))
+		if lhs > rhs:
+			debugging_print('13b')
+			return parameters['high_value'],
 
 	# constraints (14)
 	for candidate_node in variables.candidate_node_order:
 		for charger in range(parameters['max_chargers']):
 			if charger < parameters['max_chargers'] - 1:
-				if variables.z_dict['candidates'][candidate_node]['chargers'][charger] > variables.z_dict['candidates'][candidate_node]['chargers'][charger+1]:
+				if variables.z_dict['candidates'][candidate_node]['chargers'][charger + 1] > variables.z_dict['candidates'][candidate_node]['chargers'][charger]:
+					debugging_print('14a')
 					return parameters['high_value'],
 	for existing_node in variables.existing_node_order:
 		for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']):
 			if charger < parameters['existing_dict'][str(existing_node)]['chargers'] - 1:
-				if variables.z_dict['existing'][existing_node]['chargers'][charger] > variables.z_dict['existing'][existing_node]['chargers'][charger + 1]:
+				if variables.z_dict['existing'][existing_node]['chargers'][charger + 1] > variables.z_dict['existing'][existing_node]['chargers'][charger]:
+					debugging_print('14b')
 					return parameters['high_value'],
 
 	# constraints (15)
@@ -443,6 +489,7 @@ def evaluate_chromosome(parameters, chromosome):
 		rhs = parameters['service_rate']['candidates'][candidate_node] * (variables.z_dict['candidates'][candidate_node]['chargers'][0] * parameters['rho'][0] +
 		sum(variables.z_dict['candidates'][candidate_node]['chargers'][m] * (parameters['rho'][m] - parameters['rho'][m-1]) for m in range(1, parameters['max_chargers'])))
 		if lhs > rhs:
+			debugging_print('15')
 			return parameters['high_value'],
 
 	# constraints (16)
@@ -452,6 +499,7 @@ def evaluate_chromosome(parameters, chromosome):
 			if zone == parameters['contained'][str(candidate_node)]:
 				lhs_sum += (1 - variables.omega_dict['candidates'][candidate_node]) * variables.y_dict['candidates'][candidate_node]
 		if lhs_sum > parameters['zone_bound'][zone]:
+			debugging_print('16')
 			return parameters['high_value'],
 
 	return objective,
@@ -484,7 +532,7 @@ def find_nearest_cs(parameters, chromo_dict, fleet_node, candidate, existing):
 				return
 	else:
 		for item in sorted_css:
-			if chromo_dict.y_dict['existing'][int(item[0])] == 1:
+			if int(item[0]) in parameters['existing'] and chromo_dict.y_dict['existing'][int(item[0])] == 1:
 				chromo_dict.x_dict['fleet_nodes'][fleet_node]['existing'][existing] = 0
 				chromo_dict.x_dict['fleet_nodes'][fleet_node]['existing'][item[0]] = 1
 				return
@@ -498,7 +546,7 @@ def forced_mutation(parameters, chromosome):
 				find_nearest_cs(parameters, chromo_dict, fleet_node, candidate, None)
 		for existing_cs in parameters['existing']:
 			if chromo_dict.x_dict['fleet_nodes'][fleet_node]['existing'][existing_cs] == 1 and chromo_dict.y_dict['existing'][existing_cs] == 1:
-				find_nearest_cs(parameters, chromo_dict, fleet_node.split('_')[0], None, existing_cs)
+				find_nearest_cs(parameters, chromo_dict, fleet_node, None, existing_cs)
 
 
 def feasibility_check(parameters, chromosome):
@@ -540,10 +588,12 @@ def feasibility_check(parameters, chromosome):
 
 
 def run_genetic():
-	# print(f'feasible solution exists: {solution_exists}')
+	seed(1)
 	parameters = load_parameters()
+	solution_exists = feasible_solution_exists(parameters)
+	print(f'feasible solution exists: {solution_exists}')
 	variables = Variables(parameters)
-	population_size = 12
+	population_size = 20
 	initial_guess = generate_initial_population(parameters, variables, population_size)
 	n_generations = 15
 	prob_crossover = 0.4
@@ -572,19 +622,18 @@ def run_genetic():
 
 	for gen in range(0, n_generations):
 		print(f'Generation: {gen:4} | Fitness: {best_fit:.2f}')
-		offspring = toolbox.select(population, len(population), tournsize=2)
-		offspring = list(map(toolbox.clone, offspring))
-		for child1, child2 in zip(offspring[0::2], offspring[1::2]):
-			if random() < prob_crossover:
-				crossover(parameters, child1, child2)
-				is_feasible1 = feasibility_check(parameters, child1)
-				is_feasible2 = feasibility_check(parameters, child2)
-				if not is_feasible1:
-					forced_mutation(parameters, child1)
-				if not is_feasible2:
-					forced_mutation(parameters, child2)
-				del child1.fitness.values
-				del child2.fitness.values
+		offspring = toolbox.select(population, 2, tournsize=len(population))
+		child1, child2 = list(map(toolbox.clone, offspring))
+		if random() < prob_crossover:
+			crossover(parameters, child1, child2)
+			is_feasible1 = feasibility_check(parameters, child1)
+			is_feasible2 = feasibility_check(parameters, child2)
+			if not is_feasible1:
+				forced_mutation(parameters, child1)
+			if not is_feasible2:
+				forced_mutation(parameters, child2)
+			del child1.fitness.values
+			del child2.fitness.values
 
 		for chromo in offspring:
 			if random() < prob_mutation:
@@ -606,12 +655,15 @@ def run_genetic():
 			best_fit_list.append(best_fit)
 			best_sol_list.append(best_sol)
 
-	variables = get_variable_dict(parameters, best_sol)
-	best_sol_dict = dict()
-	best_sol_dict['x'] = variables.x_dict
-	best_sol_dict['y'] = variables.y_dict
-	best_sol_dict['omega'] = variables.omega_dict
-	best_sol_dict['z'] = variables.z_dict
-	save_json(best_sol_dict, settings.ga_solution)
+	if best_sol is not None:
+		variables = get_variable_dict(parameters, best_sol)
+		best_sol_dict = dict()
+		best_sol_dict['x'] = variables.x_dict
+		best_sol_dict['y'] = variables.y_dict
+		best_sol_dict['omega'] = variables.omega_dict
+		best_sol_dict['z'] = variables.z_dict
+		save_json(best_sol_dict, settings.ga_solution)
+	else:
+		print('No solution')
 
 
