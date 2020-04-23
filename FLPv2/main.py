@@ -6,7 +6,7 @@ import settings
 # import network.run as network
 # import visualisation.run as visualisation
 # import network.slice_paths_from_delos as slice_paths
-# import scripts.compute_rho_list as rho_list
+import scripts.compute_rho_list as rho_list
 import algorithms.run as algorithms
 
 
@@ -24,10 +24,10 @@ if __name__ == "__main__":
     # existing_stations_csv_to_json.export_csv_to_json()
     # charging_demand.compute_traffic_demand()
     # analytics.get_analytics()
-    # rho_list.compute_rho_list()
+    rho_list.compute_rho_list()
 
     # ALGORITHMS
-    algorithms.run()
+    # algorithms.run()
 
 
     # POST OPTIMIZATION

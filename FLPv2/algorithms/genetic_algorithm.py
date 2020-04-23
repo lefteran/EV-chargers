@@ -7,6 +7,9 @@ from deap import base, creator, tools
 import settings
 
 
+parameters = None
+
+
 class Variables:
 	def __init__(self, parameters):
 		self.x_dict = dict()
@@ -94,7 +97,7 @@ def save_json(dict_to_be_saved, filename):
 
 def reduce_input_size(list_to_be_reduced):
 	reduce_sizes = True
-	reduced_size = 28
+	reduced_size = 50
 	original_size = len(list_to_be_reduced)
 	size_to_iterate = min(reduced_size, original_size)
 
@@ -108,6 +111,7 @@ def reduce_input_size(list_to_be_reduced):
 
 
 def load_parameters():
+	global parameters
 	parameters = dict()
 	hour = '1'
 	percentage_of_evs = 0.2
@@ -118,7 +122,8 @@ def load_parameters():
 	existing_stations_dict = load_json(settings.existing_stations)
 	existing = [existing_stations_dict[i]['closest_node_id'] for i in existing_stations_dict.keys()]
 	reduced_existing = reduce_input_size(existing)
-	capacities = [existing_stations_dict[i]['chargers'] for i in existing_stations_dict.keys()]
+	# existing_capacities = [existing_stations_dict[i]['chargers'] for i in existing_stations_dict.keys()]
+	existing_capacities = {existing_node: existing_stations_dict[existing_node]['chargers'] for existing_node in existing_stations_dict.keys()}
 	recharging_nodes_per_hour = load_json(settings.recharging_nodes_per_hour)
 	recharging_nodes = recharging_nodes_per_hour[hour]
 	reduced_recharging_nodes = reduce_input_size(recharging_nodes)
@@ -136,9 +141,9 @@ def load_parameters():
 
 	service_rate = {'candidates': dict(), 'existing': dict()}
 	for candidate_node in candidates:
-		service_rate['candidates'][candidate_node] = randint(5, 10)
+		service_rate['candidates'][candidate_node] = 10		# number of vehicles that can be charged per day
 	for existing_node in existing:
-		service_rate['existing'][existing_node] = randint(5, 10)
+		service_rate['existing'][existing_node] = 10
 
 	zone_bounds = {zone: randint(5, 15) for zone in zones}
 
@@ -151,11 +156,11 @@ def load_parameters():
 			land_cost[existing_node] = randint(100, 300)
 
 	parameters['high_value'] = float('inf')
-	parameters['max_chargers'] = 2
+	parameters['max_chargers'] = 3
 	parameters['contained'] = contained
 	parameters['candidates'] = [i for i in reduced_candidates if str(i) in list(contained.keys())]
 	parameters['existing'] = [i for i in reduced_existing if str(i) in list(contained.keys())]
-	parameters['existing_capacities'] = capacities
+	parameters['existing_capacities'] = existing_capacities
 	parameters['existing_dict'] = existing_stations_dict
 	parameters['recharging_nodes'] = reduced_recharging_nodes
 	parameters['fleet_travel_times'] = fleet_travel_times
@@ -175,10 +180,10 @@ def load_parameters():
 
 
 def feasible_solution_exists(parameters):
-	if sum(parameters['traffic_intensity'].values()) > sum(parameters['existing_capacities']) + parameters['max_chargers'] * sum(parameters['zone_bound']):
+	if sum(parameters['traffic_intensity'].values()) > sum(parameters['existing_capacities'].values()) + parameters['max_chargers'] * sum(parameters['zone_bound']):
 		return False
 	if len(parameters['recharging_nodes']) + sum(parameters['traffic_intensity'].values()) > sum(
-			parameters['existing_capacities']) + parameters['max_chargers'] * len(parameters['candidates']):
+			parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates']):
 		return False
 	return True
 
@@ -353,6 +358,7 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 				variables.z_dict['candidates'][candidate]['chargers'][charger] = 1
 	for existing in variables.existing_node_order:
 		n_chargers = sum(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing] for fleet_node in variables.fleet_node_order)
+		n_chargers += sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing] for traffic_node in variables.traffic_node_order)
 		for charger in range(n_chargers):
 			variables.z_dict['existing'][existing]['chargers'][charger] = 1
 	return get_chromosome_list(variables, parameters), fleet_assigned, traffic_assigned
@@ -364,7 +370,7 @@ def generate_initial_population(parameters, variables, population_size):
 	traffic_assigned = list()
 	for _ in range(population_size):
 		chromosome, fleet_assigned, traffic_assigned = generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_assigned)
-		chromosome_value = evaluate_chromosome(parameters, chromosome)
+		chromosome_value, = evaluate_chromosome(chromosome)
 		if chromosome_value == parameters['high_value']:
 			print('invalid initial chromosome')
 		population.append(chromosome)
@@ -373,12 +379,13 @@ def generate_initial_population(parameters, variables, population_size):
 
 
 def debugging_print(n_constraint):
-	print_flag = False
+	print_flag = True
 	if print_flag:
 		print(f'constraint {n_constraint}')
 
 
-def evaluate_chromosome(parameters, chromosome):
+def evaluate_chromosome(chromosome):
+	global parameters
 	variables = get_variable_dict(parameters, chromosome)
 
 	T = 0
@@ -483,14 +490,24 @@ def evaluate_chromosome(parameters, chromosome):
 					return parameters['high_value'],
 
 	# constraints (15)
+	lhs, rhs = 0, 0
 	for candidate_node in variables.candidate_node_order:
-		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] for fleet_node in variables.fleet_node_order) + \
-			  sum(variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] for traffic_node in variables.traffic_node_order)
+		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] for fleet_node in variables.fleet_node_order)
 		rhs = parameters['service_rate']['candidates'][candidate_node] * (variables.z_dict['candidates'][candidate_node]['chargers'][0] * parameters['rho'][0] +
 		sum(variables.z_dict['candidates'][candidate_node]['chargers'][m] * (parameters['rho'][m] - parameters['rho'][m-1]) for m in range(1, parameters['max_chargers'])))
 		if lhs > rhs:
-			debugging_print('15')
+			debugging_print('15a')
 			return parameters['high_value'],
+
+	for existing_node in variables.existing_node_order:
+		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] for fleet_node in variables.fleet_node_order) + \
+			  sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] for traffic_node in variables.traffic_node_order)
+		rhs = parameters['service_rate']['existing'][existing_node] * (variables.z_dict['existing'][existing_node]['chargers'][0] * parameters['rho'][0] +
+		sum(variables.z_dict['existing'][existing_node]['chargers'][m] * (parameters['rho'][m] - parameters['rho'][m-1]) for m in range(1, parameters['existing_capacities'][str(existing_node)])))
+		if lhs > rhs:
+			debugging_print('15b')
+			return parameters['high_value'],
+
 
 	# constraints (16)
 	for zone in parameters['zones']:
@@ -505,11 +522,11 @@ def evaluate_chromosome(parameters, chromosome):
 	return objective,
 
 
-def initIndividual(icls, content):
+def init_individual(icls, content):
 	return icls(content)
 
 
-def initPopulation(pcls, ind_init, population):
+def init_population(pcls, ind_init, population):
 	return pcls(ind_init(c) for c in population)
 
 
@@ -519,6 +536,8 @@ def crossover(parameters, chromosome1, chromosome2):
 	temp_x_dict = dict(chromo_dict1.x_dict)
 	chromo_dict1.x_dict = dict(chromo_dict2.x_dict)
 	chromo_dict2.x_dict = dict(temp_x_dict)
+	chromosome1[:] = get_chromosome_list(chromo_dict1, parameters)
+	chromosome2[:] = get_chromosome_list(chromo_dict2, parameters)
 
 
 def find_nearest_cs(parameters, chromo_dict, fleet_node, candidate, existing):
@@ -595,6 +614,7 @@ def run_genetic():
 	variables = Variables(parameters)
 	population_size = 20
 	initial_guess = generate_initial_population(parameters, variables, population_size)
+
 	n_generations = 15
 	prob_crossover = 0.4
 	prob_mutation = 0.6
@@ -602,13 +622,16 @@ def run_genetic():
 	creator.create("Individual", list, fitness=creator.FitnessMin)
 
 	toolbox = base.Toolbox()
-	toolbox.register('individual_initialisation', initIndividual, creator.Individual)
-	toolbox.register('population_initialisation', initPopulation, list, toolbox.individual_initialisation, initial_guess)
-	toolbox.register('evaluate', evaluate_chromosome, parameters)
+	toolbox.register('individual_initialisation', init_individual, creator.Individual)
+	toolbox.register('population_initialisation', init_population, list, toolbox.individual_initialisation, initial_guess)
+	toolbox.register('evaluate', evaluate_chromosome)
 	toolbox.register('select', tools.selTournament)
 	toolbox.register('mutate', tools.mutShuffleIndexes)
 
 	population = toolbox.population_initialisation()
+
+	for chromosome in initial_guess:
+		is_valid = evaluate_chromosome(chromosome)
 
 	fitness_set = list(toolbox.map(toolbox.evaluate, population))
 	for ind, fit in zip(population, fitness_set):
@@ -622,28 +645,31 @@ def run_genetic():
 
 	for gen in range(0, n_generations):
 		print(f'Generation: {gen:4} | Fitness: {best_fit:.2f}')
-		offspring = toolbox.select(population, 2, tournsize=len(population))
-		child1, child2 = list(map(toolbox.clone, offspring))
-		if random() < prob_crossover:
-			crossover(parameters, child1, child2)
-			is_feasible1 = feasibility_check(parameters, child1)
-			is_feasible2 = feasibility_check(parameters, child2)
-			if not is_feasible1:
-				forced_mutation(parameters, child1)
-			if not is_feasible2:
-				forced_mutation(parameters, child2)
-			del child1.fitness.values
-			del child2.fitness.values
+		offspring = toolbox.select(population, len(population), tournsize=2)
+		offspring = list(map(toolbox.clone, offspring))
+		for child1, child2 in zip(offspring[::2], offspring[1::2]):
+			if random() < prob_crossover:
+				crossover(parameters, child1, child2)
+				is_feasible1 = feasibility_check(parameters, child1)
+				is_feasible2 = feasibility_check(parameters, child2)
+				if not is_feasible1:
+					forced_mutation(parameters, child1)
+				if not is_feasible2:
+					forced_mutation(parameters, child2)
+				del child1.fitness.values
+				del child2.fitness.values
 
-		for chromo in offspring:
+		for mutant in offspring:
 			if random() < prob_mutation:
-				toolbox.mutate(chromo, indpb=0.01)
-				del chromo.fitness.values
+				toolbox.mutate(mutant, indpb=0.01)
+				del mutant.fitness.values
 
 		invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
 		fitness_set = map(toolbox.evaluate, invalid_ind)
 		for ind, fit in zip(invalid_ind, fitness_set):
 			ind.fitness.values = fit
+
+		population[:] = offspring
 
 		curr_best_sol = tools.selBest(population, 1)[0]
 		curr_best_fit = curr_best_sol.fitness.values[0]

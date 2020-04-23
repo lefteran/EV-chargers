@@ -27,6 +27,8 @@ vehicles_locations_over_day = None
 travel_times_over_day = None
 ev_percentage = 0.25
 max_chargers = 15
+alpha_probability = 0.7
+b_vehicles_in_queue = 2
 
 time_to_money = 1
 N_ON = 1
