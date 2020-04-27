@@ -97,7 +97,7 @@ def save_json(dict_to_be_saved, filename):
 
 def reduce_input_size(list_to_be_reduced):
 	reduce_sizes = True
-	reduced_size = 50
+	reduced_size = 100
 	original_size = len(list_to_be_reduced)
 	size_to_iterate = min(reduced_size, original_size)
 
@@ -141,9 +141,9 @@ def load_parameters():
 
 	service_rate = {'candidates': dict(), 'existing': dict()}
 	for candidate_node in candidates:
-		service_rate['candidates'][candidate_node] = 10		# number of vehicles that can be charged per day
+		service_rate['candidates'][candidate_node] = 14		# number of vehicles that can be charged per day
 	for existing_node in existing:
-		service_rate['existing'][existing_node] = 10
+		service_rate['existing'][existing_node] = 14
 
 	zone_bounds = {zone: randint(5, 15) for zone in zones}
 
@@ -156,7 +156,7 @@ def load_parameters():
 			land_cost[existing_node] = randint(100, 300)
 
 	parameters['high_value'] = float('inf')
-	parameters['max_chargers'] = 3
+	parameters['max_chargers'] = settings.max_chargers
 	parameters['contained'] = contained
 	parameters['candidates'] = [i for i in reduced_candidates if str(i) in list(contained.keys())]
 	parameters['existing'] = [i for i in reduced_existing if str(i) in list(contained.keys())]
@@ -292,8 +292,8 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 
 	# ################## x ########################
 	for existing in shuffled_existing_list:
-		if existing_availability_dict[existing]['available'] > 0:
-			for traffic_node in variables.traffic_node_order:
+		for traffic_node in variables.traffic_node_order:
+			if existing_availability_dict[existing]['available'] > 0:
 				if traffic_node not in traffic_assigned:
 					variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing] = 1
 					traffic_assigned.append(traffic_node)
@@ -379,7 +379,7 @@ def generate_initial_population(parameters, variables, population_size):
 
 
 def debugging_print(n_constraint):
-	print_flag = True
+	print_flag = False
 	if print_flag:
 		print(f'constraint {n_constraint}')
 
@@ -498,7 +498,6 @@ def evaluate_chromosome(chromosome):
 		if lhs > rhs:
 			debugging_print('15a')
 			return parameters['high_value'],
-
 	for existing_node in variables.existing_node_order:
 		lhs = sum(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] for fleet_node in variables.fleet_node_order) + \
 			  sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] for traffic_node in variables.traffic_node_order)

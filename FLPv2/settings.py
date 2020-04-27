@@ -26,7 +26,7 @@ vehicles_network_locations_per_hour_dict = None
 vehicles_locations_over_day = None
 travel_times_over_day = None
 ev_percentage = 0.25
-max_chargers = 15
+max_chargers = 3
 alpha_probability = 0.7
 b_vehicles_in_queue = 2
 
