@@ -33,5 +33,6 @@ def compute_rho(m, a, b, rho_list):
 def compute_rho_list():
 	rho_list = list()
 	for n_chargers in range(settings.max_chargers):
+		print(f'computing rho for charger {n_chargers}')
 		compute_rho(n_chargers+1, settings.alpha_probability, settings.b_vehicles_in_queue, rho_list)
 	save_rhos(rho_list)

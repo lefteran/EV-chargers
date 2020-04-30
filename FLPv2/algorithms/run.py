@@ -21,7 +21,7 @@ import algorithms.genetic_algorithm as genetic_algorithm
 
 
 def run():
-	genetic_algorithm.run_genetic()
+	genetic_algorithm.run_genetic_various_inputs()
 	# optimal_pulp.solve_optimal()
 	# settings.clusters = clustering.load_clusters()
 	# settings.vehicles_network_locations_per_hour_dict = vehicles_per_hour.load_vehicles_network_locations_per_hour_dict()

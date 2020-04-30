@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # existing_stations_csv_to_json.export_csv_to_json()
     # charging_demand.compute_traffic_demand()
     # analytics.get_analytics()
-    # rho_list.compute_rho_list()
+    rho_list.compute_rho_list()
 
     # ALGORITHMS
     algorithms.run()

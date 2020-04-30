@@ -95,9 +95,8 @@ def save_json(dict_to_be_saved, filename):
 	fp.close()
 
 
-def reduce_input_size(list_to_be_reduced):
+def reduce_input_size(list_to_be_reduced, reduced_size):
 	reduce_sizes = True
-	reduced_size = 100
 	original_size = len(list_to_be_reduced)
 	size_to_iterate = min(reduced_size, original_size)
 
@@ -110,7 +109,7 @@ def reduce_input_size(list_to_be_reduced):
 		return list_to_be_reduced
 
 
-def load_parameters():
+def load_parameters(reduced_size):
 	global parameters
 	parameters = dict()
 	hour = '1'
@@ -118,21 +117,21 @@ def load_parameters():
 	percentage_of_vehicles_needing_recharge = 0.0005
 	candidates_dict = load_json(settings.candidates)
 	candidates = [int(i) for i in candidates_dict.keys()]
-	reduced_candidates = reduce_input_size(candidates)
+	reduced_candidates = reduce_input_size(candidates, reduced_size)
 	existing_stations_dict = load_json(settings.existing_stations)
 	existing = [existing_stations_dict[i]['closest_node_id'] for i in existing_stations_dict.keys()]
-	reduced_existing = reduce_input_size(existing)
+	reduced_existing = reduce_input_size(existing, reduced_size)
 	# existing_capacities = [existing_stations_dict[i]['chargers'] for i in existing_stations_dict.keys()]
 	existing_capacities = {existing_node: existing_stations_dict[existing_node]['chargers'] for existing_node in existing_stations_dict.keys()}
 	recharging_nodes_per_hour = load_json(settings.recharging_nodes_per_hour)
 	recharging_nodes = recharging_nodes_per_hour[hour]
-	reduced_recharging_nodes = reduce_input_size(recharging_nodes)
+	reduced_recharging_nodes = reduce_input_size(recharging_nodes, reduced_size)
 	travel_times_per_hour = load_json(settings.travel_times_per_hour)
 	fleet_travel_times = travel_times_per_hour[hour]
 	traffic_travel_times = load_json(settings.traffic_travel_times)
 	traffic = load_json(settings.traffic_demand)
 	traffic_nodes = list(traffic.keys())
-	reduced_traffic_nodes = reduce_input_size(traffic_nodes)
+	reduced_traffic_nodes = reduce_input_size(traffic_nodes, reduced_size)
 	# traffic_intensity = [floor(int(i) * percentage_of_evs * percentage_of_vehicles_needing_recharge) for i in list(traffic.values())]
 	traffic_intensity = {i: floor(int(traffic[i]) * percentage_of_evs * percentage_of_vehicles_needing_recharge) for i in list(traffic.keys()) }
 	rho_list = load_json(settings.rhos)
@@ -156,7 +155,7 @@ def load_parameters():
 			land_cost[existing_node] = randint(100, 300)
 
 	parameters['high_value'] = float('inf')
-	parameters['max_chargers'] = settings.max_chargers
+	parameters['max_chargers'] = 3
 	parameters['contained'] = contained
 	parameters['candidates'] = [i for i in reduced_candidates if str(i) in list(contained.keys())]
 	parameters['existing'] = [i for i in reduced_existing if str(i) in list(contained.keys())]
@@ -605,9 +604,9 @@ def feasibility_check(parameters, chromosome):
 	return True
 
 
-def run_genetic():
+def run_genetic(reduced_size):
 	seed(1)
-	parameters = load_parameters()
+	parameters = load_parameters(reduced_size)
 	solution_exists = feasible_solution_exists(parameters)
 	print(f'feasible solution exists: {solution_exists}')
 	variables = Variables(parameters)
@@ -690,5 +689,15 @@ def run_genetic():
 		save_json(best_sol_dict, settings.ga_solution)
 	else:
 		print('No solution')
+	# print(f'Number of candidates and existing locations is {len(parameters["candidates"]) + len(parameters["existing"])}')
+	# print(f'cost is {best_fit:.2f}')
+	return len(parameters["candidates"]) + len(parameters["existing"]), best_fit
 
 
+def run_genetic_various_inputs():
+	outputs = dict()
+	input_sizes = [100]
+	for reduced_size in input_sizes:
+		candidates_existing_len, best_fit = run_genetic(reduced_size)
+		outputs[reduced_size] = [candidates_existing_len, best_fit]
+	save_json(outputs, settings.ga_outputs)
