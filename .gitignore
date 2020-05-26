@@ -1471,3 +1471,28 @@ FLP/data/solutions/randomLocalSearch/k_50/0.2/p_1/r_10000/run_9/rndLocalSearch_1
 *.pyc
 *.pyc
 *.xml
+FLPv2/data/.DS_Store
+FLPv2/data/Chicago/chicago_zoning.geojson
+FLPv2/data/figures/.DS_Store
+FLPv2/data/figures/drive_time-candidates.png
+FLPv2/data/figures/drive_time-charging_stations.png
+FLPv2/data/figures/drive_time-fleet_size.png
+FLPv2/data/figures/n_locations-cost.png
+FLPv2/data/figures/old/.DS_Store
+FLPv2/data/figures/old/drive_time-candidates.png
+FLPv2/data/figures/old/drive_time-charging_stations.png
+FLPv2/data/figures/old/drive_time-fleet_size.png
+FLPv2/data/figures/old/run_time-fleet_size.png
+FLPv2/data/figures/run_time-fleet_size.png
+FLPv2/data/rhos/.DS_Store
+FLPv2/data/solutions/.DS_Store
+FLPv2/data/solutions/before debugging/.DS_Store
+FLPv2/data/solutions/before debugging/outputs.xlsx
+FLPv2/data/solutions/outputs.xlsx
+FLPv2/data/solutions/~$outputs.xlsx
+FLPv2/data/figures/drive_time-candidates.png
+FLPv2/data/figures/drive_time-charging_stations.png
+FLPv2/data/figures/drive_time-fleet_size.png
+FLPv2/data/figures/run_time-fleet_size.png
+FLPv2/data/solutions/outputs.xlsx
+FLPv2/data/solutions/~$outputs.xlsx

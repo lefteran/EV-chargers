@@ -171,7 +171,7 @@ def load_parameters(reduced_size):
 	parameters['fleet_intensity'] = [1 for _ in range(len(recharging_nodes))]
 	parameters['land_cost'] = land_cost
 	parameters['building_cost'] = 60000						#in dollars (includes maintenance)
-	parameters['park_and_charge_cost'] = 6570			#in dollars/year
+	parameters['park_and_charge_cost'] = 6570				#in dollars/year
 	parameters['zone_bound'] = zone_bounds
 	parameters['rho'] = [float(i) for i in rho_list]
 	parameters['zones'] = zones
@@ -313,7 +313,7 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 					existing_availability_dict[existing]['available'] -= 1
 			if fleet_node not in fleet_assigned:
 				for candidate in shuffled_candidates_list:
-					if candidate_availability_dict[candidate]['available'] > 0:
+					if candidate_availability_dict[candidate]['available'] > 0 and fleet_node not in fleet_assigned:
 						variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate] = 1
 						fleet_assigned.append(fleet_node)
 						candidate_availability_dict[candidate]['available'] -= 1
@@ -378,7 +378,7 @@ def generate_initial_population(parameters, variables, population_size):
 
 
 def debugging_print(n_constraint):
-	print_flag = False
+	print_flag = True
 	if print_flag:
 		print(f'constraint {n_constraint}')
 
@@ -601,7 +601,103 @@ def feasibility_check(parameters, chromosome):
 		for existing_node in chromo_dict.existing_node_order:
 			if chromo_dict.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] > chromo_dict.y_dict['existing'][existing_node]:
 				return False
+
+			#################################
+	# constraints (13)
+	for candidate_node in chromo_dict.candidate_node_order:
+		lhs = sum(chromo_dict.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] for fleet_node in chromo_dict.fleet_node_order)
+		rhs = sum(chromo_dict.z_dict['candidates'][candidate]['chargers'][charger] for candidate in chromo_dict.candidate_node_order for charger in range(parameters['max_chargers']))
+		if lhs > rhs:
+			# debugging_print('13a')
+			return False
+
+	for existing_node in chromo_dict.existing_node_order:
+		lhs = sum(chromo_dict.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] for fleet_node in chromo_dict.fleet_node_order)
+		lhs += sum(chromo_dict.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] for traffic_node in chromo_dict.traffic_node_order)
+		rhs = sum(chromo_dict.z_dict['candidates'][candidate]['chargers'][charger] for candidate in chromo_dict.candidate_node_order for charger in range(parameters['max_chargers']))
+		rhs += sum(chromo_dict.z_dict['existing'][existing]['chargers'][charger] for existing in chromo_dict.existing_node_order for charger in range(parameters['existing_dict'][str(existing)]['chargers']))
+		if lhs > rhs:
+			# debugging_print('13b')
+			return False
+
+	# constraints (14)
+	for candidate_node in chromo_dict.candidate_node_order:
+		for charger in range(parameters['max_chargers']):
+			if charger < parameters['max_chargers'] - 1:
+				if chromo_dict.z_dict['candidates'][candidate_node]['chargers'][charger + 1] > chromo_dict.z_dict['candidates'][candidate_node]['chargers'][charger]:
+					# debugging_print('14a')
+					return False
+	for existing_node in chromo_dict.existing_node_order:
+		for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']):
+			if charger < parameters['existing_dict'][str(existing_node)]['chargers'] - 1:
+				if chromo_dict.z_dict['existing'][existing_node]['chargers'][charger + 1] > chromo_dict.z_dict['existing'][existing_node]['chargers'][charger]:
+					# debugging_print('14b')
+					return False
+
+	# constraints (15)
+	lhs, rhs = 0, 0
+	for candidate_node in chromo_dict.candidate_node_order:
+		lhs = sum(chromo_dict.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node] for fleet_node in chromo_dict.fleet_node_order)
+		rhs = parameters['service_rate']['candidates'][candidate_node] * (chromo_dict.z_dict['candidates'][candidate_node]['chargers'][0] * parameters['rho'][0] +
+		sum(chromo_dict.z_dict['candidates'][candidate_node]['chargers'][m] * (parameters['rho'][m] - parameters['rho'][m-1]) for m in range(1, parameters['max_chargers'])))
+		if lhs > rhs:
+			# debugging_print('15a')
+			return False
+	for existing_node in chromo_dict.existing_node_order:
+		lhs = sum(chromo_dict.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] for fleet_node in chromo_dict.fleet_node_order) + \
+			  sum(chromo_dict.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] for traffic_node in chromo_dict.traffic_node_order)
+		rhs = parameters['service_rate']['existing'][existing_node] * (chromo_dict.z_dict['existing'][existing_node]['chargers'][0] * parameters['rho'][0] +
+		sum(chromo_dict.z_dict['existing'][existing_node]['chargers'][m] * (parameters['rho'][m] - parameters['rho'][m-1]) for m in range(1, parameters['existing_capacities'][str(existing_node)])))
+		if lhs > rhs:
+			# debugging_print('15b')
+			return False
+
+
+	# constraints (16)
+	for zone in parameters['zones']:
+		lhs_sum = 0
+		for candidate_node in chromo_dict.candidate_node_order:
+			if zone == parameters['contained'][str(candidate_node)]:
+				lhs_sum += (1 - chromo_dict.omega_dict['candidates'][candidate_node]) * chromo_dict.y_dict['candidates'][candidate_node]
+		if lhs_sum > parameters['zone_bound'][zone]:
+			# debugging_print('16')
+			return False
+
 	return True
+
+
+def get_analytical_costs(chromosome):
+	global parameters
+	variables = get_variable_dict(parameters, chromosome)
+
+	T = 0
+	for fleet_node in variables.fleet_node_order:
+		for candidate_node in variables.candidate_node_order:
+			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(candidate_node)] * variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node]
+		for existing_node in variables.existing_node_order:
+			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(existing_node)] * variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node]
+	for traffic_node in variables.traffic_node_order:
+		for candidate_node in variables.candidate_node_order:
+			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(candidate_node)] * variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node]
+		for existing_node in variables.existing_node_order:
+			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(existing_node)] * variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node]
+
+	total_land_cost = sum(parameters['land_cost'][candidate_node] * variables.y_dict['candidates'][candidate_node] * variables.omega_dict['candidates'][candidate_node] for candidate_node in variables.candidate_node_order)
+
+	total_infrastructure_cost = 0
+	for candidate_node in variables.candidate_node_order:
+		psi = sum(variables.z_dict['candidates'][candidate_node]['chargers'][charger] for charger in range(parameters['max_chargers']))
+		total_infrastructure_cost += parameters['building_cost'] * psi * variables.omega_dict['candidates'][candidate_node]
+
+	total_park_and_charge_cost = 0
+	for candidate_node in variables.candidate_node_order:
+		psi = sum(variables.z_dict['candidates'][candidate_node]['chargers'][charger] for charger in range(parameters['max_chargers']))
+		total_park_and_charge_cost += parameters['park_and_charge_cost'] * psi * (1 - variables.omega_dict['candidates'][candidate_node])
+	for existing_node in variables.existing_node_order:
+		psi = sum(variables.z_dict['existing'][existing_node]['chargers'][charger] for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']))
+		total_park_and_charge_cost += parameters['park_and_charge_cost'] * psi * (1 - variables.omega_dict['existing'][existing_node])
+
+	return T, total_land_cost, total_infrastructure_cost, total_park_and_charge_cost
 
 
 def run_genetic(reduced_size):
@@ -691,13 +787,21 @@ def run_genetic(reduced_size):
 		print('No solution')
 	# print(f'Number of candidates and existing locations is {len(parameters["candidates"]) + len(parameters["existing"])}')
 	# print(f'cost is {best_fit:.2f}')
-	return len(parameters["candidates"]) + len(parameters["existing"]), best_fit
+	return len(parameters["candidates"]) + len(parameters["existing"]), best_sol, best_fit
 
 
 def run_genetic_various_inputs():
 	outputs = dict()
-	input_sizes = [100]
+	input_sizes = [50, 100, 150, 200, 250, 300, 400, 500, 600]
 	for reduced_size in input_sizes:
-		candidates_existing_len, best_fit = run_genetic(reduced_size)
-		outputs[reduced_size] = [candidates_existing_len, best_fit]
+		candidates_existing_len, best_sol, best_fit = run_genetic(reduced_size)
+		travel_time, land_cost, infrastructure_cost, park_and_charge_cost = get_analytical_costs(best_sol)
+		outputs[reduced_size] = dict()
+		outputs[reduced_size]['candidates_existing_length'] = candidates_existing_len
+		outputs[reduced_size]['total_travel_time'] = travel_time
+		outputs[reduced_size]['land_cost'] = land_cost
+		outputs[reduced_size]['infrastructure_cost'] = infrastructure_cost
+		outputs[reduced_size]['park_and_charge_cost'] = park_and_charge_cost
+		outputs[reduced_size]['total_cost'] = best_fit
+		# outputs[reduced_size] = [candidates_existing_len, best_fit]
 	save_json(outputs, settings.ga_outputs)
