@@ -15,19 +15,23 @@ def run():
 	graph = nx_graph.create_graph()
 	# new_candidates = clustering.get_clusters(graph.nodes)
 	# clustering.save_clusters(new_candidates)
-	# candidates = clustering.load_candidates()
+	candidates = clustering.load_candidates()
 	# existing_stations.get_existing_stations(graph.nodes())
 
-	candidates_and_existing = existing_stations.load_json(settings.candidates_and_existing)
+	existing_stations_dict = existing_stations.load_json(settings.existing_stations)
+
+	# candidates_and_existing = existing_stations.load_json(settings.candidates_and_existing)
 
 	# filtering.filter_trips(graph, new_candidates)
 
 	# slice_paths_from_delos.slice_paths()
 
-	# recharging_nodes.find_recharging_nodes_per_hour_dict(graph.nodes(), new_candidates)	# for each size 700,1k,2k,3k
+	# recharging_nodes.find_recharging_nodes_per_hour_dict(graph.nodes(), candidates)	# for each size 700,1k,2k,3k
 
-	# travel_times.compute_travel_times(graph, list(candidates_and_existing.keys()))										# for each size 700,1k,2k,3k
+	# recharging_nodes.find_recharging_nodes_list(graph.nodes(), candidates, list(existing_stations_dict.keys()))
 
-	zoning.get_zoning(graph, list(candidates_and_existing.keys()))
+	travel_times.compute_travel_times(graph, candidates, list(existing_stations_dict.keys()))										# for each size 700,1k,2k,3k
+
+	# zoning.get_zoning(graph, list(candidates_and_existing.keys()))
 
 	# traffic_demand.compute_traffic_demand(graph)

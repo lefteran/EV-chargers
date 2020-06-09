@@ -75,7 +75,8 @@ def lists_lengths_are_equal(vehicle):
 
 
 def find_charging_points_and_total_distances_per_vehicle(vehicles):
-	charging_spots_per_hour_dict = {key:list() for key in range(24)}
+	# charging_spots_per_hour_dict = {key:list() for key in range(24)}
+	charging_spots_list = list()
 	vehicle_range_km = 180
 	threshold_to_charge = 0.2
 	distance_travelled_per_vehicle_dict = dict()
@@ -83,14 +84,14 @@ def find_charging_points_and_total_distances_per_vehicle(vehicles):
 		total_distance_travelled = 0
 		battery_soc = uniform(0.25, 1)
 		distance_travelled = 0
-		for i in range(len(vehicle.timeStampList) - 1):
+		for i in range(len(vehicle.locationList) - 1):
 			current_range = (battery_soc - threshold_to_charge) * vehicle_range_km
 			trip_distance = distance_in_km(vehicle.locationList[i][0], vehicle.locationList[i][1],
 										   vehicle.locationList[i + 1][0], vehicle.locationList[i + 1][1])
 			total_distance_travelled += trip_distance
 			if distance_travelled + trip_distance > current_range:
-				charging_spots_per_hour_dict[vehicle.timeStampList[i].hour].append(
-					(vehicle.vehicleKey, vehicle.locationList[i]))
+				charging_spots_list.append((vehicle.vehicleKey, vehicle.locationList[i]))
+				# charging_spots_per_hour_dict[vehicle.timeStampList[i].hour].append((vehicle.vehicleKey, vehicle.locationList[i]))
 				distance_travelled = 0
 				battery_soc = 0.9
 			else:
@@ -98,8 +99,8 @@ def find_charging_points_and_total_distances_per_vehicle(vehicles):
 				current_range -= trip_distance
 				battery_soc -= trip_distance / vehicle_range_km
 		distance_travelled_per_vehicle_dict[vehicle.vehicleKey] = total_distance_travelled
-	return charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict
-
+	# return charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict
+	return charging_spots_list, distance_travelled_per_vehicle_dict
 
 def get_average_distance_travelled_per_vehicle(distance_travelled_per_vehicle_dict):
 	total_distances = 0
@@ -147,13 +148,14 @@ def get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict
 
 
 def export_charging_coordinates_per_hour_dict_and_statistics(n_vehicles, input_filename, statistics_filename, output_filename):
-	vehPathsDict = read_json_file(input_filename)
+	allVehiclesKPIs = read_json_file(input_filename)
 	vehicles = list()
-	for vehicleKey, vehicleValue in vehPathsDict.items():
-		vehicle = Vehicle(vehicleValue['timeStampList'], vehicleValue['locationList'], vehicleKey.split(' ')[1])
-		if not lists_lengths_are_equal(vehicle):
-			stderr.write("Lists' lengths are not equal")
-			exit()
+	for vehicleKPIs in allVehiclesKPIs:
+		vehicle = Vehicle([], allVehiclesKPIs[vehicleKPIs]['VehicleTrip'], vehicleKPIs)
+		# vehicle = Vehicle(vehicleValue['timeStampList'], vehicleValue['locationList'], vehicleKey.split(' ')[1])
+		# if not lists_lengths_are_equal(vehicle):
+		# 	stderr.write("Lists' lengths are not equal")
+		# 	exit()
 		vehicles.append(vehicle)
 	charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict = find_charging_points_and_total_distances_per_vehicle(vehicles)
 	# get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict)
@@ -165,7 +167,8 @@ def export_charging_coordinates_per_hour_dict_and_statistics(n_vehicles, input_f
 
 
 def slice_paths():
-	input_filename = os.path.abspath('D:\Github\delos3\outputs\Chicago\\' + settings.date_of_trips + '\VehiclePaths.json')
+	input_filename = os.path.abspath('D:\Github\delos3\outputs\VehicleKPIs_' + str(settings.fleet_size) + 'vehicles.json')
+	# input_filename = os.path.abspath('D:\Github\delos3\outputs\Chicago\\' + settings.date_of_trips + '\VehiclePaths.json')
 	statistics_filename = 'D:\\Github\\EV-chargers\\FLPv2\\data\\chicago_vehicle_locations\\statistics.json'
-	output_filename = os.path.abspath('D:\\Github\\EV-chargers\\FLPv2\\data\\recharging_coordinates\\' + 'recharging_coordinates_per_hour_' + settings.date_of_trips + '.json')
+	output_filename = os.path.abspath('D:\\Github\\EV-chargers\\FLPv2\\data\\recharging_coordinates\\' + 'recharging_coordinates_per_hour_' + settings.date_of_trips + '_' + str(settings.fleet_size) + '.json')
 	export_charging_coordinates_per_hour_dict_and_statistics(str(settings.fleet_size), input_filename, statistics_filename, output_filename)

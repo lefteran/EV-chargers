@@ -48,21 +48,35 @@ class GraphToolNetwork:
 
 
 
-	def get_travel_times_to_candidates_dict(self, candidate_nodes, vehicles_nodes):
+	def get_travel_times_to_candidates_dict(self, candidates_and_existing, vehicles_nodes):
 		n_vehicle_nodes = len(vehicles_nodes)
 		count = 0
-		vehicles_travel_times_to_candidates_dict = dict()
+		vehicles_travel_times_to_candidates_and_existing_dict = dict()
 		for source_node in vehicles_nodes:
 			count += 1
 			print(f'Iteration ({count} / {n_vehicle_nodes})')
-			for target_node in candidate_nodes:
+			for target_node in candidates_and_existing:
 				travel_time = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
 												target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_travel_times)
-				if source_node not in vehicles_travel_times_to_candidates_dict:
-					vehicles_travel_times_to_candidates_dict[source_node] = dict()
-				vehicles_travel_times_to_candidates_dict[source_node][int(target_node)] = travel_time
-		return vehicles_travel_times_to_candidates_dict
+				if source_node not in vehicles_travel_times_to_candidates_and_existing_dict:
+					vehicles_travel_times_to_candidates_and_existing_dict[source_node] = dict()
+				vehicles_travel_times_to_candidates_and_existing_dict[source_node][int(target_node)] = travel_time
+		return vehicles_travel_times_to_candidates_and_existing_dict
 
 
+	def get_travel_times_to_candidates_and_existing_dict(self, existing, vehicles_nodes):
+		n_vehicle_nodes = len(vehicles_nodes)
+		count = 0
+		vehicles_travel_times_to_existing_dict = dict()
+		for source_node in vehicles_nodes:
+			count += 1
+			print(f'Iteration ({count} / {n_vehicle_nodes})')
+			for target_node in existing:
+				travel_time = gt.shortest_distance(self.graph_gt, source=self.nx_to_gt_nodes_dict[source_node],
+												target=self.nx_to_gt_nodes_dict[int(target_node)], weights=self.gt_edge_travel_times)
+				if source_node not in vehicles_travel_times_to_existing_dict:
+					vehicles_travel_times_to_existing_dict[source_node] = dict()
+				vehicles_travel_times_to_existing_dict[source_node][int(target_node)] = travel_time
+		return vehicles_travel_times_to_existing_dict
 
 
