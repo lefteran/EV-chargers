@@ -51,7 +51,6 @@ def run():
 	# save_solution(solution_dict)
 
 
-
 def get_list_of_all_vehicles_locations_over_day():
 	vehicles_locations = list()
 	for _, vehicles_per_hour_list in settings.vehicles_network_locations_per_hour_dict.items():

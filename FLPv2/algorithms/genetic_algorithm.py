@@ -2,6 +2,7 @@
 import json
 from random import randint, sample, randrange, random, seed
 from math import floor
+from tqdm import tqdm
 from deap import base, creator, tools
 # FILES
 import settings
@@ -42,10 +43,10 @@ class Variables:
 			for i in range(parameters['traffic_intensity'][traffic_node]):
 				self.traffic_node_order.append(str(traffic_node) + '_' + str(i))
 				self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)] = dict()
-				self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)]['candidates'] = dict()
+				# self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)]['candidates'] = dict()
 				self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)]['existing'] = dict()
-				for candidate in parameters['candidates']:
-					self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)]['candidates'][candidate] = 0
+				# for candidate in parameters['candidates']:
+				# 	self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)]['candidates'][candidate] = 0
 				for existing in parameters['existing']:
 					self.x_dict['traffic_nodes'][str(traffic_node) + '_' + str(i)]['existing'][existing] = 0
 
@@ -85,7 +86,7 @@ class Variables:
 def load_json(filename):
 	with open(filename, 'r') as json_file:
 		json_dict = json.load(json_file)
-	return  json_dict
+	return json_dict
 
 
 def save_json(dict_to_be_saved, filename):
@@ -112,7 +113,6 @@ def reduce_input_size(list_to_be_reduced, reduced_size):
 def load_parameters(reduced_size):
 	global parameters
 	parameters = dict()
-	hour = '1'
 	percentage_of_evs = 0.2
 	percentage_of_vehicles_needing_recharge = 0.0005
 	candidates_dict = load_json(settings.candidates)
@@ -123,11 +123,10 @@ def load_parameters(reduced_size):
 	reduced_existing = reduce_input_size(existing, reduced_size)
 	# existing_capacities = [existing_stations_dict[i]['chargers'] for i in existing_stations_dict.keys()]
 	existing_capacities = {existing_node: existing_stations_dict[existing_node]['chargers'] for existing_node in existing_stations_dict.keys()}
-	recharging_nodes_per_hour = load_json(settings.recharging_nodes_per_hour)
-	recharging_nodes = recharging_nodes_per_hour[hour]
-	reduced_recharging_nodes = reduce_input_size(recharging_nodes, reduced_size)
-	travel_times_per_hour = load_json(settings.travel_times_per_hour)
-	fleet_travel_times = travel_times_per_hour[hour]
+	recharging_nodes = load_json(settings.recharging_nodes_list)
+	vehicles_per_recharging_node_dict = load_json(settings.vehicles_per_recharging_node_dict)
+	# reduced_recharging_nodes = reduce_input_size(recharging_nodes, reduced_size)
+	fleet_travel_times = load_json(settings.fleet_travel_times)
 	traffic_travel_times = load_json(settings.traffic_travel_times)
 	traffic = load_json(settings.traffic_demand)
 	traffic_nodes = list(traffic.keys())
@@ -140,7 +139,7 @@ def load_parameters(reduced_size):
 
 	service_rate = {'candidates': dict(), 'existing': dict()}
 	for candidate_node in candidates:
-		service_rate['candidates'][candidate_node] = 14		# number of vehicles that can be charged per day
+		service_rate['candidates'][candidate_node] = 18		# number of vehicles that can be charged per day
 	for existing_node in existing:
 		service_rate['existing'][existing_node] = 14
 
@@ -161,10 +160,11 @@ def load_parameters(reduced_size):
 	parameters['existing'] = [i for i in reduced_existing if str(i) in list(contained.keys())]
 	parameters['existing_capacities'] = existing_capacities
 	parameters['existing_dict'] = existing_stations_dict
-	parameters['recharging_nodes'] = reduced_recharging_nodes
+	parameters['recharging_nodes'] = recharging_nodes
+	parameters['vehicles_per_recharging_node_dict'] = vehicles_per_recharging_node_dict
 	parameters['fleet_travel_times'] = fleet_travel_times
 	parameters['traffic_travel_times'] = traffic_travel_times
-	parameters['traffic_nodes'] = reduced_traffic_nodes
+	parameters['traffic_nodes'] = traffic_nodes
 	parameters['traffic_intensity'] = traffic_intensity
 	parameters['traffic_dict'] = traffic
 	parameters['service_rate'] = service_rate
@@ -179,9 +179,9 @@ def load_parameters(reduced_size):
 
 
 def feasible_solution_exists(parameters):
-	if sum(parameters['traffic_intensity'].values()) > sum(parameters['existing_capacities'].values()) + parameters['max_chargers'] * sum(parameters['zone_bound']):
+	if sum(parameters['vehicles_per_recharging_node_dict'].values()) > sum(parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates']):
 		return False
-	if len(parameters['recharging_nodes']) + sum(parameters['traffic_intensity'].values()) > sum(
+	if sum(parameters['vehicles_per_recharging_node_dict'].values()) + sum(parameters['traffic_intensity'].values()) > sum(
 			parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates']):
 		return False
 	return True
@@ -197,8 +197,8 @@ def get_chromosome_list(variables, parameters):
 		for existing_node in variables.existing_node_order:
 			chromosome_list.append(variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node])
 	for traffic_node in variables.traffic_node_order:
-		for candidate_node in variables.candidate_node_order:
-			chromosome_list.append(variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node])
+		# for candidate_node in variables.candidate_node_order:
+		# 	chromosome_list.append(variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node])
 		for existing_node in variables.existing_node_order:
 			chromosome_list.append(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node])
 
@@ -237,9 +237,9 @@ def get_variable_dict(parameters, chromosome):
 			variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node] = chromosome[current_index]
 			current_index += 1
 	for traffic_node in variables.traffic_node_order:
-		for candidate_node in variables.candidate_node_order:
-			variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] = chromosome[current_index]
-			current_index += 1
+		# for candidate_node in variables.candidate_node_order:
+		# 	variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] = chromosome[current_index]
+		# 	current_index += 1
 		for existing_node in variables.existing_node_order:
 			variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] = chromosome[current_index]
 			current_index += 1
@@ -274,6 +274,7 @@ def get_variable_dict(parameters, chromosome):
 
 
 def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_assigned):
+	print('Generating initial chromosome ...')
 	shuffled_existing_list = sample(variables.existing_node_order, len(variables.existing_node_order))
 	shuffled_candidates_list = sample(variables.candidate_node_order, len(variables.candidate_node_order))
 
@@ -290,7 +291,8 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 		candidate_availability_dict[candidate_id]['capacity'] = parameters['max_chargers']
 
 	# ################## x ########################
-	for existing in shuffled_existing_list:
+	print('Generating x traffic ...')
+	for existing in tqdm(shuffled_existing_list):
 		for traffic_node in variables.traffic_node_order:
 			if existing_availability_dict[existing]['available'] > 0:
 				if traffic_node not in traffic_assigned:
@@ -298,7 +300,8 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 					traffic_assigned.append(traffic_node)
 					existing_availability_dict[existing]['available'] -= 1
 
-	for fleet_node in variables.fleet_node_order:
+	print('\nGenerating x fleet ...')
+	for fleet_node in tqdm(variables.fleet_node_order):
 		if random() <= 0.8:
 			for candidate in shuffled_candidates_list:
 				if candidate_availability_dict[candidate]['available'] > 0 and fleet_node not in fleet_assigned:
@@ -319,6 +322,7 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 						candidate_availability_dict[candidate]['available'] -= 1
 
 	# ################## y ########################
+	print('Generating y ...')
 	for candidate in variables.candidate_node_order:
 		if candidate_availability_dict[candidate]['available'] != candidate_availability_dict[candidate]['capacity']:
 			variables.y_dict['candidates'][candidate] = 1
@@ -327,6 +331,7 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 			variables.y_dict['existing'][existing] = 1
 
 	# ################## omega ########################
+	print('Generating omega ...')
 	omega_availability = dict(parameters['zone_bound'])
 
 	for existing in variables.existing_node_order:
@@ -350,6 +355,7 @@ def generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_a
 			variables.omega_dict['candidates'][candidate] = 1
 
 	# ################## z ########################
+	print('Generating z ...')
 	for candidate in variables.candidate_node_order:
 		n_chargers = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate] for fleet_node in variables.fleet_node_order)
 		if n_chargers > 0:
@@ -367,13 +373,16 @@ def generate_initial_population(parameters, variables, population_size):
 	population = list()
 	fleet_assigned = list()
 	traffic_assigned = list()
-	for _ in range(population_size):
+	for i in range(population_size):
+		print(f'########################### Chromosome {i} ###########################')
 		chromosome, fleet_assigned, traffic_assigned = generate_initial_chromosome(parameters, variables, fleet_assigned, traffic_assigned)
+		print('Evaluating initial chromosome ...')
 		chromosome_value, = evaluate_chromosome(chromosome)
 		if chromosome_value == parameters['high_value']:
 			print('invalid initial chromosome')
 		population.append(chromosome)
 	print('==========================')
+	save_json(population, settings.ga_initial_population)
 	return population
 
 
@@ -394,8 +403,8 @@ def evaluate_chromosome(chromosome):
 		for existing_node in variables.existing_node_order:
 			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(existing_node)] * variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node]
 	for traffic_node in variables.traffic_node_order:
-		for candidate_node in variables.candidate_node_order:
-			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(candidate_node)] * variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node]
+		# for candidate_node in variables.candidate_node_order:
+		# 	T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(candidate_node)] * variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node]
 		for existing_node in variables.existing_node_order:
 			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(existing_node)] * variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node]
 
@@ -420,9 +429,7 @@ def evaluate_chromosome(chromosome):
 
 	# constraints (10)
 	for traffic_node in variables.traffic_node_order:
-		lhs = sum(variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] - variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] *
-				  variables.omega_dict['candidates'][candidate_node] for candidate_node in variables.candidate_node_order) + \
-			  sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] - variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] *
+		lhs = sum(variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] - variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] *
 			variables.omega_dict['existing'][existing_node] for existing_node in variables.existing_node_order)
 		if lhs != 1:
 			debugging_print('10')
@@ -448,10 +455,6 @@ def evaluate_chromosome(chromosome):
 				return parameters['high_value'],
 
 	for traffic_node in variables.traffic_node_order:
-		for candidate_node in variables.candidate_node_order:
-			if variables.x_dict['traffic_nodes'][traffic_node]['candidates'][candidate_node] > variables.y_dict['candidates'][candidate_node]:
-				debugging_print('12c')
-				return parameters['high_value'],
 		for existing_node in variables.existing_node_order:
 			if variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node] > variables.y_dict['existing'][existing_node]:
 				debugging_print('12c')
@@ -705,7 +708,9 @@ def run_genetic(reduced_size):
 	parameters = load_parameters(reduced_size)
 	solution_exists = feasible_solution_exists(parameters)
 	print(f'feasible solution exists: {solution_exists}')
+	print('Generating Variables')
 	variables = Variables(parameters)
+	print('Variables generated')
 	population_size = 20
 	initial_guess = generate_initial_population(parameters, variables, population_size)
 
@@ -792,7 +797,8 @@ def run_genetic(reduced_size):
 
 def run_genetic_various_inputs():
 	outputs = dict()
-	input_sizes = [50, 100, 150, 200, 250, 300, 400, 500, 600]
+	# input_sizes = [50, 100, 150, 200, 250, 300, 400, 500, 600]			#number of candidates
+	input_sizes =[600]
 	for reduced_size in input_sizes:
 		candidates_existing_len, best_sol, best_fit = run_genetic(reduced_size)
 		travel_time, land_cost, infrastructure_cost, park_and_charge_cost = get_analytical_costs(best_sol)

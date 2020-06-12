@@ -5,11 +5,12 @@ import settings
 import network.recharging_nodes as vehicles_per_hour
 import network.shortest_paths as shortest_paths
 
+
 def load_solution_dict():
 	filename = settings.solution_path
 	with open(filename, 'r') as json_file:
 		json_dict = json.load(json_file)
-	return  json_dict
+	return json_dict
 
 
 def get_list_of_all_vehicles_locations_over_day():
@@ -19,12 +20,14 @@ def get_list_of_all_vehicles_locations_over_day():
 		vehicles_locations.extend(vehicles_per_hour_list)
 	return list(set(vehicles_locations))
 
+
 def get_list_of_all_travel_times_over_day():
 	day_travel_times = dict()
 	for _, hour_travel_time_dict in settings.travel_times_per_hour.items():
 		for travel_time_key, travel_time in hour_travel_time_dict.items():
 			day_travel_times[travel_time_key] = travel_time
 	return day_travel_times
+
 
 def get_nearest_facility_to_vehicle(vehicle_location, locations):
 	time_to_nearest_location = float("inf")
