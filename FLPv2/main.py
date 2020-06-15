@@ -5,7 +5,7 @@ import settings
 # sys.path.append('project folder path')
 import network.run as network
 # import visualisation.run as visualisation
-import network.slice_paths_from_delos as slice_paths
+# import network.slice_paths_from_delos as slice_paths
 # import scripts.compute_rho_list as rho_list
 # import algorithms.run as algorithms
 

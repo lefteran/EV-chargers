@@ -24,6 +24,11 @@ def distanceInKm(latitude1, longitude1, latitude2, longitude2):
 	return distance
 
 
+def load_json(filename):
+	with open(filename, 'r') as json_file:
+		json_dict = json.load(json_file)
+	return json_dict
+
 
 def get_centroid_key_of_closest_cluster(graph_nodes, vehicle_latitude, vehicle_longitude, cluster_centroids):
 	distance = float("inf")
@@ -61,6 +66,14 @@ def find_closest_network_node_to_vehicle_within_cluster(graph_nodes, vehicle_lat
 
 def save_recharging_nodes(dict_to_be_saved):
 	filename = settings.recharging_nodes_list
+	json_file = json.dumps(dict_to_be_saved)
+	f = open(filename, 'w')
+	f.write(json_file)
+	f.close()
+
+
+def save_recharging_nodes_duplicates(dict_to_be_saved):
+	filename = settings.recharging_nodes_duplicates_dict
 	json_file = json.dumps(dict_to_be_saved)
 	f = open(filename, 'w')
 	f.write(json_file)
@@ -113,3 +126,15 @@ def find_recharging_nodes_list(graph_nodes, candidate_clusters, existing_ids_lis
 			node_id = existing_id
 		recharging_nodes_list.append(node_id)
 	save_recharging_nodes(recharging_nodes_list)
+
+
+
+def find_recharging_nodes_duplicates():
+	recharging_nodes_list = load_json(settings.recharging_nodes_list)
+	recharging_node_duplicates_dict = dict()
+	for recharging_node in recharging_nodes_list:
+		if recharging_node not in recharging_node_duplicates_dict:
+			recharging_node_duplicates_dict[recharging_node] = 1
+		else:
+			recharging_node_duplicates_dict[recharging_node] += 1
+	save_recharging_nodes_duplicates(recharging_node_duplicates_dict)

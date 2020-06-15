@@ -135,7 +135,7 @@ def load_parameters(reduced_size):
 	traffic_intensity = {i: floor(int(traffic[i]) * percentage_of_evs * percentage_of_vehicles_needing_recharge) for i in list(traffic.keys()) }
 	rho_list = load_json(settings.rhos)
 	zones = load_json(settings.zones)
-	contained = load_json(settings.contained_in_zone)
+	contained = load_json(settings.candidates_zoning)
 
 	service_rate = {'candidates': dict(), 'existing': dict()}
 	for candidate_node in candidates:
