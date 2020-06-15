@@ -135,7 +135,8 @@ def load_parameters(reduced_size):
 	traffic_intensity = {i: floor(int(traffic[i]) * percentage_of_evs * percentage_of_vehicles_needing_recharge) for i in list(traffic.keys()) }
 	rho_list = load_json(settings.rhos)
 	zones = load_json(settings.zones)
-	contained = load_json(settings.candidates_zoning)
+	candidates_zoning = load_json(settings.candidates_zoning)
+	existing_zoning = load_json(settings.existing_zoning)
 
 	service_rate = {'candidates': dict(), 'existing': dict()}
 	for candidate_node in candidates:
@@ -155,9 +156,9 @@ def load_parameters(reduced_size):
 
 	parameters['high_value'] = float('inf')
 	parameters['max_chargers'] = 3
-	parameters['contained'] = contained
-	parameters['candidates'] = [i for i in reduced_candidates if str(i) in list(contained.keys())]
-	parameters['existing'] = [i for i in reduced_existing if str(i) in list(contained.keys())]
+	parameters['candidates_zoning'] = candidates_zoning
+	parameters['candidates'] = [i for i in reduced_candidates if str(i) in list(candidates_zoning.keys())]
+	parameters['existing'] = [i for i in reduced_existing if str(i) in list(existing_zoning.keys())]
 	parameters['existing_capacities'] = existing_capacities
 	parameters['existing_dict'] = existing_stations_dict
 	parameters['recharging_nodes'] = recharging_nodes
@@ -798,7 +799,7 @@ def run_genetic(reduced_size):
 def run_genetic_various_inputs():
 	outputs = dict()
 	# input_sizes = [50, 100, 150, 200, 250, 300, 400, 500, 600]			#number of candidates
-	input_sizes =[600]
+	input_sizes =[750]
 	for reduced_size in input_sizes:
 		candidates_existing_len, best_sol, best_fit = run_genetic(reduced_size)
 		travel_time, land_cost, infrastructure_cost, park_and_charge_cost = get_analytical_costs(best_sol)
