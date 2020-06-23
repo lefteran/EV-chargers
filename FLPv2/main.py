@@ -3,12 +3,15 @@ import time
 # FILES
 import settings
 # sys.path.append('project folder path')
+
 import network.run as network
+# import algorithms.run as algorithms
 # import visualisation.run as visualisation
+
 # import network.slice_paths_from_delos as slice_paths
 # import scripts.compute_rho_list as rho_list
 # import scripts.counts_from_json_files as json_counts
-# import algorithms.run as algorithms
+# import scripts.edit_building_permits as permits
 
 
 if __name__ == "__main__":
@@ -16,6 +19,9 @@ if __name__ == "__main__":
 
     # NETWORK
     network.run()
+
+    # ALGORITHMS
+    # algorithms.run()
 
     # SCRIPTS
     # create_dat_for_optimal.create_dat_file()
@@ -27,9 +33,7 @@ if __name__ == "__main__":
     # analytics.get_analytics()
     # rho_list.compute_rho_list()
     # json_counts.count_idle_vehicles()
-
-    # ALGORITHMS
-    # algorithms.run()
+    # permits.building_permits_to_json()
 
 
     # POST OPTIMIZATION
