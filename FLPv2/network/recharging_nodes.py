@@ -73,7 +73,7 @@ def save_recharging_nodes(dict_to_be_saved):
 
 
 def save_recharging_nodes_duplicates(dict_to_be_saved):
-	filename = settings.recharging_nodes_duplicates_dict
+	filename = settings.vehicles_per_recharging_node_dict
 	json_file = json.dumps(dict_to_be_saved)
 	f = open(filename, 'w')
 	f.write(json_file)
