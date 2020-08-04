@@ -11,7 +11,7 @@ def read_json_file(filename):
 	return json_dict
 
 def create_graph():
-	json_dict = read_json_file(settings.chicago_json_network)
+	json_dict = read_json_file(settings.network_json)
 	graph = nx.Graph()
 	for node in json_dict['nodes']:
 		graph.add_node(node['id'])
@@ -21,7 +21,10 @@ def create_graph():
 
 	for edge in json_dict['links']:
 		graph.add_edge(edge['source'], edge['target'])
-		graph.edges[edge['source'], edge['target']]['id'] = edge['osmid']
+		if 'osmid' in edge:
+			graph.edges[edge['source'], edge['target']]['id'] = edge['osmid']
+		else:
+			graph.edges[edge['source'], edge['target']]['id'] = edge['id']
 		graph.edges[edge['source'], edge['target']]['length'] = edge['length']
 		graph.edges[edge['source'], edge['target']]['traveltime'] = edge['traveltime']
 		if 'geometry' in edge:

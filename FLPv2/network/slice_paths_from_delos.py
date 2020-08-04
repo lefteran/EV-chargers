@@ -133,7 +133,7 @@ def load_statistics():
 	return  json_dict
 
 
-def get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict):
+def get_vehicle_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict):
 	fleet_statistics_dict = dict()
 	average_distance_per_vehicle = get_average_distance_travelled_per_vehicle(distance_travelled_per_vehicle_dict)
 	number_of_vehicles_to_charge_per_day = get_number_of_vehicles_to_charge_per_day(charging_spots_per_hour_dict)
@@ -147,28 +147,22 @@ def get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict
 	save_statistics(statistics_dict)
 
 
-def export_charging_coordinates_per_hour_dict_and_statistics(n_vehicles, input_filename, statistics_filename, output_filename):
-	allVehiclesKPIs = read_json_file(input_filename)
+def export_charging_coordinates_per_hour_dict_and_statistics():
+	allVehiclesKPIs = read_json_file(settings.delos_vehicle_kpis)
 	vehicles = list()
-	for vehicleKPIs in allVehiclesKPIs:
-		vehicle = Vehicle([], allVehiclesKPIs[vehicleKPIs]['VehicleTrip'], vehicleKPIs)
-		# vehicle = Vehicle(vehicleValue['timeStampList'], vehicleValue['locationList'], vehicleKey.split(' ')[1])
-		# if not lists_lengths_are_equal(vehicle):
-		# 	stderr.write("Lists' lengths are not equal")
-		# 	exit()
-		vehicles.append(vehicle)
-	charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict = find_charging_points_and_total_distances_per_vehicle(vehicles)
-	# get_statistics(statistics_filename, n_vehicles, charging_spots_per_hour_dict, distance_travelled_per_vehicle_dict)
-	# print(f'Average distance per vehicle is: {average_distance_per_vehicle} km')
-	# print(f'Number of vehicles that need charging per day: {number_of_vehicles_to_charge_per_day}')
-	save_dict(charging_spots_per_hour_dict, output_filename)
+	for vehicle_kpis in allVehiclesKPIs:
+		if allVehiclesKPIs[vehicle_kpis]['VehicleTimeKpIs']['TimeTravellingToClients'] != 0.0:
+			vehicle = Vehicle([], allVehiclesKPIs[vehicle_kpis]['VehicleTrip'], vehicle_kpis)
+			vehicles.append(vehicle)
+	charging_spots_dict, distance_travelled_per_vehicle_dict = find_charging_points_and_total_distances_per_vehicle(vehicles)
+	save_dict(charging_spots_dict, settings.recharging_coordinates_list)
 
 
 
 
 def slice_paths():
-	input_filename = os.path.abspath('D:\Github\delos3\outputs\VehicleKPIs_' + str(settings.fleet_size) + 'vehicles.json')
+	# input_filename = os.path.abspath('D:\Github\delos3\outputs\VehicleKPIs_' + str(settings.fleet_size) + 'vehicles.json')
 	# input_filename = os.path.abspath('D:\Github\delos3\outputs\Chicago\\' + settings.date_of_trips + '\VehiclePaths.json')
-	statistics_filename = 'D:\\Github\\EV-chargers\\FLPv2\\data\\chicago_vehicle_locations\\statistics.json'
-	output_filename = os.path.abspath('D:\\Github\\EV-chargers\\FLPv2\\data\\recharging_coordinates\\' + 'recharging_coordinates_per_hour_' + settings.date_of_trips + '_' + str(settings.fleet_size) + '.json')
-	export_charging_coordinates_per_hour_dict_and_statistics(str(settings.fleet_size), input_filename, statistics_filename, output_filename)
+	# statistics_filename = 'D:\\Github\\EV-chargers\\FLPv2\\data\\chicago_vehicle_locations\\statistics.json'
+	# output_filename = os.path.abspath('D:\\Github\\EV-chargers\\FLPv2\\data\\recharging_coordinates\\' + 'recharging_coordinates_per_hour_' + settings.date_of_trips + '_' + str(settings.fleet_size) + '.json')
+	export_charging_coordinates_per_hour_dict_and_statistics()

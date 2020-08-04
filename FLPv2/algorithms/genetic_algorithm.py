@@ -115,8 +115,6 @@ def save_json(dict_to_be_saved, filename):
 def load_parameters():
 	global parameters
 	parameters = dict()
-	percentage_of_evs = 0.2
-	percentage_of_vehicles_needing_recharge = 0.0005
 	candidates_dict = load_json(settings.candidates)
 	candidates = [int(i) for i in candidates_dict.keys()]
 	# reduced_candidates = reduce_input_size(candidates, reduced_size)
@@ -134,27 +132,26 @@ def load_parameters():
 	traffic_nodes = list(traffic.keys())
 	# reduced_traffic_nodes = reduce_input_size(traffic_nodes, reduced_size)
 	# traffic_intensity = [floor(int(i) * percentage_of_evs * percentage_of_vehicles_needing_recharge) for i in list(traffic.values())]
-	traffic_intensity = {i: floor(int(traffic[i]) * percentage_of_evs * percentage_of_vehicles_needing_recharge) for i in list(traffic.keys()) }
+	traffic_intensity = {i: floor(int(traffic[i]) * settings.percentage_of_evs * settings.percentage_of_vehicles_needing_recharge) for i in list(traffic.keys()) }
 	rho_list = load_json(settings.rhos)
 	zones = load_json(settings.zones)
 	candidates_zoning = load_json(settings.candidates_zoning)
 	existing_zoning = load_json(settings.existing_zoning)
+	candidates_permits_dict = load_json(settings.candidate_permits_dict)
 
 	service_rate = {'candidates': dict(), 'existing': dict()}
 	for candidate_node in candidates:
-		service_rate['candidates'][candidate_node] = 18		# number of vehicles that can be charged per day
+		service_rate['candidates'][candidate_node] = settings.candidate_service_rate
 	for existing_node in existing:
-		service_rate['existing'][existing_node] = 14
+		service_rate['existing'][existing_node] = settings.existing_service_rate
 
-	zone_bounds = {zone: randint(5, 15) for zone in zones}
+	zone_bounds = load_json(settings.zone_bounds)
 
 	land_cost = dict()
 	for candidate_node in candidates:
 		if candidate_node not in land_cost:
-			land_cost[candidate_node] = randint(100, 300)
-	for existing_node in existing:
-		if existing_node not in land_cost:
-			land_cost[existing_node] = randint(100, 300)
+			land_cost[candidate_node] = float(candidates_permits_dict[str(candidate_node)])
+
 
 	parameters['high_value'] = float('inf')
 	parameters['max_chargers'] = settings.max_chargers
@@ -174,8 +171,8 @@ def load_parameters():
 	parameters['service_rate'] = service_rate
 	parameters['fleet_intensity'] = [1 for _ in range(len(recharging_nodes))]
 	parameters['land_cost'] = land_cost
-	parameters['building_cost'] = 60000						#in dollars (includes maintenance)
-	parameters['park_and_charge_cost'] = 6570				#in dollars/year
+	parameters['building_cost'] = settings.charger_building_cost
+	parameters['park_and_charge_cost'] = settings.annual_park_and_charge_cost
 	parameters['zone_bound'] = zone_bounds
 	parameters['rho'] = [float(i) for i in rho_list]
 	parameters['zones'] = zones
@@ -190,11 +187,23 @@ def compute_equivalent_number_of_vehicles():
 
 
 def feasible_solution_exists():
-	if sum(parameters['vehicles_per_recharging_node_dict'].values()) > sum(parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates']):
-		return False
-	if sum(parameters['vehicles_per_recharging_node_dict'].values()) + sum(parameters['traffic_intensity'].values()) > sum(
-			parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates']):
-		return False
+	total_traffic = sum(parameters['traffic_intensity'].values())
+	existing_capacities = sum(parameters['existing_capacities'].values())
+	if total_traffic > existing_capacities:
+		print(f'No feasible solution exists.\nTraffic: {total_traffic}, existing capacities: {existing_capacities}')
+		exit()
+
+	total_vehicles_in_nodes = sum(parameters['vehicles_per_recharging_node_dict'].values())
+	total_capacities = sum(parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates'])
+	if total_vehicles_in_nodes > total_capacities:
+		print(f'No feasible solution exists.\nTotal vehicles in recharging nodes {total_vehicles_in_nodes}, total capacities: {total_capacities}')
+		exit()
+
+	total_traffic_and_vehicles_in_nodes = sum(parameters['vehicles_per_recharging_node_dict'].values()) + sum(parameters['traffic_intensity'].values())
+	total_candidates_capacities = sum(parameters['existing_capacities'].values()) + parameters['max_chargers'] * len(parameters['candidates'])
+	if total_traffic_and_vehicles_in_nodes  > total_candidates_capacities:
+		print(f'No feasible solution exists.\nTotal traffic and vehicles in recharging nodes: {total_traffic_and_vehicles_in_nodes}, total candidate capacities: {total_candidates_capacities}')
+		exit()
 	return True
 
 
@@ -327,8 +336,8 @@ def generate_initial_chromosome(variables, fleet_assigned, traffic_assigned):
 		candidate_availability_dict[candidate_id]['capacity'] = parameters['max_chargers']
 
 	# ################## x ########################
-	print('Generating x traffic ...')
-	for existing in tqdm(shuffled_existing_list):
+	# print('Generating x traffic ...')
+	for existing in shuffled_existing_list:
 		for traffic_node in variables.traffic_node_order:
 			if existing_availability_dict[existing]['available'] > 0:
 				if traffic_node not in traffic_assigned:
@@ -338,7 +347,7 @@ def generate_initial_chromosome(variables, fleet_assigned, traffic_assigned):
 			else:
 				break
 
-	print('\nGenerating x fleet ...')
+	# print('\nGenerating x fleet ...')
 	for fleet_node in tqdm(variables.fleet_node_order):
 		if random() <= 0.8:
 			for candidate in shuffled_candidates_list:
@@ -360,7 +369,7 @@ def generate_initial_chromosome(variables, fleet_assigned, traffic_assigned):
 						candidate_availability_dict[candidate]['available'] -= 1
 
 	# ################## y ########################
-	print('Generating y ...')
+	# print('Generating y ...')
 	for candidate in variables.candidate_node_order:
 		if candidate_availability_dict[candidate]['available'] != candidate_availability_dict[candidate]['capacity']:
 			variables.y_dict['candidates'][candidate] = 1
@@ -369,7 +378,7 @@ def generate_initial_chromosome(variables, fleet_assigned, traffic_assigned):
 			variables.y_dict['existing'][existing] = 1
 
 	# ################## omega ########################
-	print('Generating omega ...')
+	# print('Generating omega ...')
 	omega_availability = dict(parameters['zone_bound'])
 
 	for existing in variables.existing_node_order:
@@ -393,7 +402,7 @@ def generate_initial_chromosome(variables, fleet_assigned, traffic_assigned):
 			variables.omega_dict['candidates'][candidate] = 1
 
 	# ################## z ########################
-	print('Generating z ...')
+	# print('Generating z ...')
 	for candidate in variables.candidate_node_order:
 		n_chargers = sum(variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate] for fleet_node in variables.fleet_node_order)
 		if n_chargers > 0:
@@ -464,7 +473,7 @@ def evaluate_chromosome(chromosome):
 
 	M = total_land_cost + total_infrastructure_cost + total_park_and_charge_cost
 
-	objective = T + M
+	objective = settings.q_time_to_monetary_units * T + M
 
 	# constraints (10)
 	for traffic_node in variables.traffic_node_order:
@@ -779,12 +788,9 @@ def run_genetic():
 	for gen in range(0, n_generations):
 		print(f'Generation: {gen:4} | Fitness: {best_fit:.2f}')
 		offspring = toolbox.select(population, len(population), tournsize=2)
-		print('offspring selected')
 		offspring = list(map(toolbox.clone, offspring))
-		print('offspring mapped')
 		for child1, child2 in zip(offspring[::2], offspring[1::2]):
 			if random() < prob_crossover:
-				print('Doing crossover ...')
 				crossover(parameters, child1, child2)
 				is_feasible1 = feasibility_check(child1)
 				is_feasible2 = feasibility_check(child2)
@@ -895,3 +901,16 @@ def prepare_output_temp():
 	outputs['outcome']['n_on_street_opened'] = solution_outcome['n_on_street_opened']
 	outputs['outcome']['n_off_street_opened'] = solution_outcome['n_off_street_opened']
 	save_json(outputs, settings.ga_outputs)
+
+
+def load_saved_solution():
+	solution = load_json(settings.temp)
+	get_infrastructure_cost(solution)
+
+
+def get_infrastructure_cost(variables):
+	parameters = load_parameters()
+	total_infrastructure_cost = 0
+	for candidate_node in variables['z']['candidates']:
+		psi = sum(variables['z']['candidates'][candidate_node]['chargers'][charger] for charger in range(parameters['max_chargers']))
+		total_infrastructure_cost += parameters['building_cost'] * psi * variables['omega']['candidates'][candidate_node]

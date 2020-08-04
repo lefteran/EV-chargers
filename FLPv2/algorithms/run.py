@@ -16,13 +16,13 @@ import algorithms.fwdGreedy as fwdGreedy
 import algorithms.localSearch as localSearch
 import algorithms.young_greedy as young_greedy
 import algorithms.jain_vazirani as jain_vazirani
-# import algorithms.optimal_pulp as optimal_pulp
+import algorithms.optimal_pulp2020 as optimal_pulp
 import algorithms.genetic_algorithm as genetic_algorithm
 
 
 def run():
-	genetic_algorithm.run_genetic()
-	# optimal_pulp.solve_optimal()
+	# genetic_algorithm.load_saved_solution()
+	optimal_pulp.solve_optimal()
 	# settings.clusters = clustering.load_clusters()
 	# settings.vehicles_network_locations_per_hour_dict = vehicles_per_hour.load_vehicles_network_locations_per_hour_dict()
 	# settings.travel_times = shortest_paths.load_vehicles_travel_times_to_candidates_dict()

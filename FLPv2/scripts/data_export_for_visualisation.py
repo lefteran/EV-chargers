@@ -133,7 +133,7 @@ def export_solution_locations_coordinates():
 	# algorithm = 'optimal'
 	# network_filename = 'Chicago_network.json'
 	# solution_filename =  algorithm + '.json'
-	network = read_json_file(settings.chicago_json_network)
+	network = read_json_file(settings.network_json)
 	# solution = read_json_file(solution_filename)
 	# for node_id in solution['solution_list']:
 	for node_id, number_of_charging_points in charging_points_per_station_dict.items():

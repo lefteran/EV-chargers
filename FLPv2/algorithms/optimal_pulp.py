@@ -43,7 +43,7 @@ def load_ilp_parameters():
 			existing.append(0)
 	rho_list = load_json(settings.rhos)
 	zones = load_json(settings.zones)
-	contained = load_json(settings.contained_in_zone)
+	contained = load_json(settings.candidates_zoning)
 
 	parameters['contained'] = contained
 	parameters['candidates'] = [i for i in candidates_and_existing if i in contained]
@@ -55,8 +55,8 @@ def load_ilp_parameters():
 	parameters['service_rate'] = [randint(1, 3) for _ in range(len(candidates_and_existing))]
 	parameters['fleet_intensity'] = [1 for _ in range(len(recharging_nodes))]
 	parameters['land_cost'] = [randint(100, 300) for _ in range(len(candidates_and_existing))]
-	parameters['building_cost'] = [randint(100, 300)]
-	parameters['park_and_charge_cost'] = [randint(10, 50)]
+	parameters['building_cost'] = 60000						#in dollars (includes maintenance)
+	parameters['park_and_charge_cost'] = settings.annual_park_and_charge_cost * settings.fleet_size				#in dollars/year
 	parameters['zone_upper_bound'] = [randint(5, 15) for _ in range(len(zones))]
 	parameters['existing'] = existing
 	parameters['rho'] = [float(i) for i in rho_list]
@@ -74,7 +74,7 @@ def solve_ilp():
 	max_chargers = 15
 	b_c = 100
 	pi_c = 0.8
-	r = 1
+	r = 0.737
 
 	# ############# Sets, Arrays, Matrices and Dictionaries #################
 	n_candidates = len(parameters['candidates'])

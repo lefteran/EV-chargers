@@ -70,7 +70,7 @@ def get_existing_stations(graph_nodes):
 		csv_reader = csv.reader(csv_file, delimiter=',')
 		next(csv_reader, None)
 		for row in csv_reader:
-			existing_station_id = row[0]
+			original_station_id = row[0]
 			existing_station_type = row[12]
 			level_1_chargers = int(row[18]) if row[18] else 0
 			level_2_chargers = int(row[19]) if row[19] else 0
@@ -79,11 +79,27 @@ def get_existing_stations(graph_nodes):
 			latitude = row[25]
 			longitude = row[26]
 			if 'Public' in existing_station_type and total_chargers != 0:
-				if existing_station_id not in existing_stations_dict:
-					existing_stations_dict[existing_station_id] = dict()
-				existing_stations_dict[existing_station_id]['latitude'] = latitude
-				existing_stations_dict[existing_station_id]['longitude'] = longitude
-				existing_stations_dict[existing_station_id]['chargers'] = total_chargers
-				existing_stations_dict[existing_station_id]['closest_node_id'] = get_closest_node_to_coordinates(graph_nodes, latitude, longitude)
+				existing_id = get_closest_node_to_coordinates(graph_nodes, latitude, longitude)
+				if existing_id not in existing_stations_dict:
+					existing_stations_dict[existing_id] = dict()
+				existing_stations_dict[existing_id]['latitude'] = latitude
+				existing_stations_dict[existing_id]['longitude'] = longitude
+				existing_stations_dict[existing_id]['chargers'] = total_chargers
+				existing_stations_dict[existing_id]['original_id'] = original_station_id
+				existing_stations_dict[existing_id]['closest_node_id'] = existing_id
 	save_json(existing_stations_dict, settings.existing_stations)
 	get_candidates_and_existing()
+
+
+def get_existing_from_open_chargemap(graph_nodes):
+	existing_stations_dict = dict()
+	open_chargemap_json = load_json(settings.existing_stations_open_chargemap)
+	for station in open_chargemap_json:
+		existing_id = get_closest_node_to_coordinates(graph_nodes, station['Coordinates']['latitude'], station['Coordinates']['longitude'])
+		existing_stations_dict[existing_id] = dict()
+		existing_stations_dict[existing_id]['latitude'] = station['Coordinates']['latitude']
+		existing_stations_dict[existing_id]['longitude'] = station['Coordinates']['longitude']
+		existing_stations_dict[existing_id]['chargers'] = 1
+		existing_stations_dict[existing_id]['original_id'] = station['ID']
+		existing_stations_dict[existing_id]['closest_node_id'] = int(existing_id)
+	save_json(existing_stations_dict, settings.existing_stations)

@@ -1,5 +1,6 @@
 # LIBRARIES
 import json
+from random import randint
 # FILES
 import settings
 
@@ -56,6 +57,7 @@ def existing_zoning(graph, existing):
 	contained_dict = dict()
 	zones_list = list()
 	zones = load_json(settings.zoning)
+	n_existing_in_zones = 0
 	for existing_cs in tqdm(existing):
 		y = graph.node[int(existing_cs)]['y']
 		x = graph.node[int(existing_cs)]['x']
@@ -64,10 +66,16 @@ def existing_zoning(graph, existing):
 			polygon = Polygon(zone['geometry']['coordinates'][0][0])
 			if polygon.contains(point):
 				contained_dict[existing_cs] = int(zone['properties']['zoning_id'])
+				n_existing_in_zones += 1
 				break
 	for zone in zones['features']:
 		zones_list.append(int(zone['properties']['zoning_id']))
-	print(f'contained_dict contains {len(contained_dict.keys())} keys')
+	print(f'{n_existing_in_zones} existing CSs out of {len(existing)} are contained in zones')
 	save_dict(contained_dict, settings.existing_zoning)
 	save_list(zones_list)
 
+
+def generate_zone_bounds():
+	zones = load_json(settings.zones)
+	zone_bounds = {zone: randint(5, 15) for zone in zones}
+	save_dict(zone_bounds, settings.zone_bounds)
