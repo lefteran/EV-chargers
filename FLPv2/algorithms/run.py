@@ -4,24 +4,18 @@ import json
 # FILES
 import settings
 # import network.create_graph as create_graph
-import network.recharging_nodes as vehicles_per_hour
-import network.clustering as clustering
-import network.shortest_paths as shortest_paths
 
-import algorithms.fwdGreedy as fwdGreedy
 # import algorithms.backGreedy as backGreedy
 # import algorithms.randomLocalSearch as randomLocalSearch
 # import algorithms.integer_optimal as integer_optimal
 # import algorithms.fractional_optimal as fractional_optimal
-import algorithms.localSearch as localSearch
-import algorithms.young_greedy as young_greedy
-import algorithms.jain_vazirani as jain_vazirani
+import algorithms.test as test
 import algorithms.optimal_pulp2020 as optimal_pulp
-import algorithms.genetic_algorithm as genetic_algorithm
 
 
 def run():
 	# genetic_algorithm.load_saved_solution()
+	# test.test_method()
 	optimal_pulp.solve_optimal()
 	# settings.clusters = clustering.load_clusters()
 	# settings.vehicles_network_locations_per_hour_dict = vehicles_per_hour.load_vehicles_network_locations_per_hour_dict()

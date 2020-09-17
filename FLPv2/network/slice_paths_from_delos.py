@@ -152,7 +152,7 @@ def export_charging_coordinates_per_hour_dict_and_statistics():
 	vehicles = list()
 	for vehicle_kpis in allVehiclesKPIs:
 		if allVehiclesKPIs[vehicle_kpis]['VehicleTimeKpIs']['TimeTravellingToClients'] != 0.0:
-			vehicle = Vehicle([], allVehiclesKPIs[vehicle_kpis]['VehicleTrip'], vehicle_kpis)
+			vehicle = Vehicle([], allVehiclesKPIs[vehicle_kpis]['VehicleStops'], vehicle_kpis)
 			vehicles.append(vehicle)
 	charging_spots_dict, distance_travelled_per_vehicle_dict = find_charging_points_and_total_distances_per_vehicle(vehicles)
 	save_dict(charging_spots_dict, settings.recharging_coordinates_list)
