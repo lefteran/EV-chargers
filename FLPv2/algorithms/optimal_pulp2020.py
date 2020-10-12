@@ -1,6 +1,7 @@
 # LIBRARIES
 from pulp import *
 import json
+import time
 from random import randint
 from math import floor
 # FILES
@@ -61,14 +62,19 @@ def load_ilp_parameters():
 	for candidate_node in candidates:
 		if candidate_node not in land_cost:
 			land_cost[candidate_node] = float(candidates_permits_dict[str(candidate_node)])
-	reduced_number_of_traffic_nodes = floor(len(traffic_nodes) * 0.5)
+
+
+	# #################### REDUCING INPUT SIZE ############################
+	reduced_number_of_traffic_nodes =  floor(len(traffic_nodes) * 0.2)
+	reduced_number_of_recharging_nodes = floor(len(recharging_nodes) * 1)
+	reduced_existing_stations = floor(len(existing) * 1)
 
 
 	parameters['candidates'] = [i for i in candidates if str(i) in list(candidates_zoning.keys())]
-	parameters['existing'] = [i for i in existing if str(i) in list(existing_zoning.keys())]
+	parameters['existing'] = [i for i in existing[:reduced_existing_stations] if str(i) in list(existing_zoning.keys())]
 	parameters['existing_capacities'] = existing_capacities
 	parameters['existing_dict'] = existing_stations_dict
-	parameters['recharging_nodes'] = recharging_nodes
+	parameters['recharging_nodes'] = recharging_nodes[:reduced_number_of_recharging_nodes]
 	parameters['vehicles_per_recharging_node_dict'] = vehicles_per_recharging_node_dict
 	parameters['fleet_travel_times'] = fleet_travel_times
 	parameters['traffic_travel_times'] = traffic_travel_times
@@ -83,16 +89,18 @@ def load_ilp_parameters():
 	parameters['zones'] = zones
 	parameters['zone_bound'] = zone_bounds
 	parameters['rho'] = [float(i) for i in rho_list]
+	print('Loaded parameters')
 	return parameters
 
 
 def solve_ilp():
+	start_time = time.time()
 	prob = LpProblem("problem", pulp.LpMinimize)
 	# ################### DATA ####################
 
 	parameters = load_ilp_parameters()
-	variable_space = 'Continuous'
-	# variable_space = 'Integer'
+	# variable_space = 'Continuous'
+	variable_space = 'Integer'
 	b_c = settings.charger_building_cost
 	pi_c = settings.annual_park_and_charge_cost
 
@@ -112,6 +120,8 @@ def solve_ilp():
 	C_E = [('C_E' + str(j)) for j in range(n_existing)]
 	C = C_C + C_E
 
+	C_E_matching_dict = {str(existing): C_E[i] for i, existing in enumerate(parameters['existing'])}
+
 	R = [[]] * n_recharging_nodes
 	for i in range(n_recharging_nodes):
 		vehicles_per_recharging_node = parameters['vehicles_per_recharging_node_dict'][str(recharging_nodes_matching_dict[i])]
@@ -127,6 +137,12 @@ def solve_ilp():
 	V = V_R + V_F
 
 	K = [('K' + str(k)) for k in range(settings.max_chargers)]
+
+	K_E = dict()
+	for existing_id, existing_capacity in parameters['existing_capacities'].items():
+		if int(existing_id) in parameters['existing']:
+			K_E[C_E_matching_dict[existing_id]] = existing_capacity		# existing CSs capacities
+
 	H = [('H' + str(n)) for n in range(n_zones)]
 
 	t = dict()
@@ -169,7 +185,7 @@ def solve_ilp():
 					 in enumerate(C_E)})
 	# mu = dict(mu_candidates.items() + mu_existing.items())
 	upper_bound = {zone:parameters['zone_bound'][str(zone_matching_dict[n])] for n, zone in enumerate(H)}
-
+	print('Loaded problem parameters')
 
 	# #################### Variables ###################################
 	x = LpVariable.dicts('x', (V,C), lowBound=0, upBound=1, cat=variable_space)
@@ -183,6 +199,7 @@ def solve_ilp():
 	theta = LpVariable.dicts('theta', (C,K), lowBound=0, upBound=1, cat=variable_space)
 	u = LpVariable.dicts('u', (V_F, C_E), lowBound=0, upBound=1, cat=variable_space)
 
+	print('Loaded variables')
 	# ##################### Objective ################################
 	T = lpSum([lpSum([t[i.split('_')[0]][j] * x[i][j]] for j in C)] for i in V_R) + \
 		lpSum([lpSum([t[i.split('_')[0]][j] * x[i][j]] for j in C_E)] for i in V_F)
@@ -191,7 +208,7 @@ def solve_ilp():
 
 	total_infrastructure_cost = lpSum(b_c * lpSum([theta[j][m]] for m in K) for j in C_C)
 
-	total_park_and_charge_cost = lpSum( [pi_c * lpSum([z[j][m] - theta[j][m]] for m in K)] for j in C_E)
+	total_park_and_charge_cost = lpSum( [pi_c * lpSum([x[i][j]] for i in V_R)] for j in C_E)
 
 	M = total_land_cost + total_infrastructure_cost + total_park_and_charge_cost
 
@@ -221,7 +238,7 @@ def solve_ilp():
 
 	# Constraint (15)
 	for j in C_E:
-		prob += lpSum([x[i][j]] for i in V) <= lpSum([z[j][m]] for m in K)
+		prob += lpSum([x[i][j]] for i in V) <= K_E[j]
 
 	# Constraint (16)
 	for j in C_C:
@@ -235,8 +252,8 @@ def solve_ilp():
 
 	# Constraint (18)
 	for j in C_E:
-		prob += lpSum([x[i][j]] for i in V) <= mu[j] * (z[j]['K0'] * rho['K0'] +
-				lpSum([z[j][m] * (rho['K' + str(index + 1)] - rho['K' + str(index)])] for index, m in enumerate(K[1:])))
+		prob += lpSum([x[i][j]] for i in V) <= mu[j] * (rho['K0'] +
+				lpSum([(rho['K' + str(index + 1)] - rho['K' + str(index)])] for index, m in enumerate(K[1:])))
 
 	# Constraint (19)
 	for n in H:
@@ -260,12 +277,23 @@ def solve_ilp():
 			prob += theta[j][m] <= omega[j]
 			prob += theta[j][m] >= z[j][m] + omega[j] - 1
 
+	print('Loaded constraints and objective')
+	save_formulation(prob)
+	print('Solving the problem ...')
 	status = prob.solve()
 	print(LpStatus[status])
 	# print(prob)
-	save_formulation(prob)
 
+	running_time = time.time() - start_time
 	solution_dict = dict()
+	solution_dict['feasibility'] = 'feasible' if status == 1 else '************ INFEASIBLE **************'
+	solution_dict['running_time_in_seconds'] = running_time
+	solution_dict['n_candidates'] = settings.centroids
+	solution_dict['n_existing'] = n_existing
+	solution_dict['traffic_vehicles'] = len(V_F)
+	solution_dict['TNC_vehicles'] = len(V_R)
+	solution_dict['percentage_of_evs'] = settings.percentage_of_evs
+	solution_dict['percentage_of_vehicles_needing_recharge'] = settings.percentage_of_vehicles_needing_recharge
 	solution_dict['objective'] = value(prob.objective)
 	for v in prob.variables():
 		solution_dict[v.name] = v.varValue
