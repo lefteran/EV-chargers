@@ -204,7 +204,7 @@ def solve_ilp():
 	T = lpSum([lpSum([t[i.split('_')[0]][j] * x[i][j]] for j in C)] for i in V_R) + \
 		lpSum([lpSum([t[i.split('_')[0]][j] * x[i][j]] for j in C_E)] for i in V_F)
 
-	total_land_cost = lpSum( [l_c[j] * w[j]] for j in C_C)
+	total_land_cost = lpSum( [l_c[j] * y[j]] for j in C_C)
 
 	total_infrastructure_cost = lpSum(b_c * lpSum([z[j][m]] for m in K) for j in C_C)
 

@@ -136,9 +136,9 @@ def load_parameters():
 
 
 	# #################### REDUCING INPUT SIZE ############################
-	reduced_number_of_traffic_nodes =  floor(len(traffic_nodes) * 0.015)
-	reduced_number_of_recharging_nodes = floor(len(recharging_nodes) * 0.028)
-	reduced_existing_stations = floor(len(existing) * 0.1)
+	reduced_number_of_traffic_nodes =  floor(len(traffic_nodes) * 0.2)
+	reduced_number_of_recharging_nodes = floor(len(recharging_nodes) * 1)
+	reduced_existing_stations = floor(len(existing) * 1)
 
 
 	parameters['high_value'] = float('inf')
@@ -525,12 +525,12 @@ def evaluate_chromosome(chromosome):
 			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(existing_node)] * variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node]
 
 	# Monetary cost
-	total_land_cost = sum(parameters['land_cost'][candidate_node] * variables.y_dict['candidates'][candidate_node] * variables.omega_dict['candidates'][candidate_node] for candidate_node in variables.candidates_list)
+	total_land_cost = sum(parameters['land_cost'][candidate_node] * variables.y_dict['candidates'][candidate_node] for candidate_node in variables.candidates_list)
 
 	total_infrastructure_cost = 0
 	for candidate_node in variables.candidates_list:
 		psi = sum(variables.z_dict['candidates'][candidate_node]['chargers'][charger] for charger in range(parameters['max_chargers']))
-		total_infrastructure_cost += parameters['building_cost'] * psi * variables.omega_dict['candidates'][candidate_node]
+		total_infrastructure_cost += parameters['building_cost'] * psi
 
 	total_park_and_charge_cost = 0
 	for existing_node in variables.existing_list:
@@ -544,7 +544,7 @@ def evaluate_chromosome(chromosome):
 	return objective,
 
 
-def crossover(parameters, chromosome1, chromosome2):
+def crossover(chromosome1, chromosome2):
 	chromo_dict1 = get_variable_dict(chromosome1)
 	chromo_dict2 = get_variable_dict(chromosome2)
 	temp_x_dict = dict(chromo_dict1.x_dict)
@@ -639,7 +639,7 @@ def run_genetic():
 		offspring = list(map(toolbox.clone, offspring))
 		for child1, child2 in zip(offspring[::2], offspring[1::2]):
 			if random() < prob_crossover:
-				crossover(parameters, child1, child2)
+				crossover(child1, child2)
 				is_feasible1 = feasibility_check(child1)
 				is_feasible2 = feasibility_check(child2)
 				if not is_feasible1:
@@ -679,13 +679,14 @@ def run_genetic():
 		best_sol_dict['omega'] = variables.omega_dict
 		best_sol_dict['z'] = variables.z_dict
 		save_json(best_sol_dict, settings.ga_solution)
+		save_json(best_sol, settings.ga_solution_chromosome)
 	else:
 		print('No solution')
 	# print(f'Number of candidates and existing locations is {len(parameters["candidates"]) + len(parameters["existing"])}')
 	# print(f'cost is {best_fit:.2f}')
 
 	running_time = time() - start_time
-	prepare_output(len(parameters["candidates"]) + len(parameters["existing"]), best_sol, best_fit, running_time)
+	prepare_output(best_sol, running_time)
 
 
 def get_solution_outcome():
@@ -720,37 +721,47 @@ def get_solution_outcome():
 
 def get_analytical_costs(chromosome):
 	global parameters
+	# ######################## TEMP CODE ########################
+	chromosome = load_json(settings.ga_solution_chromosome)
+	load_parameters()
+	# ###########################################################
 	variables = get_variable_dict(chromosome)
+	a = 2
 
+	# Time cost
 	T = 0
 	for fleet_node in variables.tnc_vehicles_list:
 		for candidate_node in variables.candidates_list:
-			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(candidate_node)] * variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node]
+			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(candidate_node)] * \
+				 variables.x_dict['fleet_nodes'][fleet_node]['candidates'][candidate_node]
 		for existing_node in variables.existing_list:
-			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(existing_node)] * variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node]
+			T += parameters['fleet_travel_times'][fleet_node.split('_')[0]][str(existing_node)] * \
+				 variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node]
 	for traffic_node in variables.traffic_vehicles_list:
 		for existing_node in variables.existing_list:
-			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(existing_node)] * variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node]
+			T += parameters['traffic_travel_times'][traffic_node.split('_')[0]][str(existing_node)] * \
+				 variables.x_dict['traffic_nodes'][traffic_node]['existing'][existing_node]
 
-	total_land_cost = sum(parameters['land_cost'][candidate_node] * variables.y_dict['candidates'][candidate_node] * variables.omega_dict['candidates'][candidate_node] for candidate_node in variables.candidates_list)
+	# Monetary cost
+	total_land_cost = sum(parameters['land_cost'][candidate_node] * variables.y_dict['candidates'][candidate_node]
+						  for candidate_node in variables.candidates_list)
 
 	total_infrastructure_cost = 0
 	for candidate_node in variables.candidates_list:
-		psi = sum(variables.z_dict['candidates'][candidate_node]['chargers'][charger] for charger in range(parameters['max_chargers']))
-		total_infrastructure_cost += parameters['building_cost'] * psi * variables.omega_dict['candidates'][candidate_node]
+		psi = sum(variables.z_dict['candidates'][candidate_node]['chargers'][charger] for charger in
+				  range(parameters['max_chargers']))
+		total_infrastructure_cost += parameters['building_cost'] * psi
 
 	total_park_and_charge_cost = 0
-	for candidate_node in variables.candidates_list:
-		psi = sum(variables.z_dict['candidates'][candidate_node]['chargers'][charger] for charger in range(parameters['max_chargers']))
-		total_park_and_charge_cost += parameters['park_and_charge_cost'] * psi * (1 - variables.omega_dict['candidates'][candidate_node])
 	for existing_node in variables.existing_list:
-		psi = sum(variables.z_dict['existing'][existing_node]['chargers'][charger] for charger in range(parameters['existing_dict'][str(existing_node)]['chargers']))
-		total_park_and_charge_cost += parameters['park_and_charge_cost'] * psi * (1 - variables.omega_dict['existing'][existing_node])
+		for fleet_node in variables.tnc_vehicles_list:
+			total_park_and_charge_cost += parameters['park_and_charge_cost'] * \
+										  variables.x_dict['fleet_nodes'][fleet_node]['existing'][existing_node]
 
 	return T, total_land_cost, total_infrastructure_cost, total_park_and_charge_cost
 
 
-def prepare_output(candidates_existing_len, best_sol, best_fit, running_time):
+def prepare_output(best_sol, running_time):
 	outputs = dict()
 	travel_time, land_cost, infrastructure_cost, park_and_charge_cost = get_analytical_costs(best_sol)
 	solution_outcome = get_solution_outcome()
@@ -763,12 +774,12 @@ def prepare_output(candidates_existing_len, best_sol, best_fit, running_time):
 	outputs['percentage_of_vehicles_needing_recharge'] = settings.percentage_of_vehicles_needing_recharge
 
 	outputs['costs'] = dict()
-	outputs['costs']['candidates_existing_length'] = candidates_existing_len
+	outputs['costs']['candidates_existing_length'] = len(parameters["candidates"]) + len(parameters["existing"])
 	outputs['costs']['total_travel_time'] = travel_time
 	outputs['costs']['land_cost'] = land_cost
 	outputs['costs']['infrastructure_cost'] = infrastructure_cost
 	outputs['costs']['park_and_charge_cost'] = park_and_charge_cost
-	outputs['costs']['total_cost'] = best_fit
+	outputs['costs']['total_cost'] = travel_time + land_cost + infrastructure_cost + park_and_charge_cost
 
 	outputs['outcome'] = dict()
 	outputs['outcome']['n_vehicles_in_candidates'] = solution_outcome['n_vehicles_in_candidates']
