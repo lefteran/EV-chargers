@@ -206,7 +206,7 @@ def solve_ilp():
 
 	total_land_cost = lpSum( [l_c[j] * w[j]] for j in C_C)
 
-	total_infrastructure_cost = lpSum(b_c * lpSum([theta[j][m]] for m in K) for j in C_C)
+	total_infrastructure_cost = lpSum(b_c * lpSum([z[j][m]] for m in K) for j in C_C)
 
 	total_park_and_charge_cost = lpSum( [pi_c * lpSum([x[i][j]] for i in V_R)] for j in C_E)
 
